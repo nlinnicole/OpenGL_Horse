@@ -1,10 +1,12 @@
 ﻿  horse.cpp
-c:\users\nicole\documents\comp371\a1_27890834\template\horse.cpp(160): warning C4305: '+=': truncation from 'double' to 'float'
-c:\users\nicole\documents\comp371\a1_27890834\template\horse.cpp(161): warning C4305: '+=': truncation from 'double' to 'float'
-c:\users\nicole\documents\comp371\a1_27890834\template\horse.cpp(162): warning C4305: '+=': truncation from 'double' to 'float'
-c:\users\nicole\documents\comp371\a1_27890834\template\horse.cpp(165): warning C4305: '-=': truncation from 'double' to 'float'
-c:\users\nicole\documents\comp371\a1_27890834\template\horse.cpp(166): warning C4305: '-=': truncation from 'double' to 'float'
-c:\users\nicole\documents\comp371\a1_27890834\template\horse.cpp(167): warning C4305: '-=': truncation from 'double' to 'float'
+c:\users\nicole\documents\comp371\a1_27890834\template\horse.cpp(165): warning C4305: '+=': truncation from 'double' to 'float'
+c:\users\nicole\documents\comp371\a1_27890834\template\horse.cpp(166): warning C4305: '+=': truncation from 'double' to 'float'
+c:\users\nicole\documents\comp371\a1_27890834\template\horse.cpp(167): warning C4305: '+=': truncation from 'double' to 'float'
+c:\users\nicole\documents\comp371\a1_27890834\template\horse.cpp(170): warning C4305: '-=': truncation from 'double' to 'float'
+c:\users\nicole\documents\comp371\a1_27890834\template\horse.cpp(171): warning C4305: '-=': truncation from 'double' to 'float'
+c:\users\nicole\documents\comp371\a1_27890834\template\horse.cpp(172): warning C4305: '-=': truncation from 'double' to 'float'
+c:\users\nicole\documents\comp371\a1_27890834\template\horse.cpp(211): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+c:\users\nicole\documents\comp371\a1_27890834\template\horse.cpp(212): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
   template.vcxproj -> C:\Users\nicole\Documents\COMP371\a1_27890834\Debug\a1_27890834.exe
   template.vcxproj -> C:\Users\nicole\Documents\COMP371\a1_27890834\Debug\a1_27890834.pdb (Partial PDB)
   0 File(s) copied
