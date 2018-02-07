@@ -1,13 +1,4 @@
-﻿  horse.cpp
-c:\users\nicole\documents\comp371\a1_27890834\template\horse.cpp(167): warning C4305: '+=': truncation from 'double' to 'float'
-c:\users\nicole\documents\comp371\a1_27890834\template\horse.cpp(168): warning C4305: '+=': truncation from 'double' to 'float'
-c:\users\nicole\documents\comp371\a1_27890834\template\horse.cpp(169): warning C4305: '+=': truncation from 'double' to 'float'
-c:\users\nicole\documents\comp371\a1_27890834\template\horse.cpp(172): warning C4305: '-=': truncation from 'double' to 'float'
-c:\users\nicole\documents\comp371\a1_27890834\template\horse.cpp(173): warning C4305: '-=': truncation from 'double' to 'float'
-c:\users\nicole\documents\comp371\a1_27890834\template\horse.cpp(174): warning C4305: '-=': truncation from 'double' to 'float'
-c:\users\nicole\documents\comp371\a1_27890834\template\horse.cpp(213): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-c:\users\nicole\documents\comp371\a1_27890834\template\horse.cpp(214): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-  template.vcxproj -> C:\Users\nicole\Documents\COMP371\a1_27890834\Debug\a1_27890834.exe
+﻿  template.vcxproj -> C:\Users\nicole\Documents\COMP371\a1_27890834\Debug\a1_27890834.exe
   template.vcxproj -> C:\Users\nicole\Documents\COMP371\a1_27890834\Debug\a1_27890834.pdb (Partial PDB)
   0 File(s) copied
   0 File(s) copied

@@ -25,7 +25,7 @@ const GLuint HEIGHT = 800;
 GLFWwindow* window;
 
 //Gobal variables
-glm::vec3 c_pos = glm::vec3(0.0f, 0.0f, 15.0f);
+glm::vec3 c_pos = glm::vec3(0.0f, 3.0f, 15.0f);
 glm::vec3 c_eye = glm::normalize(glm::vec3(0.0f, 0.0f, -15.0f));
 glm::vec3 c_up = glm::vec3(0.0f, 1.0f, 0.0f);
 
@@ -36,10 +36,14 @@ float zoom = 45.0f;
 
 glm::vec3 horseScale = glm::vec3(2.0f, 1.0f, 1.0f);
 glm::vec3 horseRotation = glm::vec3(0.0f, 0.0f, 1.0f);
-glm::vec3 horseTranslation = glm::vec3(0.0f, 0.0f, 0.0f);
+glm::vec3 horseTranslation = glm::vec3(0.0f, 4.0f, 0.0f);
 float horseRotateAngle = 0.0f;
 
 GLenum renderMode = GL_TRIANGLES;
+
+int xPos;
+int yPos;
+//glfwGetMousePos(&xPos, &yPos);
 
 GLuint loadShaders(std::string vertex_shader_path, std::string fragment_shader_path) {
 	// Read the Vertex Shader code from the file
@@ -226,14 +230,12 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	}
 }
 
-void drawHorse(GLuint shaderProgram, GLuint VAO, GLenum mode) {
+void drawHorse(GLuint shaderProgram, GLenum mode) {
 	//Model Matrix
 	float colValues[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
 	glm::mat4 scale;
 	glm::mat4 translate;
 	glm::mat4 rotate;
-	GLuint transformLoc = glGetUniformLocation(shaderProgram, "model_matrix");
-	GLuint colorLoc = glGetUniformLocation(shaderProgram, "color");
 
 	std::stack<glm::mat4> transformations;
 
@@ -249,6 +251,8 @@ void drawHorse(GLuint shaderProgram, GLuint VAO, GLenum mode) {
 	colValues[0] = 0.275f;
 	colValues[1] = 0.510f;
 	colValues[2] = 0.706f;
+	GLuint transformLoc = glGetUniformLocation(shaderProgram, "model_matrix");
+	GLuint colorLoc = glGetUniformLocation(shaderProgram, "color");
 	glProgramUniform4fv(shaderProgram, colorLoc, 1, colValues);
 	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(torso));
 
@@ -407,15 +411,37 @@ void drawHorse(GLuint shaderProgram, GLuint VAO, GLenum mode) {
 	colValues[2] = 1.000f;
 	glProgramUniform4fv(shaderProgram, colorLoc, 1, colValues);
 	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(tail));
+}
 
-	//GROUND
-	glDrawArrays(mode, 107, 4);
-	glm::mat4 ground;
-	colValues[0] = 1.000f;
-	colValues[1] = 1.000f;
-	colValues[2] = 0.878f;
-	glProgramUniform4fv(shaderProgram, colorLoc, 1, colValues);
-	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(ground));
+void drawAxes(GLuint shaderProgram) {
+	float groundAxisColValues[4] = { 1.0, 1.0, 1.0, 1.0 };
+	GLuint transformLoc2 = glGetUniformLocation(shaderProgram, "model_matrix");
+	GLuint colorLoc2 = glGetUniformLocation(shaderProgram, "color");
+
+	glDrawArrays(GL_LINES, 0, 2);
+	glm::mat4 xAxis;
+	groundAxisColValues[0] = 0.0f;
+	groundAxisColValues[1] = 1.0f;
+	groundAxisColValues[2] = 0.0f;
+	glProgramUniform4fv(shaderProgram, colorLoc2, 1, groundAxisColValues);
+	glUniformMatrix4fv(transformLoc2, 1, GL_FALSE, glm::value_ptr(xAxis));
+
+	glDrawArrays(GL_LINES, 2, 2);
+	glm::mat4 yAxis;
+	groundAxisColValues[0] = 0.0f;
+	groundAxisColValues[1] = 0.0f;
+	groundAxisColValues[2] = 1.0f;
+	glProgramUniform4fv(shaderProgram, colorLoc2, 1, groundAxisColValues);
+	glUniformMatrix4fv(transformLoc2, 1, GL_FALSE, glm::value_ptr(yAxis));
+
+	glDrawArrays(GL_LINES, 4, 2);
+	glm::mat4 zAxis;
+	groundAxisColValues[0] = 1.0f;
+	groundAxisColValues[1] = 0.0f;
+	groundAxisColValues[2] = 0.0f;
+	glProgramUniform4fv(shaderProgram, colorLoc2, 1, groundAxisColValues);
+	glUniformMatrix4fv(transformLoc2, 1, GL_FALSE, glm::value_ptr(zAxis));
+	glBindVertexArray(0);
 }
 
 int init() {
@@ -463,11 +489,11 @@ int main()
 	GLuint shaderProgram = loadShaders("vertex.shader", "fragment.shader");
 	glUseProgram(shaderProgram);
 
-	GLfloat vertices[] = {
+	GLfloat horseVertices[] = {
 		-1.0f,-1.0f,-1.0f, // Cube begin
 		-1.0f,-1.0f, 1.0f,
-		-1.0f, 1.0f, 1.0f, 
-		1.0f, 1.0f,-1.0f, 
+		-1.0f, 1.0f, 1.0f,
+		1.0f, 1.0f,-1.0f,
 		-1.0f,-1.0f,-1.0f,
 		-1.0f, 1.0f,-1.0f,
 		1.0f,-1.0f, 1.0f,
@@ -499,23 +525,59 @@ int main()
 		-1.0f, 1.0f, 1.0f,
 		1.0f, 1.0f, 1.0f,
 		-1.0f, 1.0f, 1.0f,
-		1.0f,-1.0f, 1.0f, //Cube end
-		100.0f, 100.0f, 0.0f, //Ground begin
-		-100.0f, 100.0f, 0.0f,
-		-100.0f, -100.0f, 0.0f,
-		100.0f, -100.0f, 0.0f //Ground end
+		1.0f,-1.0f, 1.0f //Cube end
 	};
-	GLuint VAO;
-	glGenVertexArrays(1, &VAO);
-	glBindVertexArray(VAO);
 
-	GLuint VBO;
-	glGenBuffers(1, &VBO);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	GLfloat vertices2[] = {
+		100.0f, 0.0f, 100.0f,
+		100.0f, 0.0f, -100.0f,
+		-100.0f, 0.0f, -100.0f,
+		-100.0f, 0.0f, 100.0f
+	};
+
+	GLfloat axis[] = {
+		0.0f, 0.0f, 0.0f,
+		5.0f, 0.0f, 0.0f,
+		0.0f, 0.0f, 0.0f,
+		0.0f, 5.0f, 0.0f,
+		0.0f, 0.0f, 0.0f,
+		0.0f, 0.0f, 5.0f
+	};
+
+	GLuint VAO[3];
+
+	glGenVertexArrays(1, &VAO[0]);
+	glBindVertexArray(VAO[0]);
+	GLuint horseVBO;
+	glGenBuffers(1, &horseVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, horseVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(horseVertices), horseVertices, GL_STATIC_DRAW);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+	glEnableVertexAttribArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
+
+	glGenVertexArrays(1, &VAO[1]);
+	glBindVertexArray(VAO[1]);
+	GLuint groundVBO;
+	glGenBuffers(1, &groundVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, groundVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices2), vertices2, GL_STATIC_DRAW);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
 	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0); 
+	glBindVertexArray(0);
+
+	glGenVertexArrays(1, &VAO[2]);
+	glBindVertexArray(VAO[2]);
+
+	GLuint axisVBO;
+	glGenBuffers(1, &axisVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, axisVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(axis), axis, GL_STATIC_DRAW);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+	glEnableVertexAttribArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 
 	//View Matrix
@@ -539,26 +601,26 @@ int main()
 		glUniformMatrix4fv(viewMatrixLoc, 1, GL_FALSE, glm::value_ptr(viewMatrix));
 		glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
 
-		//LINES
-		//glBegin(GL_LINES);
-		//glColor3f(1, 0, 0);
-		//glVertex3f(-5, 0, 0);
-		//glVertex3f(5, 0, 0);
+		//HORSE
+		glBindVertexArray(VAO[0]);
+		drawHorse(shaderProgram, renderMode);
+		glBindVertexArray(0);
 
-		//glColor3f(0, 1, 0);
-		//glVertex3f(0, -5, 0);
-		//glVertex3f(0, 5, 0);
+		//GROUND
+		/*glBindVertexArray(VAO[1]);
+		glDrawArrays(GL_TRIANGLES, 0, 4);
+		glm::mat4 ground;
+		GLuint transformLoc2 = glGetUniformLocation(shaderProgram, "model_matrix");
+		GLuint colorLoc2 = glGetUniformLocation(shaderProgram, "color");
+		glProgramUniform4fv(shaderProgram, colorLoc2, 1, colValues2);
+		glUniformMatrix4fv(transformLoc2, 1, GL_FALSE, glm::value_ptr(ground));
+		glBindVertexArray(0);*/
 
-		//glColor3f(0, 0, 1);
-		//glVertex3f(0, 0, -5);
-		//glVertex3f(0, 0, 5);
-		//glEnd();
+		//AXIS
+		glBindVertexArray(VAO[2]);
+		drawAxes(shaderProgram);
+		glBindVertexArray(0);
 
-		glBindVertexArray(VAO);
-
-		drawHorse(shaderProgram, VAO, renderMode);
-		
-		glBindVertexArray(0);		
 	}
 
 	// Terminate GLFW, clearing any resources allocated by GLFW.
