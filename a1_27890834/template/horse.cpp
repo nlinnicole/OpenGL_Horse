@@ -24,16 +24,15 @@ const GLuint WIDTH = 800;
 const GLuint HEIGHT = 800;
 GLFWwindow* window;
 
-//Gobal variables
+//Gobal view variables
 glm::vec3 c_pos = glm::vec3(0.0f, 3.0f, 15.0f);
 glm::vec3 c_eye = glm::normalize(glm::vec3(0.0f, 0.0f, -15.0f));
 glm::vec3 c_up = glm::vec3(0.0f, 1.0f, 0.0f);
-
 glm::mat4 viewMatrix;
 glm::mat4 projectionMatrix;
-
 float zoom = 45.0f;
 
+//Global horse variables
 glm::vec3 horseScale = glm::vec3(2.0f, 1.0f, 1.0f);
 glm::vec3 horseRotation = glm::vec3(0.0f, 0.0f, 1.0f);
 glm::vec3 horseTranslation = glm::vec3(0.0f, 4.0f, 0.0f);
@@ -43,8 +42,8 @@ GLenum renderMode = GL_TRIANGLES;
 
 int xPos;
 int yPos;
-//glfwGetMousePos(&xPos, &yPos);
 
+//Shader loading
 GLuint loadShaders(std::string vertex_shader_path, std::string fragment_shader_path) {
 	// Read the Vertex Shader code from the file
 	string VertexShaderCode;
@@ -137,26 +136,32 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	std::cout << key << std::endl;
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, GL_TRUE);
+
+	//Move camera left
 	if (key == GLFW_KEY_LEFT) {
 		--c_pos.x;
 		std::cout << c_pos.x << std::endl;
 		update();
 	}
+	//Move camera right
 	if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS) {
 		++c_pos.x;
 		std::cout << c_pos.x << std::endl;
 		update();
 	}
+	//Move camera up
 	if (key == GLFW_KEY_UP && action == GLFW_PRESS) {
 		++c_pos.y;
 		std::cout << c_pos.y << std::endl;
 		update();
 	}
+	//Move camera down
 	if (key == GLFW_KEY_DOWN && action == GLFW_PRESS) {
 		--c_pos.y;
 		std::cout << c_pos.y << std::endl;
 		update();
 	}
+	//Reset camera position
 	if (key == GLFW_KEY_HOME && action == GLFW_PRESS) {
 		c_pos = glm::vec3(0.0f, 0.0f, 15.0f);
 		update();
@@ -167,76 +172,92 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	//	std::cout << zoom << std::endl;
 	//	update_view();
 	//}
+	//Scale horse up
 	if (key == GLFW_KEY_U && action == GLFW_PRESS) {
 		horseScale.x += 0.2;
 		horseScale.y += 0.1;
 		horseScale.z += 0.1;
 	}
+	//Scale horse down
 	if (key == GLFW_KEY_J && action == GLFW_PRESS) {
 		horseScale.x -= 0.2;
 		horseScale.y -= 0.1;
 		horseScale.z -= 0.1;
 	}
+	//Move horse down
 	if (key == GLFW_KEY_W && action == GLFW_PRESS) {
 		if (mode == GLFW_MOD_SHIFT) {
 			++horseTranslation.y;
 		}
+		//Rotate horse upwards on z axis
 		else {
 			horseRotation = glm::vec3(0.0f, 0.0f, 1.0f);
 			horseRotateAngle += glm::radians(-5.0f);
 		}
 	}
+	//Move horse left
 	if (key == GLFW_KEY_A && action == GLFW_PRESS) {
 		if (mode == GLFW_MOD_SHIFT) {
 			--horseTranslation.x;
 		}
+		//Rotate horse left on y axis
 		else {
 			horseRotation = glm::vec3(0.0f, 1.0f, 0.0f);
 			horseRotateAngle += glm::radians(-5.0f);
 		}
 	}
+	//Move horse down
 	if (key == GLFW_KEY_S && action == GLFW_PRESS) {
 		if (mode == GLFW_MOD_SHIFT) {
 			--horseTranslation.y;
 		}
+		//Rotate horse downwards on z axis
 		else {
 			horseRotation = glm::vec3(0.0f, 0.0f, 1.0f);
 			horseRotateAngle += glm::radians(5.0f);
 		}
 	}
+	//Move horse right
 	if (key == GLFW_KEY_D && action == GLFW_PRESS) {
 		if (mode == GLFW_MOD_SHIFT) {
 			++horseTranslation.x;
 		}
+		//Rotate horse right on y axis
 		else {
 			horseRotation = glm::vec3(0.0f, 1.0f, 0.0f);
 			horseRotateAngle += glm::radians(5.0f);
 		}
 	}
+	//Re-position horse to a random position on grid
 	if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) {
 		float randX = rand() % 100;
 		float randZ = rand() % 100;
 		horseTranslation = glm::vec3(randX, 0.0f, randZ);
 		std::cout << horseTranslation.x << " " << horseTranslation.y << " " << horseTranslation.z << std::endl;
 	}
+	//Change render mode to points
 	if (key == GLFW_KEY_P && action == GLFW_PRESS) {
 		renderMode = GL_POINTS;
 	}
+	//Change render mode to lines
 	if (key == GLFW_KEY_L && action == GLFW_PRESS) {
 		renderMode = GL_LINES;
 	}
+	//Change render mode to triangles
 	if (key == GLFW_KEY_T && action == GLFW_PRESS) {
 		renderMode = GL_TRIANGLES;
 	}
 }
 
+//Function to draw the horse
 void drawHorse(GLuint shaderProgram, GLenum mode) {
-	//Model Matrix
+	//Initial values
 	float colValues[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
 	glm::mat4 scale;
 	glm::mat4 translate;
 	glm::mat4 rotate;
 
+	//Transformation stack
 	std::stack<glm::mat4> transformations;
 
 	////TORSO
@@ -413,6 +434,7 @@ void drawHorse(GLuint shaderProgram, GLenum mode) {
 	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(tail));
 }
 
+//Function to draw the axes
 void drawAxes(GLuint shaderProgram) {
 	float groundAxisColValues[4] = { 1.0, 1.0, 1.0, 1.0 };
 	GLuint transformLoc2 = glGetUniformLocation(shaderProgram, "model_matrix");
@@ -450,7 +472,7 @@ int init() {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+	glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
 
 	// Create a GLFWwindow object that we can use for GLFW's functions
 	window = glfwCreateWindow(WIDTH, HEIGHT, "Horse", nullptr, nullptr);
@@ -489,6 +511,7 @@ int main()
 	GLuint shaderProgram = loadShaders("vertex.shader", "fragment.shader");
 	glUseProgram(shaderProgram);
 
+	//Horse vertices
 	GLfloat horseVertices[] = {
 		-1.0f,-1.0f,-1.0f, // Cube begin
 		-1.0f,-1.0f, 1.0f,
@@ -528,6 +551,7 @@ int main()
 		1.0f,-1.0f, 1.0f //Cube end
 	};
 
+	//Ground vertices
 	GLfloat vertices2[] = {
 		100.0f, 0.0f, 100.0f,
 		100.0f, 0.0f, -100.0f,
@@ -535,13 +559,14 @@ int main()
 		-100.0f, 0.0f, 100.0f
 	};
 
+	//Axes vertices
 	GLfloat axis[] = {
 		0.0f, 0.0f, 0.0f,
-		5.0f, 0.0f, 0.0f,
+		5.0f, 0.0f, 0.0f, //X-Axis
 		0.0f, 0.0f, 0.0f,
-		0.0f, 5.0f, 0.0f,
+		0.0f, 5.0f, 0.0f, //Y-Axis
 		0.0f, 0.0f, 0.0f,
-		0.0f, 0.0f, 5.0f
+		0.0f, 0.0f, 5.0f //Z-Axis
 	};
 
 	GLuint VAO[3];
