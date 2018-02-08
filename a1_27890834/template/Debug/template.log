@@ -1,12 +1,16 @@
 ﻿  horse.cpp
-c:\users\nicole\documents\comp371\a1_27890834\template\horse.cpp(171): warning C4305: '+=': truncation from 'double' to 'float'
-c:\users\nicole\documents\comp371\a1_27890834\template\horse.cpp(172): warning C4305: '+=': truncation from 'double' to 'float'
-c:\users\nicole\documents\comp371\a1_27890834\template\horse.cpp(173): warning C4305: '+=': truncation from 'double' to 'float'
-c:\users\nicole\documents\comp371\a1_27890834\template\horse.cpp(176): warning C4305: '-=': truncation from 'double' to 'float'
-c:\users\nicole\documents\comp371\a1_27890834\template\horse.cpp(177): warning C4305: '-=': truncation from 'double' to 'float'
-c:\users\nicole\documents\comp371\a1_27890834\template\horse.cpp(178): warning C4305: '-=': truncation from 'double' to 'float'
-c:\users\nicole\documents\comp371\a1_27890834\template\horse.cpp(217): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-c:\users\nicole\documents\comp371\a1_27890834\template\horse.cpp(218): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+c:\users\nicole\documents\comp371\a1_27890834\template\horse.cpp(184): warning C4305: '+=': truncation from 'double' to 'float'
+c:\users\nicole\documents\comp371\a1_27890834\template\horse.cpp(185): warning C4305: '+=': truncation from 'double' to 'float'
+c:\users\nicole\documents\comp371\a1_27890834\template\horse.cpp(186): warning C4305: '+=': truncation from 'double' to 'float'
+c:\users\nicole\documents\comp371\a1_27890834\template\horse.cpp(190): warning C4305: '-=': truncation from 'double' to 'float'
+c:\users\nicole\documents\comp371\a1_27890834\template\horse.cpp(191): warning C4305: '-=': truncation from 'double' to 'float'
+c:\users\nicole\documents\comp371\a1_27890834\template\horse.cpp(192): warning C4305: '-=': truncation from 'double' to 'float'
+c:\users\nicole\documents\comp371\a1_27890834\template\horse.cpp(240): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+c:\users\nicole\documents\comp371\a1_27890834\template\horse.cpp(241): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+c:\users\nicole\documents\comp371\a1_27890834\template\horse.cpp(601): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+c:\users\nicole\documents\comp371\a1_27890834\template\horse.cpp(605): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\nicole\documents\comp371\a1_27890834\template\horse.cpp(612): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+c:\users\nicole\documents\comp371\a1_27890834\template\horse.cpp(615): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
   template.vcxproj -> C:\Users\nicole\Documents\COMP371\a1_27890834\Debug\a1_27890834.exe
   template.vcxproj -> C:\Users\nicole\Documents\COMP371\a1_27890834\Debug\a1_27890834.pdb (Partial PDB)
   0 File(s) copied

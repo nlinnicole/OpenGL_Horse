@@ -30,7 +30,12 @@ glm::vec3 c_eye = glm::normalize(glm::vec3(0.0f, 0.0f, -15.0f));
 glm::vec3 c_up = glm::vec3(0.0f, 1.0f, 0.0f);
 glm::mat4 viewMatrix;
 glm::mat4 projectionMatrix;
+
+float horizontalAngle = 3.14f;
+float verticalAngle = 0.0f;
 float zoom = 45.0f;
+float speed = 3.0f;
+float mouseSpeed = 0.0005f;
 
 //Global horse variables
 glm::vec3 horseScale = glm::vec3(2.0f, 1.0f, 1.0f);
@@ -40,8 +45,16 @@ float horseRotateAngle = 0.0f;
 
 GLenum renderMode = GL_TRIANGLES;
 
-int xPos;
-int yPos;
+void mouseInput() {
+	double xPos;
+	double yPos;
+	glfwGetCursorPos(window, &xPos, &yPos);
+	horizontalAngle += mouseSpeed * float(WIDTH / 2 - xPos);
+	verticalAngle += mouseSpeed * float(HEIGHT / 2 - xPos);
+	glm::vec3 direction = glm::vec3(cos(verticalAngle)*sin(horizontalAngle), sin(verticalAngle), cos(verticalAngle)*cos(horizontalAngle));
+	glm::vec3 right = glm::vec3(sin(horizontalAngle - 3.14f / 2.0f), 0, cos(horizontalAngle - 3.14f / 2.0f));
+	glm::vec3 up = glm::cross(right, direction);
+}
 
 //Shader loading
 GLuint loadShaders(std::string vertex_shader_path, std::string fragment_shader_path) {
@@ -166,12 +179,6 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		c_pos = glm::vec3(0.0f, 0.0f, 15.0f);
 		update();
 	}
-	//if (key == GLFW_KEY_U && action == GLFW_PRESS) {
-	//	std::cout << zoom << std::endl;
-	//	zoom += 2;
-	//	std::cout << zoom << std::endl;
-	//	update_view();
-	//}
 	//Scale horse up
 	if (key == GLFW_KEY_U && action == GLFW_PRESS) {
 		horseScale.x += 0.2;
@@ -249,20 +256,38 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	}
 }
 
+void mouse_button_callback(GLFWwindow* window, int button, int action, int mods) {
+	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
+		zoom +=	 0.5;
+		update();
+	}
+	/*if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS) {
+		zoom -= 0.5;
+		update();
+	}*/
+	if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS) {
+
+	}
+}
+
 //Function to draw the horse
-void drawHorse(GLuint shaderProgram, GLenum mode) {
+void drawHorse(GLuint shaderProgram, GLenum mode, GLuint VAO) {
 	//Initial values
 	float colValues[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
 	glm::mat4 scale;
 	glm::mat4 translate;
 	glm::mat4 rotate;
 
+	GLuint transformLoc = glGetUniformLocation(shaderProgram, "model_matrix");
+	GLuint colorLoc = glGetUniformLocation(shaderProgram, "color");
+
 	//Transformation stack
 	std::stack<glm::mat4> transformations;
 
+	glBindVertexArray(VAO);
+
 	////TORSO
 	glDrawArrays(mode, 0, 12 * 3);
-
 	glm::mat4 torso;
 	scale = glm::scale(torso, horseScale);
 	rotate = glm::rotate(torso, horseRotateAngle, horseRotation);
@@ -272,14 +297,11 @@ void drawHorse(GLuint shaderProgram, GLenum mode) {
 	colValues[0] = 0.275f;
 	colValues[1] = 0.510f;
 	colValues[2] = 0.706f;
-	GLuint transformLoc = glGetUniformLocation(shaderProgram, "model_matrix");
-	GLuint colorLoc = glGetUniformLocation(shaderProgram, "color");
+
 	glProgramUniform4fv(shaderProgram, colorLoc, 1, colValues);
 	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(torso));
-
 	//NECK
 	glDrawArrays(mode, 0, 12 * 3);
-
 	glm::mat4 neck;
 	scale = glm::scale(neck, glm::vec3(0.5f, 0.5f, 0.5f));
 	rotate = glm::rotate(neck, glm::radians(-25.0f), glm::vec3(0.0f, 0.0f, 1.0f));
@@ -294,7 +316,6 @@ void drawHorse(GLuint shaderProgram, GLenum mode) {
 
 	//HEAD
 	glDrawArrays(mode, 0, 12 * 3);
-
 	glm::mat4 head;
 	scale = glm::scale(head, glm::vec3(0.5f, 0.8f, 0.8f));
 	rotate = glm::rotate(head, glm::radians(160.0f), glm::vec3(0.0f, 0.0f, 1.0f));
@@ -308,7 +329,6 @@ void drawHorse(GLuint shaderProgram, GLenum mode) {
 
 	//UPPER ARM L
 	glDrawArrays(mode, 0, 12 * 3);
-
 	transformations.pop(); //pop neck from transformations
 	glm::mat4 upperArmL;
 	scale = glm::scale(upperArmL, glm::vec3(0.15f, 0.9f, 0.15f));
@@ -323,7 +343,6 @@ void drawHorse(GLuint shaderProgram, GLenum mode) {
 
 	//LOWER ARM L
 	glDrawArrays(mode, 0, 12 * 3);
-
 	glm::mat4 lowerArmL;
 	scale = glm::scale(lowerArmL, glm::vec3(1.2f, 1.0f, 1.2f));
 	translate = glm::translate(lowerArmL, glm::vec3(0.0f, -2.0f, 0.0f));
@@ -336,7 +355,6 @@ void drawHorse(GLuint shaderProgram, GLenum mode) {
 
 	//UPPER ARM R
 	glDrawArrays(mode, 0, 12 * 3);
-
 	transformations.pop(); //pop UpperArmL
 	glm::mat4 upperArmR;
 	scale = glm::scale(upperArmR, glm::vec3(0.15f, 0.9f, 0.15f));
@@ -351,7 +369,6 @@ void drawHorse(GLuint shaderProgram, GLenum mode) {
 
 	//LOWER ARM R
 	glDrawArrays(mode, 0, 12 * 3);
-
 	glm::mat4 lowerArmR;
 	scale = glm::scale(lowerArmR, glm::vec3(1.2f, 1.0f, 1.2f));
 	translate = glm::translate(lowerArmR, glm::vec3(0.0f, -2.0f, 0.0f));
@@ -364,7 +381,6 @@ void drawHorse(GLuint shaderProgram, GLenum mode) {
 
 	//UPPER LEG L
 	glDrawArrays(mode, 0, 12 * 3);
-
 	transformations.pop(); //pop UpperArmR
 	glm::mat4 upperLegL;
 	scale = glm::scale(upperLegL, glm::vec3(0.15f, 0.9f, 0.15f));
@@ -379,7 +395,6 @@ void drawHorse(GLuint shaderProgram, GLenum mode) {
 
 	//LOWER LEG L
 	glDrawArrays(mode, 0, 12 * 3);
-
 	glm::mat4 lowerLegL;
 	scale = glm::scale(lowerLegL, glm::vec3(1.2f, 1.0f, 1.2f));
 	translate = glm::translate(lowerLegL, glm::vec3(0.0f, -2.0f, 0.0f));
@@ -392,7 +407,6 @@ void drawHorse(GLuint shaderProgram, GLenum mode) {
 
 	//UPPER LEG R
 	glDrawArrays(mode, 0, 12 * 3);
-
 	transformations.pop(); //pop UpperLegL
 	glm::mat4 upperLegR;
 	scale = glm::scale(upperLegR, glm::vec3(0.15f, 0.9f, 0.15f));
@@ -407,7 +421,6 @@ void drawHorse(GLuint shaderProgram, GLenum mode) {
 
 	//LOWER LEG R
 	glDrawArrays(mode, 0, 12 * 3);
-
 	glm::mat4 lowerLegR;
 	scale = glm::scale(lowerLegR, glm::vec3(1.2f, 1.0f, 1.2f));
 	translate = glm::translate(lowerLegR, glm::vec3(0.0f, -2.0f, 0.0f));
@@ -419,23 +432,26 @@ void drawHorse(GLuint shaderProgram, GLenum mode) {
 	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(lowerLegR));
 
 	//TAIL
-	glDrawArrays(mode, 0, 12 * 3);
+	//glDrawArrays(mode, 0, 12 * 3);
+	//transformations.pop(); //pop UpperLegR
+	//glm::mat4 tail;
+	//scale = glm::scale(tail, glm::vec3(0.5f, 0.3f, 0.3f));
+	//rotate = glm::rotate(tail, glm::radians(10.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+	//translate = glm::translate(tail, glm::vec3(3.0f, 1.5f, 0.0f));
+	//tail *= transformations.top() * scale * rotate * translate;
+	//colValues[0] = 0.118f;
+	//colValues[1] = 0.565f;
+	//colValues[2] = 1.000f;
+	//glProgramUniform4fv(shaderProgram, colorLoc, 1, colValues);
+	//glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(tail));
 
-	transformations.pop(); //pop UpperLegR
-	glm::mat4 tail;
-	scale = glm::scale(tail, glm::vec3(0.5f, 0.3f, 0.3f));
-	rotate = glm::rotate(tail, glm::radians(10.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-	translate = glm::translate(tail, glm::vec3(3.0f, 1.5f, 0.0f));
-	tail *= transformations.top() * scale * rotate * translate;
-	colValues[0] = 0.118f;
-	colValues[1] = 0.565f;
-	colValues[2] = 1.000f;
-	glProgramUniform4fv(shaderProgram, colorLoc, 1, colValues);
-	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(tail));
+	glBindVertexArray(0);
 }
 
 //Function to draw the axes
-void drawAxes(GLuint shaderProgram) {
+void drawAxes(GLuint shaderProgram, GLuint VAO) {
+	glBindVertexArray(VAO);
+
 	float groundAxisColValues[4] = { 1.0, 1.0, 1.0, 1.0 };
 	GLuint transformLoc2 = glGetUniformLocation(shaderProgram, "model_matrix");
 	GLuint colorLoc2 = glGetUniformLocation(shaderProgram, "color");
@@ -463,6 +479,23 @@ void drawAxes(GLuint shaderProgram) {
 	groundAxisColValues[2] = 0.0f;
 	glProgramUniform4fv(shaderProgram, colorLoc2, 1, groundAxisColValues);
 	glUniformMatrix4fv(transformLoc2, 1, GL_FALSE, glm::value_ptr(zAxis));
+
+	glBindVertexArray(0);
+}
+
+void drawGround(GLuint shaderProgram, GLuint VAO) {
+	glBindVertexArray(VAO);
+
+	float groundColValues[4] = { 1.0, 1.0, 1.0, 1.0 };
+	GLuint transformLoc3 = glGetUniformLocation(shaderProgram, "model_matrix");
+	GLuint colorLoc3 = glGetUniformLocation(shaderProgram, "color");
+
+	glm::mat4 ground;
+
+	glDrawArrays(GL_LINES, 0, 800);
+	glProgramUniform4fv(shaderProgram, colorLoc3, 1, groundColValues);
+	glUniformMatrix4fv(transformLoc3, 1, GL_FALSE, glm::value_ptr(ground));
+
 	glBindVertexArray(0);
 }
 
@@ -484,6 +517,7 @@ int init() {
 	}
 
 	glfwSetKeyCallback(window, key_callback);
+	glfwSetMouseButtonCallback(window, mouse_button_callback);
 	glfwMakeContextCurrent(window);
 	glewExperimental = GL_TRUE;
 
@@ -551,14 +585,6 @@ int main()
 		1.0f,-1.0f, 1.0f //Cube end
 	};
 
-	//Ground vertices
-	GLfloat vertices2[] = {
-		100.0f, 0.0f, 100.0f,
-		100.0f, 0.0f, -100.0f,
-		-100.0f, 0.0f, -100.0f,
-		-100.0f, 0.0f, 100.0f
-	};
-
 	//Axes vertices
 	GLfloat axis[] = {
 		0.0f, 0.0f, 0.0f,
@@ -569,10 +595,30 @@ int main()
 		0.0f, 0.0f, 5.0f //Z-Axis
 	};
 
-	GLuint VAO[3];
+	//Grid vertices
+	std::vector<glm::vec3> ground;
+	for (int i = -100; i < 100; ++i) {
+		float x = i;
+		float y = 0;
+		float z = 100;
+		ground.push_back(glm::vec3(x, y, z));
+		x = i;
+		z = -100;
+		ground.push_back(glm::vec3(x, y, z));
+	}
+	for (int i = -100; i < 100; ++i) {
+		float x = 100;
+		float y = 0;
+		float z = i;
+		ground.push_back(glm::vec3(x, y, z));
+		x = -100;
+		z = i;
+		ground.push_back(glm::vec3(x, y, z));
+	}
 
-	glGenVertexArrays(1, &VAO[0]);
-	glBindVertexArray(VAO[0]);
+	GLuint horseVAO;
+	glGenVertexArrays(1, &horseVAO);
+	glBindVertexArray(horseVAO);
 	GLuint horseVBO;
 	glGenBuffers(1, &horseVBO);
 	glBindBuffer(GL_ARRAY_BUFFER, horseVBO);
@@ -582,20 +628,9 @@ int main()
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 
-	glGenVertexArrays(1, &VAO[1]);
-	glBindVertexArray(VAO[1]);
-	GLuint groundVBO;
-	glGenBuffers(1, &groundVBO);
-	glBindBuffer(GL_ARRAY_BUFFER, groundVBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices2), vertices2, GL_STATIC_DRAW);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
-	glEnableVertexAttribArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0); 
-	glBindVertexArray(0);
-
-	glGenVertexArrays(1, &VAO[2]);
-	glBindVertexArray(VAO[2]);
-
+	GLuint axisVAO;
+	glGenVertexArrays(1, &axisVAO);
+	glBindVertexArray(axisVAO);
 	GLuint axisVBO;
 	glGenBuffers(1, &axisVBO);
 	glBindBuffer(GL_ARRAY_BUFFER, axisVBO);
@@ -604,6 +639,16 @@ int main()
 	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
+
+	GLuint groundVAO;
+	glGenVertexArrays(1, &groundVAO);
+	glBindVertexArray(groundVAO);
+	GLuint groundVBO;
+	glGenBuffers(1, &groundVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, groundVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3)*ground.size(), &ground[0], GL_STATIC_DRAW);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	glEnableVertexAttribArray(0);
 
 	//View Matrix
 	viewMatrix = glm::lookAt(c_pos, c_pos + c_eye, c_up);
@@ -626,26 +671,14 @@ int main()
 		glUniformMatrix4fv(viewMatrixLoc, 1, GL_FALSE, glm::value_ptr(viewMatrix));
 		glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
 
-		//HORSE
-		glBindVertexArray(VAO[0]);
-		drawHorse(shaderProgram, renderMode);
-		glBindVertexArray(0);
-
 		//GROUND
-		/*glBindVertexArray(VAO[1]);
-		glDrawArrays(GL_TRIANGLES, 0, 4);
-		glm::mat4 ground;
-		GLuint transformLoc2 = glGetUniformLocation(shaderProgram, "model_matrix");
-		GLuint colorLoc2 = glGetUniformLocation(shaderProgram, "color");
-		glProgramUniform4fv(shaderProgram, colorLoc2, 1, colValues2);
-		glUniformMatrix4fv(transformLoc2, 1, GL_FALSE, glm::value_ptr(ground));
-		glBindVertexArray(0);*/
+		drawGround(shaderProgram, groundVAO);
 
 		//AXIS
-		glBindVertexArray(VAO[2]);
-		drawAxes(shaderProgram);
-		glBindVertexArray(0);
+		drawAxes(shaderProgram, axisVAO);
 
+		//HORSE
+		drawHorse(shaderProgram, renderMode, horseVAO);
 	}
 
 	// Terminate GLFW, clearing any resources allocated by GLFW.
