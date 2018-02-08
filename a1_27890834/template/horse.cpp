@@ -1,5 +1,5 @@
-//Lab 1
-//modified from http://learnopengl.com/
+//Nicole Lin 27890834
+//COMP 371 Assignment 1
 
 #include "stdafx.h"
 
@@ -16,13 +16,14 @@
 #include <stack>
 #include <vector>
 
-
 using namespace std;
 
 // Window dimensions
 const GLuint WIDTH = 800;
 const GLuint HEIGHT = 800;
 GLFWwindow* window;
+float windowWidth;
+float windowHeight;
 
 //Gobal view variables
 glm::vec3 c_pos = glm::vec3(0.0f, 3.0f, 15.0f);
@@ -31,9 +32,19 @@ glm::vec3 c_up = glm::vec3(0.0f, 1.0f, 0.0f);
 glm::mat4 viewMatrix;
 glm::mat4 projectionMatrix;
 
+float zoom = 45.0f;
+
+bool firstMouse = true;
+float yaw = -90.0f;
+float pitch = 0.0f;
+float lastX = (float)WIDTH / 2.0;
+float lastY = (float)HEIGHT / 2.0;
+
+float deltaTime = 0.0f;
+float lastFrame = 0.0f;
+
 float horizontalAngle = 3.14f;
 float verticalAngle = 0.0f;
-float zoom = 45.0f;
 float speed = 3.0f;
 float mouseSpeed = 0.0005f;
 
@@ -44,17 +55,6 @@ glm::vec3 horseTranslation = glm::vec3(0.0f, 4.0f, 0.0f);
 float horseRotateAngle = 0.0f;
 
 GLenum renderMode = GL_TRIANGLES;
-
-void mouseInput() {
-	double xPos;
-	double yPos;
-	glfwGetCursorPos(window, &xPos, &yPos);
-	horizontalAngle += mouseSpeed * float(WIDTH / 2 - xPos);
-	verticalAngle += mouseSpeed * float(HEIGHT / 2 - xPos);
-	glm::vec3 direction = glm::vec3(cos(verticalAngle)*sin(horizontalAngle), sin(verticalAngle), cos(verticalAngle)*cos(horizontalAngle));
-	glm::vec3 right = glm::vec3(sin(horizontalAngle - 3.14f / 2.0f), 0, cos(horizontalAngle - 3.14f / 2.0f));
-	glm::vec3 up = glm::cross(right, direction);
-}
 
 //Shader loading
 GLuint loadShaders(std::string vertex_shader_path, std::string fragment_shader_path) {
@@ -256,18 +256,50 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	}
 }
 
-void mouse_button_callback(GLFWwindow* window, int button, int action, int mods) {
-	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
-		zoom +=	 0.5;
-		update();
+void mouse_callback(GLFWwindow* window, double xpos, double ypos){
+	if (firstMouse) {
+		lastX = xpos;
+		lastY = ypos;
+		firstMouse = false;
 	}
-	/*if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS) {
-		zoom -= 0.5;
-		update();
-	}*/
-	if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS) {
+	float xoffset = xpos - lastX;
+	float yoffset = lastY - ypos;
+	lastX = xpos;
+	lastY = ypos;
+	float sensitivity = 0.1f;
 
+	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
+		//if (zoom >= 1.0f && zoom <= 45.0f)
+		if (zoom >= 100.0f)
+				zoom -= yoffset * deltaTime * sensitivity;
+		if (zoom <= 100.0f)
+			zoom += yoffset * deltaTime * sensitivity;
+		update();
 	}
+	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_MIDDLE) == GLFW_PRESS) {
+		horizontalAngle += xoffset * deltaTime * sensitivity;
+		verticalAngle += yoffset * deltaTime * sensitivity;
+		if (verticalAngle > 89.0f)
+			verticalAngle = 89.0f;
+		if (verticalAngle < -89.0f)
+			verticalAngle = -89.0f;
+		c_eye = glm::vec3(cos(verticalAngle)*sin(horizontalAngle), sin(verticalAngle), cos(verticalAngle)*cos(horizontalAngle));
+		glm::vec3 right = glm::vec3(sin(horizontalAngle - 3.14f / 2.0f), 0, cos(horizontalAngle - 3.14f / 2.0f));
+		c_up = glm::cross(right, c_eye);;
+		update();
+	}
+	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS) {
+		if (c_pos.x >= 100.0f) 
+			c_pos.x -= xoffset * deltaTime * sensitivity;
+		if (c_pos.x <= 100.0f)
+			c_pos.x += xoffset * deltaTime * sensitivity;
+		update();
+	}
+
+}
+
+void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
+	glViewport(0, 0, width, height);
 }
 
 //Function to draw the horse
@@ -517,9 +549,13 @@ int init() {
 	}
 
 	glfwSetKeyCallback(window, key_callback);
-	glfwSetMouseButtonCallback(window, mouse_button_callback);
+	glfwSetCursorPosCallback(window, mouse_callback);
+	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+	//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	glfwMakeContextCurrent(window);
+
 	glewExperimental = GL_TRUE;
+	glEnable(GL_CULL_FACE);
 
 	if (glewInit() != 0) {
 		std::cout << "Failed to initialize GLEW" << std::endl;
@@ -536,11 +572,6 @@ int main()
 		std::cout << "Failed to initialize program" << std::endl;
 		return -1;
 	}
-	// Define the viewport dimensions
-	int width, height;
-	glfwGetFramebufferSize(window, &width, &height);
-
-	glViewport(0, 0, width, height);
 
 	GLuint shaderProgram = loadShaders("vertex.shader", "fragment.shader");
 	glUseProgram(shaderProgram);
@@ -655,7 +686,7 @@ int main()
 	GLuint viewMatrixLoc = glGetUniformLocation(shaderProgram, "view_matrix");
 
 	//Projection Matrix
-	projectionMatrix = glm::perspective(zoom, (GLfloat)width / (GLfloat)height, 0.0f, 100.0f);
+	projectionMatrix = glm::perspective(zoom, (float)WIDTH / HEIGHT, 0.0f, 100.0f);
 	GLuint projectionLoc = glGetUniformLocation(shaderProgram, "projection_matrix");
 
 	glClearColor(0.7f, 0.7f, 0.7f, 0.0f);
@@ -663,6 +694,10 @@ int main()
 	// Game loop
 	while (!glfwWindowShouldClose(window))
 	{
+		float currentFrame = glfwGetTime();
+		deltaTime = currentFrame - lastFrame;
+		lastFrame = currentFrame;
+
 		glfwPollEvents();
 		glfwSwapBuffers(window);
 		glClear(GL_COLOR_BUFFER_BIT);
