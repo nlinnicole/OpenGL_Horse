@@ -19,11 +19,11 @@
 using namespace std;
 
 // Window dimensions
-const GLuint WIDTH = 800;
-const GLuint HEIGHT = 800;
+//const GLfloat WIDTH = 800;
+//const GLfloat HEIGHT = 800;
 GLFWwindow* window;
-float windowWidth;
-float windowHeight;
+int windowWidth = 800;
+int windowHeight= 800;
 
 //Gobal view variables
 glm::vec3 c_pos = glm::vec3(0.0f, 3.0f, 15.0f);
@@ -37,8 +37,8 @@ float zoom = 45.0f;
 bool firstMouse = true;
 float yaw = -90.0f;
 float pitch = 0.0f;
-float lastX = (float)WIDTH / 2.0;
-float lastY = (float)HEIGHT / 2.0;
+float lastX = (float)windowWidth / 2.0;
+float lastY = (float)windowHeight / 2.0;
 
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
@@ -140,7 +140,8 @@ GLuint loadShaders(std::string vertex_shader_path, std::string fragment_shader_p
 // Update view
 void update() {
 	viewMatrix = glm::lookAt(c_pos, c_pos + c_eye, c_up);
-	projectionMatrix = glm::perspective(zoom, (GLfloat)WIDTH / (GLfloat)HEIGHT, 0.0f, 100.0f);
+	glfwGetWindowSize(window, &windowWidth, &windowHeight);
+	projectionMatrix = glm::perspective(zoom, (float)windowWidth / windowHeight, 0.0f, 100.0f);
 }
 
 // Is called whenever a key is pressed/released via GLFW
@@ -300,6 +301,53 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos){
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
 	glViewport(0, 0, width, height);
+	windowWidth = width;
+	windowHeight = height;
+	update();
+}
+
+void drawGround(GLuint shaderProgram, GLuint VAO) {
+	glBindVertexArray(VAO);
+
+	GLuint transformLoc3 = glGetUniformLocation(shaderProgram, "model_matrix");
+	GLuint colorLoc3 = glGetUniformLocation(shaderProgram, "color");
+	float groundColValues[4] = { 1.0, 1.0, 1.0, 1.0 };
+
+	glm::mat4 ground;
+
+	glDrawArrays(GL_LINES, 0, 800);
+	groundColValues[0] = 1.0f;
+	groundColValues[1] = 1.0f;
+	groundColValues[2] = 1.0f;
+	glProgramUniform4fv(shaderProgram, colorLoc3, 1, groundColValues);
+	glUniformMatrix4fv(transformLoc3, 1, GL_FALSE, glm::value_ptr(ground));
+	glBindVertexArray(0);
+}
+
+//Function to draw the axes
+void drawAxes(GLuint shaderProgram, GLuint VAO) {
+	glBindVertexArray(VAO);
+
+	GLuint transformLoc2 = glGetUniformLocation(shaderProgram, "model_matrix");
+	GLuint colorLoc2 = glGetUniformLocation(shaderProgram, "color");
+	float axisColValues[4] = { 1.0, 0.0, 0.0, 1.0 };
+
+	glDrawArrays(GL_LINES, 0, 2);
+	glm::mat4 xAxis;
+	glProgramUniform4fv(shaderProgram, colorLoc2, 1, axisColValues);
+	glUniformMatrix4fv(transformLoc2, 1, GL_FALSE, glm::value_ptr(xAxis));
+
+	glDrawArrays(GL_LINES, 2, 2);
+	glm::mat4 yAxis;
+	glProgramUniform4fv(shaderProgram, colorLoc2, 1, axisColValues);
+	glUniformMatrix4fv(transformLoc2, 1, GL_FALSE, glm::value_ptr(yAxis));
+
+	glDrawArrays(GL_LINES, 4, 2);
+	glm::mat4 zAxis;
+	glProgramUniform4fv(shaderProgram, colorLoc2, 1, axisColValues);
+	glUniformMatrix4fv(transformLoc2, 1, GL_FALSE, glm::value_ptr(zAxis));
+
+	glBindVertexArray(0);
 }
 
 //Function to draw the horse
@@ -480,57 +528,6 @@ void drawHorse(GLuint shaderProgram, GLenum mode, GLuint VAO) {
 	glBindVertexArray(0);
 }
 
-//Function to draw the axes
-void drawAxes(GLuint shaderProgram, GLuint VAO) {
-	glBindVertexArray(VAO);
-
-	float groundAxisColValues[4] = { 1.0, 1.0, 1.0, 1.0 };
-	GLuint transformLoc2 = glGetUniformLocation(shaderProgram, "model_matrix");
-	GLuint colorLoc2 = glGetUniformLocation(shaderProgram, "color");
-
-	glDrawArrays(GL_LINES, 0, 2);
-	glm::mat4 xAxis;
-	groundAxisColValues[0] = 0.0f;
-	groundAxisColValues[1] = 1.0f;
-	groundAxisColValues[2] = 0.0f;
-	glProgramUniform4fv(shaderProgram, colorLoc2, 1, groundAxisColValues);
-	glUniformMatrix4fv(transformLoc2, 1, GL_FALSE, glm::value_ptr(xAxis));
-
-	glDrawArrays(GL_LINES, 2, 2);
-	glm::mat4 yAxis;
-	groundAxisColValues[0] = 0.0f;
-	groundAxisColValues[1] = 0.0f;
-	groundAxisColValues[2] = 1.0f;
-	glProgramUniform4fv(shaderProgram, colorLoc2, 1, groundAxisColValues);
-	glUniformMatrix4fv(transformLoc2, 1, GL_FALSE, glm::value_ptr(yAxis));
-
-	glDrawArrays(GL_LINES, 4, 2);
-	glm::mat4 zAxis;
-	groundAxisColValues[0] = 1.0f;
-	groundAxisColValues[1] = 0.0f;
-	groundAxisColValues[2] = 0.0f;
-	glProgramUniform4fv(shaderProgram, colorLoc2, 1, groundAxisColValues);
-	glUniformMatrix4fv(transformLoc2, 1, GL_FALSE, glm::value_ptr(zAxis));
-
-	glBindVertexArray(0);
-}
-
-void drawGround(GLuint shaderProgram, GLuint VAO) {
-	glBindVertexArray(VAO);
-
-	float groundColValues[4] = { 1.0, 1.0, 1.0, 1.0 };
-	GLuint transformLoc3 = glGetUniformLocation(shaderProgram, "model_matrix");
-	GLuint colorLoc3 = glGetUniformLocation(shaderProgram, "color");
-
-	glm::mat4 ground;
-
-	glDrawArrays(GL_LINES, 0, 800);
-	glProgramUniform4fv(shaderProgram, colorLoc3, 1, groundColValues);
-	glUniformMatrix4fv(transformLoc3, 1, GL_FALSE, glm::value_ptr(ground));
-
-	glBindVertexArray(0);
-}
-
 int init() {
 	std::cout << "Starting GLFW context, OpenGL 3.3" << std::endl;
 	glfwInit();
@@ -540,7 +537,7 @@ int init() {
 	glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
 
 	// Create a GLFWwindow object that we can use for GLFW's functions
-	window = glfwCreateWindow(WIDTH, HEIGHT, "Horse", nullptr, nullptr);
+	window = glfwCreateWindow(windowWidth, windowHeight, "Horse", nullptr, nullptr);
 	if (window == nullptr)
 	{
 		std::cout << "Failed to create GLFW window" << std::endl;
@@ -686,7 +683,7 @@ int main()
 	GLuint viewMatrixLoc = glGetUniformLocation(shaderProgram, "view_matrix");
 
 	//Projection Matrix
-	projectionMatrix = glm::perspective(zoom, (float)WIDTH / HEIGHT, 0.0f, 100.0f);
+	projectionMatrix = glm::perspective(zoom, (float)windowWidth / windowHeight, 0.0f, 100.0f);
 	GLuint projectionLoc = glGetUniformLocation(shaderProgram, "projection_matrix");
 
 	glClearColor(0.7f, 0.7f, 0.7f, 0.0f);
