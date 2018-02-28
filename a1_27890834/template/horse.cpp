@@ -177,7 +177,13 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	}
 	//Reset camera position
 	if (key == GLFW_KEY_HOME && action == GLFW_PRESS) {
-		c_pos = glm::vec3(0.0f, 0.0f, 15.0f);
+		c_pos = glm::vec3(0.0f, 3.0f, 15.0f);
+		c_eye = glm::normalize(glm::vec3(0.0f, 0.0f, -15.0f));
+		c_up = glm::vec3(0.0f, 1.0f, 0.0f);
+		horseScale = glm::vec3(2.0f, 1.0f, 1.0f);
+		horseRotation = glm::vec3(0.0f, 0.0f, 1.0f);
+		horseTranslation = glm::vec3(0.0f, 4.0f, 0.0f);
+		horseRotateAngle = 0.0f;
 		update();
 	}
 	//Scale horse up
@@ -211,7 +217,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		//Rotate horse left on y axis
 		else {
 			horseRotation = glm::vec3(0.0f, 1.0f, 0.0f);
-			horseRotateAngle += glm::radians(-5.0f);
+			horseRotateAngle -= glm::radians(5.0f);
 		}
 	}
 	//Move horse down
@@ -238,8 +244,8 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	}
 	//Re-position horse to a random position on grid
 	if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) {
-		float randX = rand() % 100;
-		float randZ = rand() % 100;
+		float randX = rand() % 50;
+		float randZ = rand() % 50;
 		horseTranslation = glm::vec3(randX, 0.0f, randZ);
 		std::cout << horseTranslation.x << " " << horseTranslation.y << " " << horseTranslation.z << std::endl;
 	}
@@ -277,7 +283,7 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos){
 			zoom += yoffset * deltaTime * sensitivity;
 		update();
 	}
-	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_MIDDLE) == GLFW_PRESS) {
+	if ((glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_MIDDLE) || (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) && (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT)))) == GLFW_PRESS) {
 		horizontalAngle += xoffset * deltaTime * sensitivity;
 		verticalAngle += yoffset * deltaTime * sensitivity;
 		if (verticalAngle > 89.0f)
@@ -296,7 +302,6 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos){
 			c_pos.x += xoffset * deltaTime * sensitivity;
 		update();
 	}
-
 }
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
@@ -307,6 +312,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
 }
 
 void drawGround(GLuint shaderProgram, GLuint VAO) {
+	glBindVertexArray(0);
 	glBindVertexArray(VAO);
 
 	GLuint transformLoc3 = glGetUniformLocation(shaderProgram, "model_matrix");
@@ -314,38 +320,48 @@ void drawGround(GLuint shaderProgram, GLuint VAO) {
 	float groundColValues[4] = { 1.0, 1.0, 1.0, 1.0 };
 
 	glm::mat4 ground;
-
-	glDrawArrays(GL_LINES, 0, 800);
 	groundColValues[0] = 1.0f;
 	groundColValues[1] = 1.0f;
 	groundColValues[2] = 1.0f;
 	glProgramUniform4fv(shaderProgram, colorLoc3, 1, groundColValues);
 	glUniformMatrix4fv(transformLoc3, 1, GL_FALSE, glm::value_ptr(ground));
+	glDrawArrays(GL_LINES, 0, 800);
+
 	glBindVertexArray(0);
 }
 
 //Function to draw the axes
 void drawAxes(GLuint shaderProgram, GLuint VAO) {
+	glBindVertexArray(0);
 	glBindVertexArray(VAO);
 
 	GLuint transformLoc2 = glGetUniformLocation(shaderProgram, "model_matrix");
 	GLuint colorLoc2 = glGetUniformLocation(shaderProgram, "color");
 	float axisColValues[4] = { 1.0, 0.0, 0.0, 1.0 };
 
-	glDrawArrays(GL_LINES, 0, 2);
 	glm::mat4 xAxis;
+	axisColValues[0] = 1.0;
+	axisColValues[1] = 0.0;
+	axisColValues[2] = 0.0;
 	glProgramUniform4fv(shaderProgram, colorLoc2, 1, axisColValues);
 	glUniformMatrix4fv(transformLoc2, 1, GL_FALSE, glm::value_ptr(xAxis));
+	glDrawArrays(GL_LINES, 0, 2);
 
-	glDrawArrays(GL_LINES, 2, 2);
 	glm::mat4 yAxis;
+	axisColValues[0] = 0.0;
+	axisColValues[1] = 1.0;
+	axisColValues[2] = 0.0;
 	glProgramUniform4fv(shaderProgram, colorLoc2, 1, axisColValues);
 	glUniformMatrix4fv(transformLoc2, 1, GL_FALSE, glm::value_ptr(yAxis));
+	glDrawArrays(GL_LINES, 2, 2);
 
-	glDrawArrays(GL_LINES, 4, 2);
 	glm::mat4 zAxis;
+	axisColValues[0] = 0.0;
+	axisColValues[1] = 0.0;
+	axisColValues[2] = 1.0;
 	glProgramUniform4fv(shaderProgram, colorLoc2, 1, axisColValues);
 	glUniformMatrix4fv(transformLoc2, 1, GL_FALSE, glm::value_ptr(zAxis));
+	glDrawArrays(GL_LINES, 4, 2);
 
 	glBindVertexArray(0);
 }
@@ -364,10 +380,10 @@ void drawHorse(GLuint shaderProgram, GLenum mode, GLuint VAO) {
 	//Transformation stack
 	std::stack<glm::mat4> transformations;
 
+	glBindVertexArray(0);
 	glBindVertexArray(VAO);
 
 	////TORSO
-	glDrawArrays(mode, 0, 12 * 3);
 	glm::mat4 torso;
 	scale = glm::scale(torso, horseScale);
 	rotate = glm::rotate(torso, horseRotateAngle, horseRotation);
@@ -377,11 +393,11 @@ void drawHorse(GLuint shaderProgram, GLenum mode, GLuint VAO) {
 	colValues[0] = 0.275f;
 	colValues[1] = 0.510f;
 	colValues[2] = 0.706f;
-
 	glProgramUniform4fv(shaderProgram, colorLoc, 1, colValues);
 	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(torso));
-	//NECK
 	glDrawArrays(mode, 0, 12 * 3);
+
+	//NECK
 	glm::mat4 neck;
 	scale = glm::scale(neck, glm::vec3(0.5f, 0.5f, 0.5f));
 	rotate = glm::rotate(neck, glm::radians(-25.0f), glm::vec3(0.0f, 0.0f, 1.0f));
@@ -393,9 +409,9 @@ void drawHorse(GLuint shaderProgram, GLenum mode, GLuint VAO) {
 	colValues[2] = 0.922f;
 	glProgramUniform4fv(shaderProgram, colorLoc, 1, colValues);
 	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(neck));
+	glDrawArrays(mode, 0, 12 * 3);
 
 	//HEAD
-	glDrawArrays(mode, 0, 12 * 3);
 	glm::mat4 head;
 	scale = glm::scale(head, glm::vec3(0.5f, 0.8f, 0.8f));
 	rotate = glm::rotate(head, glm::radians(160.0f), glm::vec3(0.0f, 0.0f, 1.0f));
@@ -406,9 +422,9 @@ void drawHorse(GLuint shaderProgram, GLenum mode, GLuint VAO) {
 	colValues[2] = 0.902f;
 	glProgramUniform4fv(shaderProgram, colorLoc, 1, colValues);
 	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(head));
+	glDrawArrays(mode, 0, 12 * 3);
 
 	//UPPER ARM L
-	glDrawArrays(mode, 0, 12 * 3);
 	transformations.pop(); //pop neck from transformations
 	glm::mat4 upperArmL;
 	scale = glm::scale(upperArmL, glm::vec3(0.15f, 0.9f, 0.15f));
@@ -420,9 +436,9 @@ void drawHorse(GLuint shaderProgram, GLenum mode, GLuint VAO) {
 	colValues[2] = 0.871f;
 	glProgramUniform4fv(shaderProgram, colorLoc, 1, colValues);
 	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(upperArmL));
+	glDrawArrays(mode, 0, 12 * 3);
 
 	//LOWER ARM L
-	glDrawArrays(mode, 0, 12 * 3);
 	glm::mat4 lowerArmL;
 	scale = glm::scale(lowerArmL, glm::vec3(1.2f, 1.0f, 1.2f));
 	translate = glm::translate(lowerArmL, glm::vec3(0.0f, -2.0f, 0.0f));
@@ -432,9 +448,9 @@ void drawHorse(GLuint shaderProgram, GLenum mode, GLuint VAO) {
 	colValues[2] = 0.929f;
 	glProgramUniform4fv(shaderProgram, colorLoc, 1, colValues);
 	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(lowerArmL));
+	glDrawArrays(mode, 0, 12 * 3);
 
 	//UPPER ARM R
-	glDrawArrays(mode, 0, 12 * 3);
 	transformations.pop(); //pop UpperArmL
 	glm::mat4 upperArmR;
 	scale = glm::scale(upperArmR, glm::vec3(0.15f, 0.9f, 0.15f));
@@ -446,9 +462,9 @@ void drawHorse(GLuint shaderProgram, GLenum mode, GLuint VAO) {
 	colValues[2] = 0.871f;
 	glProgramUniform4fv(shaderProgram, colorLoc, 1, colValues);
 	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(upperArmR));
+	glDrawArrays(mode, 0, 12 * 3);
 
 	//LOWER ARM R
-	glDrawArrays(mode, 0, 12 * 3);
 	glm::mat4 lowerArmR;
 	scale = glm::scale(lowerArmR, glm::vec3(1.2f, 1.0f, 1.2f));
 	translate = glm::translate(lowerArmR, glm::vec3(0.0f, -2.0f, 0.0f));
@@ -458,9 +474,9 @@ void drawHorse(GLuint shaderProgram, GLenum mode, GLuint VAO) {
 	colValues[2] = 0.929f;
 	glProgramUniform4fv(shaderProgram, colorLoc, 1, colValues);
 	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(lowerArmR));
+	glDrawArrays(mode, 0, 12 * 3);
 
 	//UPPER LEG L
-	glDrawArrays(mode, 0, 12 * 3);
 	transformations.pop(); //pop UpperArmR
 	glm::mat4 upperLegL;
 	scale = glm::scale(upperLegL, glm::vec3(0.15f, 0.9f, 0.15f));
@@ -472,9 +488,9 @@ void drawHorse(GLuint shaderProgram, GLenum mode, GLuint VAO) {
 	colValues[2] = 0.871f;
 	glProgramUniform4fv(shaderProgram, colorLoc, 1, colValues);
 	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(upperLegL));
+	glDrawArrays(mode, 0, 12 * 3);
 
 	//LOWER LEG L
-	glDrawArrays(mode, 0, 12 * 3);
 	glm::mat4 lowerLegL;
 	scale = glm::scale(lowerLegL, glm::vec3(1.2f, 1.0f, 1.2f));
 	translate = glm::translate(lowerLegL, glm::vec3(0.0f, -2.0f, 0.0f));
@@ -484,9 +500,9 @@ void drawHorse(GLuint shaderProgram, GLenum mode, GLuint VAO) {
 	colValues[2] = 0.929f;
 	glProgramUniform4fv(shaderProgram, colorLoc, 1, colValues);
 	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(lowerLegL));
+	glDrawArrays(mode, 0, 12 * 3);
 
 	//UPPER LEG R
-	glDrawArrays(mode, 0, 12 * 3);
 	transformations.pop(); //pop UpperLegL
 	glm::mat4 upperLegR;
 	scale = glm::scale(upperLegR, glm::vec3(0.15f, 0.9f, 0.15f));
@@ -498,9 +514,9 @@ void drawHorse(GLuint shaderProgram, GLenum mode, GLuint VAO) {
 	colValues[2] = 0.871f;
 	glProgramUniform4fv(shaderProgram, colorLoc, 1, colValues);
 	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(upperLegR));
+	glDrawArrays(mode, 0, 12 * 3);
 
 	//LOWER LEG R
-	glDrawArrays(mode, 0, 12 * 3);
 	glm::mat4 lowerLegR;
 	scale = glm::scale(lowerLegR, glm::vec3(1.2f, 1.0f, 1.2f));
 	translate = glm::translate(lowerLegR, glm::vec3(0.0f, -2.0f, 0.0f));
@@ -510,6 +526,7 @@ void drawHorse(GLuint shaderProgram, GLenum mode, GLuint VAO) {
 	colValues[2] = 0.929f;
 	glProgramUniform4fv(shaderProgram, colorLoc, 1, colValues);
 	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(lowerLegR));
+	glDrawArrays(mode, 0, 12 * 3);
 
 	//TAIL
 	//glDrawArrays(mode, 0, 12 * 3);
@@ -558,7 +575,6 @@ int init() {
 		std::cout << "Failed to initialize GLEW" << std::endl;
 		return -1;
 	}
-
 	return 0;
 }
 
@@ -613,6 +629,18 @@ int main()
 		1.0f,-1.0f, 1.0f //Cube end
 	};
 
+	GLuint VAO[3];
+	glGenVertexArrays(1, &VAO[0]);
+	glBindVertexArray(VAO[0]);
+	GLuint horseVBO;
+	glGenBuffers(1, &horseVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, horseVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(horseVertices), horseVertices, GL_STATIC_DRAW);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+	glEnableVertexAttribArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
+
 	//Axes vertices
 	GLfloat axis[] = {
 		0.0f, 0.0f, 0.0f,
@@ -622,6 +650,17 @@ int main()
 		0.0f, 0.0f, 0.0f,
 		0.0f, 0.0f, 5.0f //Z-Axis
 	};
+
+	glGenVertexArrays(1, &VAO[1]);
+	glBindVertexArray(VAO[1]);
+	GLuint axisVBO;
+	glGenBuffers(1, &axisVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, axisVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(axis), axis, GL_STATIC_DRAW);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+	glEnableVertexAttribArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
 
 	//Grid vertices
 	std::vector<glm::vec3> ground;
@@ -644,39 +683,16 @@ int main()
 		ground.push_back(glm::vec3(x, y, z));
 	}
 
-	GLuint horseVAO;
-	glGenVertexArrays(1, &horseVAO);
-	glBindVertexArray(horseVAO);
-	GLuint horseVBO;
-	glGenBuffers(1, &horseVBO);
-	glBindBuffer(GL_ARRAY_BUFFER, horseVBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(horseVertices), horseVertices, GL_STATIC_DRAW);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
-	glEnableVertexAttribArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
-
-	GLuint axisVAO;
-	glGenVertexArrays(1, &axisVAO);
-	glBindVertexArray(axisVAO);
-	GLuint axisVBO;
-	glGenBuffers(1, &axisVBO);
-	glBindBuffer(GL_ARRAY_BUFFER, axisVBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(axis), axis, GL_STATIC_DRAW);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
-	glEnableVertexAttribArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
-
-	GLuint groundVAO;
-	glGenVertexArrays(1, &groundVAO);
-	glBindVertexArray(groundVAO);
+	glGenVertexArrays(1, &VAO[2]);
+	glBindVertexArray(VAO[2]);
 	GLuint groundVBO;
 	glGenBuffers(1, &groundVBO);
 	glBindBuffer(GL_ARRAY_BUFFER, groundVBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3)*ground.size(), &ground[0], GL_STATIC_DRAW);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
 	glEnableVertexAttribArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
 
 	//View Matrix
 	viewMatrix = glm::lookAt(c_pos, c_pos + c_eye, c_up);
@@ -696,7 +712,6 @@ int main()
 		lastFrame = currentFrame;
 
 		glfwPollEvents();
-		glfwSwapBuffers(window);
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		//Update View
@@ -704,13 +719,17 @@ int main()
 		glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
 
 		//GROUND
-		drawGround(shaderProgram, groundVAO);
+		drawGround(shaderProgram, VAO[2]);
 
 		//AXIS
-		drawAxes(shaderProgram, axisVAO);
+		drawAxes(shaderProgram, VAO[1]);
 
 		//HORSE
-		drawHorse(shaderProgram, renderMode, horseVAO);
+		drawHorse(shaderProgram, renderMode, VAO[0]);
+		
+
+		glfwSwapBuffers(window);
+
 	}
 
 	// Terminate GLFW, clearing any resources allocated by GLFW.
