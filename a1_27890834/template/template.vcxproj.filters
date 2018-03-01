@@ -7,6 +7,10 @@
     <ClCompile Include="horse.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="ShaderLoader.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -15,6 +19,10 @@
     <ClInclude Include="targetver.h">
       <Filter>Header</Filter>
     </ClInclude>
+    <ClInclude Include="ShaderLoader.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="fragment.shader">

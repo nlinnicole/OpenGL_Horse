@@ -8,6 +8,8 @@
 #include "glm.hpp"
 #include "gtc/matrix_transform.hpp"
 #include "gtc/type_ptr.hpp"
+#include "ShaderLoader.h"
+#include "Renderer.h"
 
 #include <stdio.h>
 #include <iostream>
@@ -55,87 +57,6 @@ glm::vec3 horseTranslation = glm::vec3(0.0f, 4.0f, 0.0f);
 float horseRotateAngle = 0.0f;
 
 GLenum renderMode = GL_TRIANGLES;
-
-//Shader loading
-GLuint loadShaders(std::string vertex_shader_path, std::string fragment_shader_path) {
-	// Read the Vertex Shader code from the file
-	string VertexShaderCode;
-	std::ifstream VertexShaderStream(vertex_shader_path, ios::in);
-
-	if (VertexShaderStream.is_open()) {
-		string Line = "";
-		while (getline(VertexShaderStream, Line))
-			VertexShaderCode += "\n" + Line;
-		VertexShaderStream.close();
-	}
-	else {
-		printf("Impossible to open %s. Are you in the right directory ?\n", vertex_shader_path.c_str());
-		getchar();
-		return -1;
-	}
-
-	// Read the Fragment Shader code from the file
-	std::string FragmentShaderCode;
-	std::ifstream FragmentShaderStream(fragment_shader_path, std::ios::in);
-
-	if (FragmentShaderStream.is_open()) {
-		std::string Line = "";
-		while (getline(FragmentShaderStream, Line))
-			FragmentShaderCode += "\n" + Line;
-		FragmentShaderStream.close();
-	}
-	else {
-		printf("Impossible to open %s. Are you in the right directory?\n", fragment_shader_path.c_str());
-		getchar();
-		return -1;
-	}
-
-	GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
-	char const * VertexSourcePointer = VertexShaderCode.c_str();
-	glShaderSource(vertexShader, 1, &VertexSourcePointer, NULL);
-	glCompileShader(vertexShader);
-	// Check for compile time errors
-	GLint success;
-	GLchar infoLog[512];
-	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-	if (!success)
-	{
-		glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-		std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
-		return -1;
-	}
-
-	// Fragment shader
-	GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-	char const * FragmentSourcePointer = FragmentShaderCode.c_str();
-	glShaderSource(fragmentShader, 1, &FragmentSourcePointer, NULL);
-	glCompileShader(fragmentShader);
-	// Check for compile time errors
-	glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
-	if (!success)
-	{
-		glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-		std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
-		return -1;
-	}
-	// Link shaders
-	GLuint shaderProgram = glCreateProgram();
-	glAttachShader(shaderProgram, vertexShader);
-	glAttachShader(shaderProgram, fragmentShader);
-	glLinkProgram(shaderProgram);
-
-	// Check for linking errors
-	glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-	if (!success) {
-		glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
-		std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
-		return -1;
-	}
-	glDeleteShader(vertexShader); //free up memory
-	glDeleteShader(fragmentShader);
-
-	return shaderProgram;
-}
 
 // Update view
 void update() {
@@ -529,19 +450,19 @@ void drawHorse(GLuint shaderProgram, GLenum mode, GLuint VAO) {
 	glDrawArrays(mode, 0, 12 * 3);
 
 	//TAIL
-	//glDrawArrays(mode, 0, 12 * 3);
-	//transformations.pop(); //pop UpperLegR
-	//glm::mat4 tail;
-	//scale = glm::scale(tail, glm::vec3(0.5f, 0.3f, 0.3f));
-	//rotate = glm::rotate(tail, glm::radians(10.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-	//translate = glm::translate(tail, glm::vec3(3.0f, 1.5f, 0.0f));
-	//tail *= transformations.top() * scale * rotate * translate;
-	//colValues[0] = 0.118f;
-	//colValues[1] = 0.565f;
-	//colValues[2] = 1.000f;
-	//glProgramUniform4fv(shaderProgram, colorLoc, 1, colValues);
-	//glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(tail));
-
+	transformations.pop(); //pop UpperLegR
+	glm::mat4 tail;
+	scale = glm::scale(tail, glm::vec3(0.5f, 0.3f, 0.3f));
+	rotate = glm::rotate(tail, glm::radians(10.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+	translate = glm::translate(tail, glm::vec3(3.0f, 1.5f, 0.0f));
+	tail *= transformations.top() * scale * rotate * translate;
+	colValues[0] = 0.118f;
+	colValues[1] = 0.565f;
+	colValues[2] = 1.000f;
+	glProgramUniform4fv(shaderProgram, colorLoc, 1, colValues);
+	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(tail));
+	glDrawArrays(mode, 0, 12 * 3);
+	
 	glBindVertexArray(0);
 }
 
@@ -586,7 +507,8 @@ int main()
 		return -1;
 	}
 
-	GLuint shaderProgram = loadShaders("vertex.shader", "fragment.shader");
+	ShaderLoader s;
+	GLuint shaderProgram = s.loadShaders("vertex.shader", "fragment.shader");
 	glUseProgram(shaderProgram);
 
 	//Horse vertices
@@ -640,6 +562,32 @@ int main()
 	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
+
+	//Horse Normals
+	/*std::vector<glm::vec3> normals;
+	for (int i = 0; i < sizeof(horseVertices); ++i) {
+		glm::vec3 a, b;
+		a.x = horseVertices[i];
+		a.y = horseVertices[i + 1];
+		a.y = horseVertices[i + 2];
+		b.x = horseVertices[i + 3];
+		b.y = horseVertices[i + 4];
+		b.y = horseVertices[i + 5];
+		glm::vec3 cross = glm::cross(a, b);
+		cross = glm::normalize(cross);
+		normals.push_back(cross);
+	}
+
+	glGenVertexArrays(1, &VAO[0]);
+	glBindVertexArray(VAO[0]);
+	GLuint normalVBO;
+	glGenBuffers(1, &normalVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, normalVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3)*normals.size(), &normals[0], GL_STATIC_DRAW);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	glEnableVertexAttribArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);*/
 
 	//Axes vertices
 	GLfloat axis[] = {
