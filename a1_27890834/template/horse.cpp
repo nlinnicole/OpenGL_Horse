@@ -232,25 +232,6 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
 	update();
 }
 
-void drawGround(GLuint shaderProgram, GLuint VAO) {
-	glBindVertexArray(0);
-	glBindVertexArray(VAO);
-
-	GLuint transformLoc3 = glGetUniformLocation(shaderProgram, "model_matrix");
-	GLuint colorLoc3 = glGetUniformLocation(shaderProgram, "color");
-	float groundColValues[4] = { 1.0, 1.0, 1.0, 1.0 };
-
-	glm::mat4 ground;
-	groundColValues[0] = 1.0f;
-	groundColValues[1] = 1.0f;
-	groundColValues[2] = 1.0f;
-	glProgramUniform4fv(shaderProgram, colorLoc3, 1, groundColValues);
-	glUniformMatrix4fv(transformLoc3, 1, GL_FALSE, glm::value_ptr(ground));
-	glDrawArrays(GL_LINES, 0, 800);
-
-	glBindVertexArray(0);
-}
-
 //Function to draw the axes
 void drawAxes(GLuint shaderProgram, GLuint VAO) {
 	glBindVertexArray(0);
@@ -650,6 +631,13 @@ int main()
 	projectionMatrix = glm::perspective(zoom, (float)windowWidth / windowHeight, 0.0f, 100.0f);
 	GLuint projectionLoc = glGetUniformLocation(shaderProgram, "projection_matrix");
 
+	//Initialize Renderer
+	GLuint transformLoc = glGetUniformLocation(shaderProgram, "model_matrix");
+	GLuint colorLoc = glGetUniformLocation(shaderProgram, "color");
+	Renderer r = Renderer(transformLoc, colorLoc, shaderProgram);
+	float colValues[4] = { 1.0, 1.0, 1.0, 1.0 };
+
+
 	glClearColor(0.7f, 0.7f, 0.7f, 0.0f);
 
 	// Game loop
@@ -667,7 +655,10 @@ int main()
 		glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
 
 		//GROUND
-		drawGround(shaderProgram, VAO[2]);
+		r.setVAO(VAO[2]);
+		glm::mat4 ground;
+		r.drawGround(colValues, ground);
+		r.setVAO(0);
 
 		//AXIS
 		drawAxes(shaderProgram, VAO[1]);

@@ -7,11 +7,10 @@ Renderer::Renderer()
 
 }
 
-Renderer::Renderer(GLuint tl, GLuint cl, GLuint v, GLuint sp)
+Renderer::Renderer(GLuint tl, GLuint cl, GLuint sp)
 {
 	transformLoc = tl;
 	colorLoc = cl;
-	VAO = v;
 	shaderProgram = sp;
 }
 
@@ -25,6 +24,11 @@ void Renderer::setTransformLoc(GLuint t) {
 
 void Renderer::setColorLoc(GLuint c) {
 	colorLoc = c;
+}
+
+void Renderer::setVAO(GLuint v) {
+	VAO = v;
+	glBindVertexArray(VAO);
 }
 
 void Renderer::setShaderProgram(GLuint sp) {

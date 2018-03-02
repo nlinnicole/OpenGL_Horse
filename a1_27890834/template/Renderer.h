@@ -9,12 +9,12 @@ class Renderer
 {
 public:
 	Renderer();
-	Renderer(GLuint transformLoc, GLuint colorLoc, GLuint VAO, GLuint shaderProgram);
+	Renderer(GLuint transformLoc, GLuint colorLoc, GLuint shaderProgram);
 	~Renderer();
 	
 	void setTransformLoc(GLuint t);
 	void setColorLoc(GLuint c);
-	void setVAO(GLuint V);
+	void setVAO(GLuint v);
 	void setShaderProgram(GLuint sP);
 	void setMode(GLenum m);
 
