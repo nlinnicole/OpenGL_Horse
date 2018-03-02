@@ -232,42 +232,6 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
 	update();
 }
 
-//Function to draw the axes
-void drawAxes(GLuint shaderProgram, GLuint VAO) {
-	glBindVertexArray(0);
-	glBindVertexArray(VAO);
-
-	GLuint transformLoc2 = glGetUniformLocation(shaderProgram, "model_matrix");
-	GLuint colorLoc2 = glGetUniformLocation(shaderProgram, "color");
-	float axisColValues[4] = { 1.0, 0.0, 0.0, 1.0 };
-
-	glm::mat4 xAxis;
-	axisColValues[0] = 1.0;
-	axisColValues[1] = 0.0;
-	axisColValues[2] = 0.0;
-	glProgramUniform4fv(shaderProgram, colorLoc2, 1, axisColValues);
-	glUniformMatrix4fv(transformLoc2, 1, GL_FALSE, glm::value_ptr(xAxis));
-	glDrawArrays(GL_LINES, 0, 2);
-
-	glm::mat4 yAxis;
-	axisColValues[0] = 0.0;
-	axisColValues[1] = 1.0;
-	axisColValues[2] = 0.0;
-	glProgramUniform4fv(shaderProgram, colorLoc2, 1, axisColValues);
-	glUniformMatrix4fv(transformLoc2, 1, GL_FALSE, glm::value_ptr(yAxis));
-	glDrawArrays(GL_LINES, 2, 2);
-
-	glm::mat4 zAxis;
-	axisColValues[0] = 0.0;
-	axisColValues[1] = 0.0;
-	axisColValues[2] = 1.0;
-	glProgramUniform4fv(shaderProgram, colorLoc2, 1, axisColValues);
-	glUniformMatrix4fv(transformLoc2, 1, GL_FALSE, glm::value_ptr(zAxis));
-	glDrawArrays(GL_LINES, 4, 2);
-
-	glBindVertexArray(0);
-}
-
 //Function to draw the horse
 void drawHorse(GLuint shaderProgram, GLenum mode, GLuint VAO) {
 	//Initial values
@@ -635,8 +599,19 @@ int main()
 	GLuint transformLoc = glGetUniformLocation(shaderProgram, "model_matrix");
 	GLuint colorLoc = glGetUniformLocation(shaderProgram, "color");
 	Renderer r = Renderer(transformLoc, colorLoc, shaderProgram);
+
+	//GROUND
 	float colValues[4] = { 1.0, 1.0, 1.0, 1.0 };
 
+	//AXIS
+	std::vector<glm::vec3> colors;
+
+	glm::vec3 red = glm::vec3(1.0f, 0.0f, 0.0f);
+	glm::vec3 green = glm::vec3(0.0f, 1.0f, 0.0f);
+	glm::vec3 blue = glm::vec3(0.0f, 0.0f, 1.0f);
+	colors.push_back(red);
+	colors.push_back(green);
+	colors.push_back(blue);
 
 	glClearColor(0.7f, 0.7f, 0.7f, 0.0f);
 
@@ -661,7 +636,12 @@ int main()
 		r.setVAO(0);
 
 		//AXIS
-		drawAxes(shaderProgram, VAO[1]);
+		r.setVAO(VAO[1]);
+		glm::mat4 axis;
+		r.drawAxis(colors[0], axis, 0);
+		r.drawAxis(colors[1], axis, 2);
+		r.drawAxis(colors[2], axis, 4);
+		r.setVAO(0);
 
 		//HORSE
 		drawHorse(shaderProgram, renderMode, VAO[0]);

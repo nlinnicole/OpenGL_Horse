@@ -67,9 +67,10 @@ void Renderer::drawGround(float colValues[4], glm::mat4 matrix) {
 	glDrawArrays(GL_LINES, 0, 800);
 };
 
-void Renderer::drawAxis(float colValues[4], glm::mat4 matrix, int n) {
+void Renderer::drawAxis(glm::vec3 colours, glm::mat4 matrix, int i) {
+	float colValues[4] = { colours.x, colours.y, colours.z , 1.0f};
 	glProgramUniform4fv(shaderProgram, colorLoc, 1, colValues);
 	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(matrix));
-	glDrawArrays(GL_LINES, n, 2);
+	glDrawArrays(GL_LINES, i, 2);
 	//put drawAxis in a for loop and increment n 
 };

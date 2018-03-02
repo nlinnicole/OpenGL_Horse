@@ -20,7 +20,7 @@ public:
 
 	void drawCube(float colValues[4], glm::mat4 matrix);
 	void drawGround(float colValues[4], glm::mat4 matrix);
-	void drawAxis(float colValues[4], glm::mat4 matrix, int n);
+	void drawAxis(glm::vec3 colours, glm::mat4 matrix, int i);
 	
 private:
 	GLuint transformLoc;
