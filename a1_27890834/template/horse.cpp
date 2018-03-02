@@ -10,6 +10,7 @@
 #include "gtc/type_ptr.hpp"
 #include "ShaderLoader.h"
 #include "Renderer.h"
+#include "BufferLoader.h"
 
 #include <stdio.h>
 #include <iostream>
@@ -457,135 +458,135 @@ int main()
 	glUseProgram(shaderProgram);
 
 	//Horse vertices
-	GLfloat horseVertices[] = {
-		-1.0f,-1.0f,-1.0f, // Cube begin
-		-1.0f,-1.0f, 1.0f,
-		-1.0f, 1.0f, 1.0f,
-		1.0f, 1.0f,-1.0f,
-		-1.0f,-1.0f,-1.0f,
-		-1.0f, 1.0f,-1.0f,
-		1.0f,-1.0f, 1.0f,
-		-1.0f,-1.0f,-1.0f,
-		1.0f,-1.0f,-1.0f,
-		1.0f, 1.0f,-1.0f,
-		1.0f,-1.0f,-1.0f,
-		-1.0f,-1.0f,-1.0f,
-		-1.0f,-1.0f,-1.0f,
-		-1.0f, 1.0f, 1.0f,
-		-1.0f, 1.0f,-1.0f,
-		1.0f,-1.0f, 1.0f,
-		-1.0f,-1.0f, 1.0f,
-		-1.0f,-1.0f,-1.0f,
-		-1.0f, 1.0f, 1.0f,
-		-1.0f,-1.0f, 1.0f,
-		1.0f,-1.0f, 1.0f,
-		1.0f, 1.0f, 1.0f,
-		1.0f,-1.0f,-1.0f,
-		1.0f, 1.0f,-1.0f,
-		1.0f,-1.0f,-1.0f,
-		1.0f, 1.0f, 1.0f,
-		1.0f,-1.0f, 1.0f,
-		1.0f, 1.0f, 1.0f,
-		1.0f, 1.0f,-1.0f,
-		-1.0f, 1.0f,-1.0f,
-		1.0f, 1.0f, 1.0f,
-		-1.0f, 1.0f,-1.0f,
-		-1.0f, 1.0f, 1.0f,
-		1.0f, 1.0f, 1.0f,
-		-1.0f, 1.0f, 1.0f,
-		1.0f,-1.0f, 1.0f //Cube end
-	};
+	//GLfloat horseVertices[] = {
+	//	-1.0f,-1.0f,-1.0f, // Cube begin
+	//	-1.0f,-1.0f, 1.0f,
+	//	-1.0f, 1.0f, 1.0f,
+	//	1.0f, 1.0f,-1.0f,
+	//	-1.0f,-1.0f,-1.0f,
+	//	-1.0f, 1.0f,-1.0f,
+	//	1.0f,-1.0f, 1.0f,
+	//	-1.0f,-1.0f,-1.0f,
+	//	1.0f,-1.0f,-1.0f,
+	//	1.0f, 1.0f,-1.0f,
+	//	1.0f,-1.0f,-1.0f,
+	//	-1.0f,-1.0f,-1.0f,
+	//	-1.0f,-1.0f,-1.0f,
+	//	-1.0f, 1.0f, 1.0f,
+	//	-1.0f, 1.0f,-1.0f,
+	//	1.0f,-1.0f, 1.0f,
+	//	-1.0f,-1.0f, 1.0f,
+	//	-1.0f,-1.0f,-1.0f,
+	//	-1.0f, 1.0f, 1.0f,
+	//	-1.0f,-1.0f, 1.0f,
+	//	1.0f,-1.0f, 1.0f,
+	//	1.0f, 1.0f, 1.0f,
+	//	1.0f,-1.0f,-1.0f,
+	//	1.0f, 1.0f,-1.0f,
+	//	1.0f,-1.0f,-1.0f,
+	//	1.0f, 1.0f, 1.0f,
+	//	1.0f,-1.0f, 1.0f,
+	//	1.0f, 1.0f, 1.0f,
+	//	1.0f, 1.0f,-1.0f,
+	//	-1.0f, 1.0f,-1.0f,
+	//	1.0f, 1.0f, 1.0f,
+	//	-1.0f, 1.0f,-1.0f,
+	//	-1.0f, 1.0f, 1.0f,
+	//	1.0f, 1.0f, 1.0f,
+	//	-1.0f, 1.0f, 1.0f,
+	//	1.0f,-1.0f, 1.0f //Cube end
+	//};
 
-	GLuint VAO[3];
-	glGenVertexArrays(1, &VAO[0]);
-	glBindVertexArray(VAO[0]);
-	GLuint horseVBO;
-	glGenBuffers(1, &horseVBO);
-	glBindBuffer(GL_ARRAY_BUFFER, horseVBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(horseVertices), horseVertices, GL_STATIC_DRAW);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
-	glEnableVertexAttribArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
+	//GLuint VAO[3];
+	//glGenVertexArrays(1, &VAO[0]);
+	//glBindVertexArray(VAO[0]);
+	//GLuint horseVBO;
+	//glGenBuffers(1, &horseVBO);
+	//glBindBuffer(GL_ARRAY_BUFFER, horseVBO);
+	//glBufferData(GL_ARRAY_BUFFER, sizeof(horseVertices), horseVertices, GL_STATIC_DRAW);
+	//glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+	//glEnableVertexAttribArray(0);
+	//glBindBuffer(GL_ARRAY_BUFFER, 0);
+	//glBindVertexArray(0);
 
-	//Horse Normals
-	/*std::vector<glm::vec3> normals;
-	for (int i = 0; i < sizeof(horseVertices); ++i) {
-		glm::vec3 a, b;
-		a.x = horseVertices[i];
-		a.y = horseVertices[i + 1];
-		a.y = horseVertices[i + 2];
-		b.x = horseVertices[i + 3];
-		b.y = horseVertices[i + 4];
-		b.y = horseVertices[i + 5];
-		glm::vec3 cross = glm::cross(a, b);
-		cross = glm::normalize(cross);
-		normals.push_back(cross);
-	}
+	////Horse Normals
+	///*std::vector<glm::vec3> normals;
+	//for (int i = 0; i < sizeof(horseVertices); ++i) {
+	//	glm::vec3 a, b;
+	//	a.x = horseVertices[i];
+	//	a.y = horseVertices[i + 1];
+	//	a.y = horseVertices[i + 2];
+	//	b.x = horseVertices[i + 3];
+	//	b.y = horseVertices[i + 4];
+	//	b.y = horseVertices[i + 5];
+	//	glm::vec3 cross = glm::cross(a, b);
+	//	cross = glm::normalize(cross);
+	//	normals.push_back(cross);
+	//}
 
-	glGenVertexArrays(1, &VAO[0]);
-	glBindVertexArray(VAO[0]);
-	GLuint normalVBO;
-	glGenBuffers(1, &normalVBO);
-	glBindBuffer(GL_ARRAY_BUFFER, normalVBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3)*normals.size(), &normals[0], GL_STATIC_DRAW);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
-	glEnableVertexAttribArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);*/
+	//glGenVertexArrays(1, &VAO[0]);
+	//glBindVertexArray(VAO[0]);
+	//GLuint normalVBO;
+	//glGenBuffers(1, &normalVBO);
+	//glBindBuffer(GL_ARRAY_BUFFER, normalVBO);
+	//glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3)*normals.size(), &normals[0], GL_STATIC_DRAW);
+	//glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	//glEnableVertexAttribArray(0);
+	//glBindBuffer(GL_ARRAY_BUFFER, 0);
+	//glBindVertexArray(0);*/
 
-	//Axes vertices
-	GLfloat axis[] = {
-		0.0f, 0.0f, 0.0f,
-		5.0f, 0.0f, 0.0f, //X-Axis
-		0.0f, 0.0f, 0.0f,
-		0.0f, 5.0f, 0.0f, //Y-Axis
-		0.0f, 0.0f, 0.0f,
-		0.0f, 0.0f, 5.0f //Z-Axis
-	};
+	////Axes vertices
+	//GLfloat axis[] = {
+	//	0.0f, 0.0f, 0.0f,
+	//	5.0f, 0.0f, 0.0f, //X-Axis
+	//	0.0f, 0.0f, 0.0f,
+	//	0.0f, 5.0f, 0.0f, //Y-Axis
+	//	0.0f, 0.0f, 0.0f,
+	//	0.0f, 0.0f, 5.0f //Z-Axis
+	//};
 
-	glGenVertexArrays(1, &VAO[1]);
-	glBindVertexArray(VAO[1]);
-	GLuint axisVBO;
-	glGenBuffers(1, &axisVBO);
-	glBindBuffer(GL_ARRAY_BUFFER, axisVBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(axis), axis, GL_STATIC_DRAW);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
-	glEnableVertexAttribArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
+	//glGenVertexArrays(1, &VAO[1]);
+	//glBindVertexArray(VAO[1]);
+	//GLuint axisVBO;
+	//glGenBuffers(1, &axisVBO);
+	//glBindBuffer(GL_ARRAY_BUFFER, axisVBO);
+	//glBufferData(GL_ARRAY_BUFFER, sizeof(axis), axis, GL_STATIC_DRAW);
+	//glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+	//glEnableVertexAttribArray(0);
+	//glBindBuffer(GL_ARRAY_BUFFER, 0);
+	//glBindVertexArray(0);
 
-	//Grid vertices
-	std::vector<glm::vec3> ground;
-	for (int i = -100; i < 100; ++i) {
-		float x = i;
-		float y = 0;
-		float z = 100;
-		ground.push_back(glm::vec3(x, y, z));
-		x = i;
-		z = -100;
-		ground.push_back(glm::vec3(x, y, z));
-	}
-	for (int i = -100; i < 100; ++i) {
-		float x = 100;
-		float y = 0;
-		float z = i;
-		ground.push_back(glm::vec3(x, y, z));
-		x = -100;
-		z = i;
-		ground.push_back(glm::vec3(x, y, z));
-	}
+	////Grid vertices
+	//std::vector<glm::vec3> ground;
+	//for (int i = -100; i < 100; ++i) {
+	//	float x = i;
+	//	float y = 0;
+	//	float z = 100;
+	//	ground.push_back(glm::vec3(x, y, z));
+	//	x = i;
+	//	z = -100;
+	//	ground.push_back(glm::vec3(x, y, z));
+	//}
+	//for (int i = -100; i < 100; ++i) {
+	//	float x = 100;
+	//	float y = 0;
+	//	float z = i;
+	//	ground.push_back(glm::vec3(x, y, z));
+	//	x = -100;
+	//	z = i;
+	//	ground.push_back(glm::vec3(x, y, z));
+	//}
 
-	glGenVertexArrays(1, &VAO[2]);
-	glBindVertexArray(VAO[2]);
-	GLuint groundVBO;
-	glGenBuffers(1, &groundVBO);
-	glBindBuffer(GL_ARRAY_BUFFER, groundVBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3)*ground.size(), &ground[0], GL_STATIC_DRAW);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-	glEnableVertexAttribArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
+	//glGenVertexArrays(1, &VAO[2]);
+	//glBindVertexArray(VAO[2]);
+	//GLuint groundVBO;
+	//glGenBuffers(1, &groundVBO);
+	//glBindBuffer(GL_ARRAY_BUFFER, groundVBO);
+	//glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3)*ground.size(), &ground[0], GL_STATIC_DRAW);
+	//glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	//glEnableVertexAttribArray(0);
+	//glBindBuffer(GL_ARRAY_BUFFER, 0);
+	//glBindVertexArray(0);
 
 	//View Matrix
 	viewMatrix = glm::lookAt(c_pos, c_pos + c_eye, c_up);
@@ -599,6 +600,9 @@ int main()
 	GLuint transformLoc = glGetUniformLocation(shaderProgram, "model_matrix");
 	GLuint colorLoc = glGetUniformLocation(shaderProgram, "color");
 	Renderer r = Renderer(transformLoc, colorLoc, shaderProgram);
+
+	//Buffer Loader
+	BufferLoader b;
 
 	//GROUND
 	float colValues[4] = { 1.0, 1.0, 1.0, 1.0 };
@@ -629,14 +633,15 @@ int main()
 		glUniformMatrix4fv(viewMatrixLoc, 1, GL_FALSE, glm::value_ptr(viewMatrix));
 		glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
 
+
 		//GROUND
-		r.setVAO(VAO[2]);
+		r.setVAO(b.getGroundVAO());
 		glm::mat4 ground;
 		r.drawGround(colValues, ground);
 		r.setVAO(0);
 
 		//AXIS
-		r.setVAO(VAO[1]);
+		r.setVAO(b.getAxisVAO());
 		glm::mat4 axis;
 		r.drawAxis(colors[0], axis, 0);
 		r.drawAxis(colors[1], axis, 2);
@@ -644,7 +649,7 @@ int main()
 		r.setVAO(0);
 
 		//HORSE
-		drawHorse(shaderProgram, renderMode, VAO[0]);
+		drawHorse(shaderProgram, renderMode, b.getHorseVAO());
 		
 
 		glfwSwapBuffers(window);
