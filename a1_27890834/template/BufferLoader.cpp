@@ -18,11 +18,11 @@ GLuint BufferLoader::getHorseVAO()
 	return VAO[0];
 }
 
-GLuint BufferLoader::getGroundVAO() {
+GLuint BufferLoader::getAxisVAO() {
 	return VAO[1];
 }
 
-GLuint BufferLoader::getAxisVAO() {
+GLuint BufferLoader::getGroundVAO() {
 	return VAO[2];
 }
 
