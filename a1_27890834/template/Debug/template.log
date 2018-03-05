@@ -1,27 +1,25 @@
-﻿  main.cpp
-c:\users\nicole\documents\comp371\a1_27890834\template\main.cpp(43): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-c:\users\nicole\documents\comp371\a1_27890834\template\main.cpp(44): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-c:\users\nicole\documents\comp371\a1_27890834\template\main.cpp(123): warning C4305: '+=': truncation from 'double' to 'float'
-c:\users\nicole\documents\comp371\a1_27890834\template\main.cpp(124): warning C4305: '+=': truncation from 'double' to 'float'
-c:\users\nicole\documents\comp371\a1_27890834\template\main.cpp(125): warning C4305: '+=': truncation from 'double' to 'float'
-c:\users\nicole\documents\comp371\a1_27890834\template\main.cpp(130): warning C4305: '-=': truncation from 'double' to 'float'
-c:\users\nicole\documents\comp371\a1_27890834\template\main.cpp(131): warning C4305: '-=': truncation from 'double' to 'float'
-c:\users\nicole\documents\comp371\a1_27890834\template\main.cpp(132): warning C4305: '-=': truncation from 'double' to 'float'
-c:\users\nicole\documents\comp371\a1_27890834\template\main.cpp(185): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-c:\users\nicole\documents\comp371\a1_27890834\template\main.cpp(186): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-c:\users\nicole\documents\comp371\a1_27890834\template\main.cpp(262): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-c:\users\nicole\documents\comp371\a1_27890834\template\main.cpp(263): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-c:\users\nicole\documents\comp371\a1_27890834\template\main.cpp(266): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-c:\users\nicole\documents\comp371\a1_27890834\template\main.cpp(267): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-c:\users\nicole\documents\comp371\a1_27890834\template\main.cpp(268): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-c:\users\nicole\documents\comp371\a1_27890834\template\main.cpp(269): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-c:\users\nicole\documents\comp371\a1_27890834\template\main.cpp(387): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-  Renderer.cpp
-c:\users\nicole\documents\comp371\a1_27890834\template\renderer.cpp(64): warning C4018: '<': signed/unsigned mismatch
-  Generating Code...
-  Skipping... (no relevant changes detected)
-  Horse.cpp
-  template.vcxproj -> C:\Users\nicole\Documents\COMP371\a1_27890834\Debug\a1_27890834.exe
-  template.vcxproj -> C:\Users\nicole\Documents\COMP371\a1_27890834\Debug\a1_27890834.pdb (Partial PDB)
-  0 File(s) copied
-  0 File(s) copied
+﻿Build started 3/5/2018 1:39:31 PM.
+     1>Project "C:\Users\Nicole\Documents\OpenGL_Assignments\a1_27890834\template\template.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\CL.exe /c /I..\glm /I..\glfw /I..\glew /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Yu"stdafx.h" /Fp"Debug\a1_27890834.pch" /Fo"Debug\\" /Fd"Debug\vc140.pdb" /Gd /TP /analyze- /errorReport:prompt Horse.cpp
+         Horse.cpp
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Nicole\Documents\OpenGL_Assignments\a1_27890834\Debug\a1_27890834.exe" /INCREMENTAL /NOLOGO /LIBPATH:..\glfw /LIBPATH:..\glew glew32.lib glu32.lib opengl32.lib glfw3dll.lib glfw3.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /Debug /PDB:"C:\Users\Nicole\Documents\OpenGL_Assignments\a1_27890834\Debug\a1_27890834.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Nicole\Documents\OpenGL_Assignments\a1_27890834\Debug\a1_27890834.lib" /MACHINE:X86 Debug\BufferLoader.obj
+         Debug\Horse.obj
+         Debug\main.obj
+         Debug\Renderer.obj
+         Debug\ShaderLoader.obj
+         Debug\stdafx.obj
+         Debug\TextureLoader.obj
+         template.vcxproj -> C:\Users\Nicole\Documents\OpenGL_Assignments\a1_27890834\Debug\a1_27890834.exe
+       PostBuildEvent:
+         xcopy /y /d "C:\Users\Nicole\Documents\OpenGL_Assignments\a1_27890834\template\..\glfw\glfw3.dll" "C:\Users\Nicole\Documents\OpenGL_Assignments\a1_27890834\Debug\"
+         xcopy /y /d "C:\Users\Nicole\Documents\OpenGL_Assignments\a1_27890834\template\..\glew\glew32.dll" "C:\Users\Nicole\Documents\OpenGL_Assignments\a1_27890834\Debug\"
+         :VCEnd
+         0 File(s) copied
+         0 File(s) copied
+     1>Done Building Project "C:\Users\Nicole\Documents\OpenGL_Assignments\a1_27890834\template\template.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:00.90

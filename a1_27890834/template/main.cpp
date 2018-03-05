@@ -199,61 +199,92 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	if (key == GLFW_KEY_T && action == GLFW_PRESS) {
 		renderMode = GL_TRIANGLES;
 	}
-	if (key == GLFW_KEY_1 && action == GLFW_PRESS) {
-		float n = 0.0f;
+	if (key == GLFW_KEY_0 && action == GLFW_PRESS) {
 		if (mode == GLFW_MOD_SHIFT) {
-			n -= 5.0f;
+			newRotateAngle[0] -= 5.0f;
+		} else {
+			newRotateAngle[0] += 5.0f;
 		}
-		else {
-			n += 5.0f;
+		h.setHead(newRotateAngle[0]);
+	}
+	if (key == GLFW_KEY_1 && action == GLFW_PRESS) {
+		if (mode == GLFW_MOD_SHIFT) {
+			newRotateAngle[1] -= 5.0f;
+		} else {
+			newRotateAngle[1] += 5.0f;
 		}
-		h.setNeck(n);
+		h.setNeck(newRotateAngle[1]);
 	}
 	if (key == GLFW_KEY_2 && action == GLFW_PRESS) {
 		if (mode == GLFW_MOD_SHIFT) {
-
+			newRotateAngle[2] -= 5.0f;
+		} else {
+			newRotateAngle[2] += 5.0f;
 		}
+		h.setUpperArmR(newRotateAngle[2]);
 	}
 	if (key == GLFW_KEY_3 && action == GLFW_PRESS) {
 		if (mode == GLFW_MOD_SHIFT) {
-
+			newRotateAngle[3] -= 5.0f;
 		}
+		else {
+			newRotateAngle[3] += 5.0f;
+		}
+		h.setLowerArmR(newRotateAngle[3]);
 	}
 	if (key == GLFW_KEY_4 && action == GLFW_PRESS) {
 		if (mode == GLFW_MOD_SHIFT) {
-
+			newRotateAngle[4] -= 5.0f;
 		}
+		else {
+			newRotateAngle[4] += 5.0f;
+		}
+		h.setUpperLegR(newRotateAngle[4]);
 	}
 	if (key == GLFW_KEY_5 && action == GLFW_PRESS) {
 		if (mode == GLFW_MOD_SHIFT) {
-
+			newRotateAngle[5] -= 5.0f;
 		}
+		else {
+			newRotateAngle[5] += 5.0f;
+		}
+		h.setLowerLegR(newRotateAngle[5]);
 	}
 	if (key == GLFW_KEY_6 && action == GLFW_PRESS) {
 		if (mode == GLFW_MOD_SHIFT) {
-
+			newRotateAngle[6] -= 5.0f;
 		}
-
+		else {
+			newRotateAngle[6] += 5.0f;
+		}
+		h.setUpperArmL(newRotateAngle[6]);
 	}
 	if (key == GLFW_KEY_7 && action == GLFW_PRESS) {
 		if (mode == GLFW_MOD_SHIFT) {
-
+			newRotateAngle[7] -= 5.0f;
 		}
-			}
+		else {
+			newRotateAngle[7] += 5.0f;
+		}
+		h.setLowerArmL(newRotateAngle[7]);
+	}
 	if (key == GLFW_KEY_8 && action == GLFW_PRESS) {
 		if (mode == GLFW_MOD_SHIFT) {
-
+			newRotateAngle[8] -= 5.0f;
 		}
+		else {
+			newRotateAngle[8] += 5.0f;
+		}
+		h.setUpperLegL(newRotateAngle[8]);
 	}
 	if (key == GLFW_KEY_9 && action == GLFW_PRESS) {
 		if (mode == GLFW_MOD_SHIFT) {
-
+			newRotateAngle[9] -= 5.0f;
 		}
-	}
-	if (key == GLFW_KEY_0 && action == GLFW_PRESS) {
-		if (mode == GLFW_MOD_SHIFT) {
-
+		else {
+			newRotateAngle[9] += 5.0f;
 		}
+		h.setLowerLegL(newRotateAngle[9]);
 	}
 }
 
