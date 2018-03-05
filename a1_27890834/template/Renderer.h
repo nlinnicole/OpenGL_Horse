@@ -19,7 +19,7 @@ public:
 	void setShaderProgram(GLuint sP);
 	void setMode(GLenum m);
 
-	void drawHorse();
+	void drawHorse(GLenum renderMode);
 	void drawGround(float colValues[4], glm::mat4 matrix);
 	void drawAxis(glm::vec3 colours, glm::mat4 matrix, int i);
 	

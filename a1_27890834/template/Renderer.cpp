@@ -60,11 +60,11 @@ void Renderer::horseInit() {
 
 }
 
-void Renderer::drawHorse() {
+void Renderer::drawHorse(GLenum renderMode) {
 	for (int i = 0; i < h.components.size(); ++i) {
 		glProgramUniform4fv(shaderProgram, colorLoc, 1, h.components[i]->colour);
 		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(h.components[i]->matrix));
-		glDrawArrays(GL_TRIANGLES, 0, 12 * 3);
+		glDrawArrays(renderMode, 0, 12 * 3);
 	}
 };
 

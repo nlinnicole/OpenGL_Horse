@@ -51,7 +51,6 @@ float verticalAngle = 0.0f;
 float speed = 3.0f;
 float mouseSpeed = 0.0005f;
 
-
 Horse h;
 glm::vec3 initScale = glm::vec3(2.0f, 1.0f, 1.0f);
 glm::vec3 initRotation = glm::vec3(0.0f, 0.0f, 1.0f);
@@ -136,7 +135,8 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	//Move horse down
 	if (key == GLFW_KEY_W && action == GLFW_PRESS) {
 		if (mode == GLFW_MOD_SHIFT) {
-			++h.horseTranslation.y;
+			++newTranslation.y;
+			h.setTorso(initScale, initRotateAngle, initRotation, newTranslation);
 		}
 		//Rotate horse upwards on z axis
 		else {
@@ -147,7 +147,8 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	//Move horse left
 	if (key == GLFW_KEY_A && action == GLFW_PRESS) {
 		if (mode == GLFW_MOD_SHIFT) {
-			--h.horseTranslation.x;
+			--newTranslation.x;
+			h.setTorso(initScale, initRotateAngle, initRotation, newTranslation);
 		}
 		//Rotate horse left on y axis
 		else {
@@ -158,7 +159,8 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	//Move horse down
 	if (key == GLFW_KEY_S && action == GLFW_PRESS) {
 		if (mode == GLFW_MOD_SHIFT) {
-			--h.horseTranslation.y;
+			--newTranslation.y;
+			h.setTorso(initScale, initRotateAngle, initRotation, newTranslation);
 		}
 		//Rotate horse downwards on z axis
 		else {
@@ -169,7 +171,8 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	//Move horse right
 	if (key == GLFW_KEY_D && action == GLFW_PRESS) {
 		if (mode == GLFW_MOD_SHIFT) {
-			++h.horseTranslation.x;
+			++newTranslation.x;
+			h.setTorso(initScale, initRotateAngle, initRotation, newTranslation);
 		}
 		//Rotate horse right on y axis
 		else {
@@ -181,8 +184,8 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) {
 		float randX = rand() % 50;
 		float randZ = rand() % 50;
-		h.horseTranslation = glm::vec3(randX, 0.0f, randZ);
-		std::cout << h.horseTranslation.x << " " << h.horseTranslation.y << " " << h.horseTranslation.z << std::endl;
+		newTranslation = glm::vec3(randX, 0.0f, randZ);
+		h.setTorso(initScale, initRotateAngle, initRotation, newTranslation);
 	}
 	//Change render mode to points
 	if (key == GLFW_KEY_P && action == GLFW_PRESS) {
@@ -302,181 +305,6 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
 	update();
 }
 
-//Function to draw the horse
-//void drawHorse(GLuint shaderProgram, GLenum mode, GLuint VAO) {
-//	//Initial values
-//	float colValues[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
-//	glm::mat4 scale;
-//	glm::mat4 translate;
-//	glm::mat4 rotate;
-//
-//	GLuint transformLoc = glGetUniformLocation(shaderProgram, "model_matrix");
-//	GLuint colorLoc = glGetUniformLocation(shaderProgram, "color");
-//
-//	//Transformation stack
-//	std::vector<glm::mat4> transformations;
-//
-//	//TORSO
-//	glm::mat4 torso;
-//	scale = glm::scale(torso, horseScale);
-//	rotate = glm::rotate(torso, horseRotateAngle, horseRotation);
-//	translate = glm::translate(torso, horseTranslation);
-//	torso *= scale * rotate * translate;
-//	transformations.push_back(torso); //push torso to transformations
-//	colValues[0] = 0.275f;
-//	colValues[1] = 0.510f;
-//	colValues[2] = 0.706f;
-//	glProgramUniform4fv(shaderProgram, colorLoc, 1, colValues);
-//	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(torso));
-//	glDrawArrays(mode, 0, 12 * 3);
-//
-//	//NECK
-//	glm::mat4 neck;
-//	scale = glm::scale(neck, glm::vec3(0.5f, 0.5f, 0.5f));
-//	rotate = glm::rotate(neck, glm::radians(-25.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-//	translate = glm::translate(neck, glm::vec3(-3.2f, 0.5f, 0.0f));
-//	neck *= torso * scale * rotate * translate;
-//	transformations.push_back(neck); //push neck to transformations
-//	colValues[0] = 0.529f;
-//	colValues[1] = 0.808f;
-//	colValues[2] = 0.922f;
-//	glProgramUniform4fv(shaderProgram, colorLoc, 1, colValues);
-//	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(neck));
-//	glDrawArrays(mode, 0, 12 * 3);
-//
-//	//HEAD
-//	glm::mat4 head;
-//	scale = glm::scale(head, glm::vec3(0.5f, 0.8f, 0.8f));
-//	rotate = glm::rotate(head, glm::radians(160.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-//	translate = glm::translate(head, glm::vec3(1.0f, 2.0f, 0.0f));
-//	head *= neck * scale * rotate * translate; //use neck
-//	transformations.push_back(head);
-//	colValues[0] = 0.690f;
-//	colValues[1] = 0.878f;
-//	colValues[2] = 0.902f;
-//	glProgramUniform4fv(shaderProgram, colorLoc, 1, colValues);
-//	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(head));
-//	glDrawArrays(mode, 0, 12 * 3);
-//
-//	//UPPER ARM L
-//	glm::mat4 upperArmL;
-//	scale = glm::scale(upperArmL, glm::vec3(0.15f, 0.9f, 0.15f));
-//	translate = glm::translate(upperArmL, glm::vec3(-5.4f, -1.5f, 3.0f));
-//	upperArmL *= torso * scale * translate; //use torso
-//	transformations.push_back(upperArmL); //push upperArmL to transformations
-//	colValues[0] = 0.690f;
-//	colValues[1] = 0.769f;
-//	colValues[2] = 0.871f;
-//	glProgramUniform4fv(shaderProgram, colorLoc, 1, colValues);
-//	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(upperArmL));
-//	glDrawArrays(mode, 0, 12 * 3);
-//
-//	//LOWER ARM L
-//	glm::mat4 lowerArmL;
-//	scale = glm::scale(lowerArmL, glm::vec3(1.2f, 1.0f, 1.2f));
-//	translate = glm::translate(lowerArmL, glm::vec3(0.0f, -2.0f, 0.0f));
-//	lowerArmL *= upperArmL * scale * translate; //use UpperArmL
-//	transformations.push_back(lowerArmL);
-//	colValues[0] = 0.392f;
-//	colValues[1] = 0.584f;
-//	colValues[2] = 0.929f;
-//	glProgramUniform4fv(shaderProgram, colorLoc, 1, colValues);
-//	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(lowerArmL));
-//	glDrawArrays(mode, 0, 12 * 3);
-//
-//	//UPPER ARM R
-//	glm::mat4 upperArmR;
-//	scale = glm::scale(upperArmR, glm::vec3(0.15f, 0.9f, 0.15f));
-//	translate = glm::translate(upperArmR, glm::vec3(-5.4f, -1.5f, -3.0f));
-//	upperArmR *= torso * scale * translate; //use torso
-//	transformations.push_back(upperArmR); // push upperArmR to transformations
-//	colValues[0] = 0.690f;
-//	colValues[1] = 0.769f;
-//	colValues[2] = 0.871f;
-//	glProgramUniform4fv(shaderProgram, colorLoc, 1, colValues);
-//	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(upperArmR));
-//	glDrawArrays(mode, 0, 12 * 3);
-//
-//	//LOWER ARM R
-//	glm::mat4 lowerArmR;
-//	scale = glm::scale(lowerArmR, glm::vec3(1.2f, 1.0f, 1.2f));
-//	translate = glm::translate(lowerArmR, glm::vec3(0.0f, -2.0f, 0.0f));
-//	lowerArmR *= upperArmR * scale * translate; //use UpperArmR
-//	transformations.push_back(lowerArmR);
-//	colValues[0] = 0.392f;
-//	colValues[1] = 0.584f;
-//	colValues[2] = 0.929f;
-//	glProgramUniform4fv(shaderProgram, colorLoc, 1, colValues);
-//	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(lowerArmR));
-//	glDrawArrays(mode, 0, 12 * 3);
-//
-//	//UPPER LEG L
-//	glm::mat4 upperLegL;
-//	scale = glm::scale(upperLegL, glm::vec3(0.15f, 0.9f, 0.15f));
-//	translate = glm::translate(upperLegL, glm::vec3(5.4f, -1.5f, 3.0f));
-//	upperLegL *= torso * scale * translate; //use torso
-//	transformations.push_back(upperLegL); // push upperLegL to transformations
-//	colValues[0] = 0.690f;
-//	colValues[1] = 0.769f;
-//	colValues[2] = 0.871f;
-//	glProgramUniform4fv(shaderProgram, colorLoc, 1, colValues);
-//	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(upperLegL));
-//	glDrawArrays(mode, 0, 12 * 3);
-//
-//	//LOWER LEG L
-//	glm::mat4 lowerLegL;
-//	scale = glm::scale(lowerLegL, glm::vec3(1.2f, 1.0f, 1.2f));
-//	translate = glm::translate(lowerLegL, glm::vec3(0.0f, -2.0f, 0.0f));
-//	lowerLegL *= upperLegL * scale * translate; //use UpperLegL
-//	transformations.push_back(lowerLegL);
-//	colValues[0] = 0.392f;
-//	colValues[1] = 0.584f;
-//	colValues[2] = 0.929f;
-//	glProgramUniform4fv(shaderProgram, colorLoc, 1, colValues);
-//	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(lowerLegL));
-//	glDrawArrays(mode, 0, 12 * 3);
-//
-//	//UPPER LEG R
-//	glm::mat4 upperLegR;
-//	scale = glm::scale(upperLegR, glm::vec3(0.15f, 0.9f, 0.15f));
-//	translate = glm::translate(upperLegR, glm::vec3(5.4f, -1.5f, -3.0f));
-//	upperLegR *= torso * scale * translate * rotate; //use torso
-//	transformations.push_back(upperLegR); // push upperLegL to transformations
-//	colValues[0] = 0.690f;
-//	colValues[1] = 0.769f;
-//	colValues[2] = 0.871f;
-//	glProgramUniform4fv(shaderProgram, colorLoc, 1, colValues);
-//	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(upperLegR));
-//	glDrawArrays(mode, 0, 12 * 3);
-//
-//	//LOWER LEG R
-//	glm::mat4 lowerLegR;
-//	scale = glm::scale(lowerLegR, glm::vec3(1.2f, 1.0f, 1.2f));
-//	translate = glm::translate(lowerLegR, glm::vec3(0.0f, -2.0f, 0.0f));
-//	lowerLegR *= upperLegR * scale * translate; //use UpperLegR
-//	transformations.push_back(lowerLegR);
-//	colValues[0] = 0.392f;
-//	colValues[1] = 0.584f;
-//	colValues[2] = 0.929f;
-//	glProgramUniform4fv(shaderProgram, colorLoc, 1, colValues);
-//	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(lowerLegR));
-//	glDrawArrays(mode, 0, 12 * 3);
-//
-//	//TAIL
-//	glm::mat4 tail;
-//	scale = glm::scale(tail, glm::vec3(0.5f, 0.3f, 0.3f));
-//	rotate = glm::rotate(tail, glm::radians(10.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-//	translate = glm::translate(tail, glm::vec3(3.0f, 1.5f, 0.0f));
-//	tail *= torso * scale * rotate * translate; //use torso
-//	transformations.push_back(tail);
-//	colValues[0] = 0.118f;
-//	colValues[1] = 0.565f;
-//	colValues[2] = 1.000f;
-//	glProgramUniform4fv(shaderProgram, colorLoc, 1, colValues);
-//	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(tail));
-//	glDrawArrays(mode, 0, 12 * 3);
-//}
-
 int init() {
 	std::cout << "Starting GLFW context, OpenGL 3.3" << std::endl;
 	glfwInit();
@@ -584,7 +412,7 @@ int main()
 		//HORSE
 		r.setVAO(b.getHorseVAO());
 		//drawHorse(shaderProgram, renderMode, b.getHorseVAO());
-		r.drawHorse();
+		r.drawHorse(renderMode);
 		r.setVAO(0);
 		
 		glfwSwapBuffers(window);
