@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "BufferLoader.h"
 
-
 BufferLoader::BufferLoader()
 {
 	setHorseVAO();
@@ -11,6 +10,10 @@ BufferLoader::BufferLoader()
 
 BufferLoader::~BufferLoader()
 {
+}
+
+void BufferLoader::loadTex() {
+
 }
 
 GLuint BufferLoader::getHorseVAO()
@@ -27,45 +30,6 @@ GLuint BufferLoader::getGroundVAO() {
 }
 
 void BufferLoader::setHorseVAO() {
-	GLfloat horseVertices[] = {
-		-1.0f,-1.0f,-1.0f, // Cube begin
-		-1.0f,-1.0f, 1.0f,
-		-1.0f, 1.0f, 1.0f,
-		1.0f, 1.0f,-1.0f,
-		-1.0f,-1.0f,-1.0f,
-		-1.0f, 1.0f,-1.0f,
-		1.0f,-1.0f, 1.0f,
-		-1.0f,-1.0f,-1.0f,
-		1.0f,-1.0f,-1.0f,
-		1.0f, 1.0f,-1.0f,
-		1.0f,-1.0f,-1.0f,
-		-1.0f,-1.0f,-1.0f,
-		-1.0f,-1.0f,-1.0f,
-		-1.0f, 1.0f, 1.0f,
-		-1.0f, 1.0f,-1.0f,
-		1.0f,-1.0f, 1.0f,
-		-1.0f,-1.0f, 1.0f,
-		-1.0f,-1.0f,-1.0f,
-		-1.0f, 1.0f, 1.0f,
-		-1.0f,-1.0f, 1.0f,
-		1.0f,-1.0f, 1.0f,
-		1.0f, 1.0f, 1.0f,
-		1.0f,-1.0f,-1.0f,
-		1.0f, 1.0f,-1.0f,
-		1.0f,-1.0f,-1.0f,
-		1.0f, 1.0f, 1.0f,
-		1.0f,-1.0f, 1.0f,
-		1.0f, 1.0f, 1.0f,
-		1.0f, 1.0f,-1.0f,
-		-1.0f, 1.0f,-1.0f,
-		1.0f, 1.0f, 1.0f,
-		-1.0f, 1.0f,-1.0f,
-		-1.0f, 1.0f, 1.0f,
-		1.0f, 1.0f, 1.0f,
-		-1.0f, 1.0f, 1.0f,
-		1.0f,-1.0f, 1.0f //Cube end
-	};
-
 	glGenVertexArrays(1, &VAO[0]);
 	glBindVertexArray(VAO[0]);
 	glGenBuffers(1, &VBO[0]);
@@ -76,29 +40,29 @@ void BufferLoader::setHorseVAO() {
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 
-	//std::vector<glm::vec3> normals;
-	//for (int i = 0; i < sizeof(horseVertices); ++i) {
-	//	glm::vec3 a, b;
-	//	a.x = horseVertices[i];
-	//	a.y = horseVertices[i + 1];
-	//	a.y = horseVertices[i + 2];
-	//	b.x = horseVertices[i + 3];
-	//	b.y = horseVertices[i + 4];
-	//	b.y = horseVertices[i + 5];
-	//	glm::vec3 cross = glm::cross(a, b);
-	//	cross = glm::normalize(cross);
-	//	normals.push_back(cross);
-	//}
+	/*std::vector<glm::vec3> normals;
+	for (int i = 0; i < (sizeof(horseVertices)-5); ++i) {
+		glm::vec3 a, b;
+		a.x = horseVertices[i];
+		a.y = horseVertices[i + 1];
+		a.y = horseVertices[i + 2];
+		b.x = horseVertices[i + 3];
+		b.y = horseVertices[i + 4];
+		b.y = horseVertices[i + 5];
+		glm::vec3 cross = glm::cross(a, b);
+		cross = glm::normalize(cross);
+		normals.push_back(cross);
+	}
 
-	//glGenVertexArrays(1, &VAO[0]);
-	//glBindVertexArray(VAO[0]);
-	//glGenBuffers(1, &VBO[1]);
-	//glBindBuffer(GL_ARRAY_BUFFER, VBO[1]);
-	//glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3)*normals.size(), &normals[0], GL_STATIC_DRAW);
-	//glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
-	//glEnableVertexAttribArray(0);
-	//glBindBuffer(GL_ARRAY_BUFFER, 0);
-	//glBindVertexArray(0);
+	glGenVertexArrays(1, &VAO[0]);
+	glBindVertexArray(VAO[0]);
+	glGenBuffers(1, &VBO[1]);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO[1]);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3)*normals.size(), &normals[0], GL_STATIC_DRAW);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	glEnableVertexAttribArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);*/
 }
 
 void BufferLoader::setAxisVAO() {
@@ -123,7 +87,6 @@ void BufferLoader::setAxisVAO() {
 }
 
 void BufferLoader::setGroundVAO() {
-	std::vector<glm::vec3> ground;
 	for (int i = -100; i < 100; ++i) {
 		float x = i;
 		float y = 0;

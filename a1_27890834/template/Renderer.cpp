@@ -7,11 +7,12 @@ Renderer::Renderer()
 
 }
 
-Renderer::Renderer(GLuint tl, GLuint cl, GLuint sp)
+Renderer::Renderer(GLuint tl, GLuint cl, GLuint sp, Horse h)
 {
 	transformLoc = tl;
 	colorLoc = cl;
 	shaderProgram = sp;
+	this->h = h;
 }
 
 Renderer::~Renderer()
@@ -55,10 +56,16 @@ GLuint Renderer::getShaderProgram() {
 	return shaderProgram;
 }
 
-void Renderer::drawCube(float colValues[4], glm::mat4 matrix) {
-	glProgramUniform4fv(shaderProgram, colorLoc, 1, colValues);
-	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(matrix));
-	glDrawArrays(mode, 0, 12 * 3);
+void Renderer::horseInit() {
+
+}
+
+void Renderer::drawHorse() {
+	for (int i = 0; i < h.components.size(); ++i) {
+		glProgramUniform4fv(shaderProgram, colorLoc, 1, h.components[i]->colour);
+		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(h.components[i]->matrix));
+		glDrawArrays(GL_TRIANGLES, 0, 12 * 3);
+	}
 };
 
 void Renderer::drawGround(float colValues[4], glm::mat4 matrix) {
@@ -72,5 +79,4 @@ void Renderer::drawAxis(glm::vec3 colours, glm::mat4 matrix, int i) {
 	glProgramUniform4fv(shaderProgram, colorLoc, 1, colValues);
 	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(matrix));
 	glDrawArrays(GL_LINES, i, 2);
-	//put drawAxis in a for loop and increment n 
 };
