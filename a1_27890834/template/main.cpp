@@ -60,7 +60,7 @@ float initRotateAngle = 0.0f;
 glm::vec3 newScale = initScale;
 glm::vec3 newRotation = initRotation;
 glm::vec3 newTranslation = initTranslation;
-float newRotateAngle[11];
+float newRotateAngle[14];
 
 GLenum renderMode = GL_TRIANGLES;
 
@@ -140,8 +140,8 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		}
 		//Rotate horse upwards on z axis
 		else {
-			h.horseRotation = glm::vec3(0.0f, 0.0f, 1.0f);
-			h.horseRotateAngle += glm::radians(-5.0f);
+			newRotateAngle[10] += 0.1f;
+			h.setTorso(initScale, newRotateAngle[10], initRotation, newTranslation);
 		}
 	}
 	//Move horse left
@@ -152,8 +152,9 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		}
 		//Rotate horse left on y axis
 		else {
-			h.horseRotation = glm::vec3(0.0f, 1.0f, 0.0f);
-			h.horseRotateAngle -= glm::radians(5.0f);
+			newRotateAngle[11] -= 0.1f;
+			newRotation = glm::vec3(0.0f, 1.0f, 0.0f);
+			h.setTorso(initScale, newRotateAngle[11], newRotation, newTranslation);
 		}
 	}
 	//Move horse down
@@ -164,8 +165,8 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		}
 		//Rotate horse downwards on z axis
 		else {
-			h.horseRotation = glm::vec3(0.0f, 0.0f, 1.0f);
-			h.horseRotateAngle += glm::radians(5.0f);
+			newRotateAngle[12] -= 0.1f;
+			h.setTorso(initScale, newRotateAngle[12], initRotation, newTranslation);
 		}
 	}
 	//Move horse right
@@ -176,8 +177,9 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		}
 		//Rotate horse right on y axis
 		else {
-			h.horseRotation = glm::vec3(0.0f, 1.0f, 0.0f);
-			h.horseRotateAngle += glm::radians(5.0f);
+			newRotateAngle[13] += 0.1f;
+			newRotation = glm::vec3(0.0f, 1.0f, 0.0f);
+			h.setTorso(initScale, newRotateAngle[13], newRotation, newTranslation);
 		}
 	}
 	//Re-position horse to a random position on grid

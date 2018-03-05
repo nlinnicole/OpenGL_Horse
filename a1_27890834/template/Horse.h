@@ -45,9 +45,6 @@ public:
 	float horseRotateAngle = 0.0f;
 
 private:
-
-
-
 	float colValues[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
 
 	glm::mat4 scale;
