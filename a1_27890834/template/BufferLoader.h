@@ -1,4 +1,5 @@
 #pragma once
+#include "objloader.hpp"
 
 class BufferLoader
 {
@@ -9,12 +10,15 @@ public:
 	GLuint getHorseVAO();
 	GLuint getGroundVAO();
 	GLuint getAxisVAO();
-	void loadTex();
 
 private:
 	GLuint VAO[3];
 	GLuint VBO[4];
 	GLuint tex;
+
+	std::vector<glm::vec3> vertices;
+	std::vector<glm::vec3> indices;
+	std::vector<glm::vec2> uvCoord;
 
 	std::vector<glm::vec3> ground;
 	GLfloat horseVertices[108] = {

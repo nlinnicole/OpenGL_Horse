@@ -4,13 +4,14 @@
 #include "gtc/matrix_transform.hpp"
 #include "gtc/type_ptr.hpp"
 #include "Horse.h"
+#include "SOIL.h"
 
 
 class Renderer
 {
 public:
 	Renderer();
-	Renderer(GLuint transformLoc, GLuint colorLoc, GLuint shaderProgram, Horse h);
+	Renderer(GLuint transformLoc, GLuint colorLoc, GLuint texL, GLuint shaderProgram, Horse h);
 	~Renderer();
 	
 	void setTransformLoc(GLuint t);
@@ -22,10 +23,12 @@ public:
 	void drawHorse(GLenum renderMode);
 	void drawGround(float colValues[4], glm::mat4 matrix);
 	void drawAxis(glm::vec3 colours, glm::mat4 matrix, int i);
+	void loadTex();
 	
 private:
 	GLuint transformLoc;
 	GLuint colorLoc;
+	GLuint texLoc;
 	GLuint VAO;
 	GLuint shaderProgram;
 	GLenum mode;

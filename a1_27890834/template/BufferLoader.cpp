@@ -3,6 +3,7 @@
 
 BufferLoader::BufferLoader()
 {
+	loadOBJ("cube.obj", vertices, indices, uvCoord);
 	setHorseVAO();
 	setAxisVAO();
 	setGroundVAO();
@@ -10,10 +11,6 @@ BufferLoader::BufferLoader()
 
 BufferLoader::~BufferLoader()
 {
-}
-
-void BufferLoader::loadTex() {
-
 }
 
 GLuint BufferLoader::getHorseVAO()
@@ -30,7 +27,7 @@ GLuint BufferLoader::getGroundVAO() {
 }
 
 void BufferLoader::setHorseVAO() {
-	glGenVertexArrays(1, &VAO[0]);
+	/*glGenVertexArrays(1, &VAO[0]);
 	glBindVertexArray(VAO[0]);
 	glGenBuffers(1, &VBO[0]);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO[0]);
@@ -39,7 +36,7 @@ void BufferLoader::setHorseVAO() {
 	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
-
+*/
 	/*std::vector<glm::vec3> normals;
 	for (int i = 0; i < (sizeof(horseVertices)-5); ++i) {
 		glm::vec3 a, b;
@@ -116,3 +113,4 @@ void BufferLoader::setGroundVAO() {
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 }
+

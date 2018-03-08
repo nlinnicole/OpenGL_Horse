@@ -3,6 +3,10 @@
 uniform vec4 color = vec4(1.0, 1.0, 1.0, 1.0);
 out vec4 outputF;
 
+in vec2 outUV;
+
+uniform sampler2D tex;
+
 //uniform mat4 model_matrix;
 //
 //uniform struct Light {
@@ -48,4 +52,5 @@ void main()
 	//outputF = vec4(result_color, 1.0f);
 
 	outputF = color;
+	//outputF = texture(tex, outUV);
 }

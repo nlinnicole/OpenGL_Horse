@@ -132,7 +132,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		newScale.z -= 0.1;
 		h.setTorso(newScale, initRotateAngle, initRotation, initTranslation);
 	}
-	//Move horse down
+	//Move horse up
 	if (key == GLFW_KEY_W && action == GLFW_PRESS) {
 		if (mode == GLFW_MOD_SHIFT) {
 			++newTranslation.y;
@@ -362,7 +362,6 @@ int init() {
 	glfwMakeContextCurrent(window);
 
 	glewExperimental = GL_TRUE;
-	glEnable(GL_CULL_FACE);
 
 	if (glewInit() != 0) {
 		std::cout << "Failed to initialize GLEW" << std::endl;
@@ -394,7 +393,10 @@ int main()
 	//Initialize Renderer
 	GLuint transformLoc = glGetUniformLocation(shaderProgram, "model_matrix");
 	GLuint colorLoc = glGetUniformLocation(shaderProgram, "color");
-	Renderer r = Renderer(transformLoc, colorLoc, shaderProgram, h);
+	GLuint texLoc = glGetAttribLocation(shaderProgram, "tex");
+	Renderer r = Renderer(transformLoc, colorLoc, texLoc, shaderProgram, h);
+
+	//.loadTex();
 
 	//Buffer Loader
 	BufferLoader b;
@@ -413,6 +415,7 @@ int main()
 	colors.push_back(blue);
 
 	glClearColor(0.7f, 0.7f, 0.7f, 0.0f);
+
 
 	// Game loop
 	while (!glfwWindowShouldClose(window))
@@ -444,7 +447,6 @@ int main()
 
 		//HORSE
 		r.setVAO(b.getHorseVAO());
-		//drawHorse(shaderProgram, renderMode, b.getHorseVAO());
 		r.drawHorse(renderMode);
 		r.setVAO(0);
 		
