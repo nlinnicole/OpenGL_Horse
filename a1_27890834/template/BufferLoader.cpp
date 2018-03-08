@@ -3,7 +3,7 @@
 
 BufferLoader::BufferLoader()
 {
-	loadOBJ("cube.obj", vertices, indices, uvCoord);
+	loadOBJ("cube.obj", vertices, normals, uvCoord);
 	setHorseVAO();
 	setAxisVAO();
 	setGroundVAO();
@@ -27,6 +27,29 @@ GLuint BufferLoader::getGroundVAO() {
 }
 
 void BufferLoader::setHorseVAO() {
+	glGenVertexArrays(1, &VAO[0]);
+	glBindVertexArray(VAO[0]);
+
+	glGenBuffers(1, &VBO[0]);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO[0]);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3)*vertices.size(), &vertices[0], GL_STATIC_DRAW);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	glEnableVertexAttribArray(0);
+
+	//VBOnormals
+	glGenBuffers(1, &VBO[1]);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO[1]);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3)*normals.size(), &normals[0], GL_STATIC_DRAW);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	glEnableVertexAttribArray(1);
+
+	//UV
+	glGenBuffers(1, &VBO[2]);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO[2]);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec2)*uvCoord.size(), &uvCoord[0], GL_STATIC_DRAW);
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, 0);
+	glEnableVertexAttribArray(2);
+
 	/*glGenVertexArrays(1, &VAO[0]);
 	glBindVertexArray(VAO[0]);
 	glGenBuffers(1, &VBO[0]);

@@ -3,22 +3,11 @@
 uniform vec4 color = vec4(1.0, 1.0, 1.0, 1.0);
 out vec4 outputF;
 
+in vec3 outNormal;
+in vec3 fragPosition;
 in vec2 outUV;
 
 uniform sampler2D tex;
-
-//uniform mat4 model_matrix;
-//
-//uniform struct Light {
-//	vec3 position;
-//	vec3 intensities;
-//} light;
-//
-//in vec3 fragPosition;
-//in vec3 outNormal;
-//
-//in vec3 fragNormal;
-//in vec3 fragVert;
 
 void main()
 {
@@ -50,6 +39,7 @@ void main()
 
 	//vec3 result_color = (amb_contribution + diffuse_contribution) * color;
 	//outputF = vec4(result_color, 1.0f);
+
 
 	outputF = color;
 	//outputF = texture(tex, outUV);

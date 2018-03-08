@@ -396,7 +396,7 @@ int main()
 	GLuint texLoc = glGetAttribLocation(shaderProgram, "tex");
 	Renderer r = Renderer(transformLoc, colorLoc, texLoc, shaderProgram, h);
 
-	//.loadTex();
+	//r.loadTex();
 
 	//Buffer Loader
 	BufferLoader b;
