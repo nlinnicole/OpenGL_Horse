@@ -6,7 +6,6 @@
 #include "Horse.h"
 #include "SOIL.h"
 
-
 class Renderer
 {
 public:
@@ -23,8 +22,9 @@ public:
 	void drawHorse(GLenum renderMode);
 	void drawGround(float colValues[4], glm::mat4 matrix);
 	void drawAxis(glm::vec3 colours, glm::mat4 matrix, int i);
+
 	void loadTex();
-	
+
 private:
 	GLuint transformLoc;
 	GLuint colorLoc;

@@ -1,5 +1,6 @@
 #pragma once
 #include "objloader.hpp"
+#include "SOIL.h"
 
 class BufferLoader
 {
@@ -10,10 +11,12 @@ public:
 	GLuint getHorseVAO();
 	GLuint getGroundVAO();
 	GLuint getAxisVAO();
+	void loadTex();
+
 
 private:
 	GLuint VAO[3];
-	GLuint VBO[4];
+	GLuint VBO[5];
 	GLuint EBO;
 	GLuint tex;
 

@@ -396,10 +396,9 @@ int main()
 	GLuint texLoc = glGetAttribLocation(shaderProgram, "tex");
 	Renderer r = Renderer(transformLoc, colorLoc, texLoc, shaderProgram, h);
 
-	//r.loadTex();
-
 	//Buffer Loader
 	BufferLoader b;
+	r.loadTex();
 
 	//GROUND
 	float colValues[4] = { 1.0, 1.0, 1.0, 1.0 };

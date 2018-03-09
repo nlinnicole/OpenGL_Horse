@@ -49,40 +49,6 @@ void BufferLoader::setHorseVAO() {
 	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec2)*uvCoord.size(), &uvCoord[0], GL_STATIC_DRAW);
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, 0);
 	glEnableVertexAttribArray(2);
-
-	/*glGenVertexArrays(1, &VAO[0]);
-	glBindVertexArray(VAO[0]);
-	glGenBuffers(1, &VBO[0]);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO[0]);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(horseVertices), horseVertices, GL_STATIC_DRAW);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
-	glEnableVertexAttribArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
-*/
-	/*std::vector<glm::vec3> normals;
-	for (int i = 0; i < (sizeof(horseVertices)-5); ++i) {
-		glm::vec3 a, b;
-		a.x = horseVertices[i];
-		a.y = horseVertices[i + 1];
-		a.y = horseVertices[i + 2];
-		b.x = horseVertices[i + 3];
-		b.y = horseVertices[i + 4];
-		b.y = horseVertices[i + 5];
-		glm::vec3 cross = glm::cross(a, b);
-		cross = glm::normalize(cross);
-		normals.push_back(cross);
-	}
-
-	glGenVertexArrays(1, &VAO[0]);
-	glBindVertexArray(VAO[0]);
-	glGenBuffers(1, &VBO[1]);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO[1]);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3)*normals.size(), &normals[0], GL_STATIC_DRAW);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
-	glEnableVertexAttribArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);*/
 }
 
 void BufferLoader::setAxisVAO() {
@@ -97,8 +63,8 @@ void BufferLoader::setAxisVAO() {
 
 	glGenVertexArrays(1, &VAO[1]);
 	glBindVertexArray(VAO[1]);
-	glGenBuffers(1, &VBO[2]);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO[2]);
+	glGenBuffers(1, &VBO[3]);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO[3]);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(axis), axis, GL_STATIC_DRAW);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
 	glEnableVertexAttribArray(0);
@@ -128,12 +94,11 @@ void BufferLoader::setGroundVAO() {
 
 	glGenVertexArrays(1, &VAO[2]);
 	glBindVertexArray(VAO[2]);
-	glGenBuffers(1, &VBO[3]);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO[3]);
+	glGenBuffers(1, &VBO[4]);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO[4]);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3)*ground.size(), &ground[0], GL_STATIC_DRAW);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
 	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 }
-
