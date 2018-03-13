@@ -18,14 +18,19 @@ void main()
 {
 	vec4 texCol = texture(tex, outUV);
 	vec3 lightCol = vec3(1.0, 1.0, 1.0);
-	vec3 ambient = 0.3 * lightCol;
 
+	//AMBIENT LIGHT
+	float amb = 0.15f;
+	vec3 ambient = amb * lightCol;
+
+	//DIffUSE LIGHT
 	vec3 ld = normalize(lightPos - fragPosition);
 	vec3 n = normalize(outNormal);
 	float angle = dot(n, ld);
 	float diff = max(0.0, angle);
 	vec3 diffuse = diff * lightCol;
 
+	//SPECULAR LIGHT
 	vec3 vd = normalize(cameraPos - fragPosition);
 	vec3 rf = reflect(-ld, n);
 	float an = dot(rf, vd);

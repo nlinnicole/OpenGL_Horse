@@ -1,27 +1,8 @@
-﻿  main.cpp
-c:\users\nicole\documents\comp371\a1_27890834\template\main.cpp(41): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-c:\users\nicole\documents\comp371\a1_27890834\template\main.cpp(42): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-c:\users\nicole\documents\comp371\a1_27890834\template\main.cpp(123): warning C4305: '+=': truncation from 'double' to 'float'
-c:\users\nicole\documents\comp371\a1_27890834\template\main.cpp(124): warning C4305: '+=': truncation from 'double' to 'float'
-c:\users\nicole\documents\comp371\a1_27890834\template\main.cpp(125): warning C4305: '+=': truncation from 'double' to 'float'
-c:\users\nicole\documents\comp371\a1_27890834\template\main.cpp(130): warning C4305: '-=': truncation from 'double' to 'float'
-c:\users\nicole\documents\comp371\a1_27890834\template\main.cpp(131): warning C4305: '-=': truncation from 'double' to 'float'
-c:\users\nicole\documents\comp371\a1_27890834\template\main.cpp(132): warning C4305: '-=': truncation from 'double' to 'float'
-c:\users\nicole\documents\comp371\a1_27890834\template\main.cpp(187): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-c:\users\nicole\documents\comp371\a1_27890834\template\main.cpp(188): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-c:\users\nicole\documents\comp371\a1_27890834\template\main.cpp(303): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-c:\users\nicole\documents\comp371\a1_27890834\template\main.cpp(304): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-c:\users\nicole\documents\comp371\a1_27890834\template\main.cpp(307): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-c:\users\nicole\documents\comp371\a1_27890834\template\main.cpp(308): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-c:\users\nicole\documents\comp371\a1_27890834\template\main.cpp(309): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-c:\users\nicole\documents\comp371\a1_27890834\template\main.cpp(310): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-c:\users\nicole\documents\comp371\a1_27890834\template\main.cpp(444): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-  BufferLoader.cpp
-c:\users\nicole\documents\comp371\a1_27890834\template\bufferloader.cpp(82): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-c:\users\nicole\documents\comp371\a1_27890834\template\bufferloader.cpp(86): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\nicole\documents\comp371\a1_27890834\template\bufferloader.cpp(93): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-c:\users\nicole\documents\comp371\a1_27890834\template\bufferloader.cpp(96): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+﻿  Renderer.cpp
+c:\users\nicole\documents\comp371\a1_27890834\template\renderer.cpp(36): warning C4018: '<': signed/unsigned mismatch
   Generating Code...
+  Skipping... (no relevant changes detected)
+  main.cpp
   template.vcxproj -> C:\Users\nicole\Documents\COMP371\a1_27890834\Debug\a1_27890834.exe
   template.vcxproj -> C:\Users\nicole\Documents\COMP371\a1_27890834\Debug\a1_27890834.pdb (Partial PDB)
   0 File(s) copied

@@ -22,6 +22,7 @@ class Horse
 {
 public:
 	Horse();
+	Horse(glm::vec3 horseScale, float horseRotateAngle, glm::vec3 horseRotation, glm::vec3 horseTranslation);
 	~Horse();
 
 	std::vector<HorseObject*> components;
@@ -37,11 +38,6 @@ public:
 	void setLowerLegL(float angle);
 	void setUpperLegR(float angle);
 	void setLowerLegR(float angle);
-
-	glm::vec3 horseScale = glm::vec3(2.0f, 1.0f, 1.0f);
-	glm::vec3 horseRotation = glm::vec3(0.0f, 0.0f, 1.0f);
-	glm::vec3 horseTranslation = glm::vec3(0.0f, 4.0f, 0.0f);
-	float horseRotateAngle = 0.0f;
 
 private:
 	float colValues[4] = { 0.0f, 0.0f, 0.0f, 1.0f };

@@ -1,7 +1,11 @@
 #include "stdafx.h"
 #include "Horse.h"
 
-Horse::Horse()
+Horse::Horse() {
+
+}
+
+Horse::Horse(glm::vec3 horseScale, float horseRotateAngle, glm::vec3 horseRotation, glm::vec3 horseTranslation)
 {
 	setTorso(horseScale, horseRotateAngle, horseRotation, horseTranslation);
 	setHorseRender();

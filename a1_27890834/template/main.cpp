@@ -26,7 +26,7 @@ GLFWwindow* window;
 int windowWidth = 800;
 int windowHeight= 800;
 
-//Gobal view variables
+//Global view variables
 glm::vec3 c_pos = glm::vec3(0.0f, 3.0f, 15.0f);
 glm::vec3 c_eye = glm::normalize(glm::vec3(0.0f, 0.0f, -15.0f));
 glm::vec3 c_up = glm::vec3(0.0f, 1.0f, 0.0f);
@@ -34,7 +34,6 @@ glm::mat4 viewMatrix;
 glm::mat4 projectionMatrix;
 
 float zoom = 45.0f;
-
 bool firstMouse = true;
 float yaw = -90.0f;
 float pitch = 0.0f;
@@ -49,11 +48,13 @@ float verticalAngle = 0.0f;
 float speed = 3.0f;
 float mouseSpeed = 0.0005f;
 
-Horse h;
+//Initial Horse Values
 glm::vec3 initScale = glm::vec3(2.0f, 1.0f, 1.0f);
 glm::vec3 initRotation = glm::vec3(0.0f, 0.0f, 1.0f);
-glm::vec3 initTranslation = glm::vec3(0.0f, 0.0f, 0.0f);
+glm::vec3 initTranslation = glm::vec3(0.0f, 4.0f, 0.0f);
 float initRotateAngle = 0.0f;
+
+Horse h = Horse(initScale, initRotateAngle, initRotation, initTranslation);
 
 glm::vec3 newScale = initScale;
 glm::vec3 newRotation = initRotation;
@@ -61,15 +62,7 @@ glm::vec3 newTranslation = initTranslation;
 float newRotateAngle[14];
 
 GLenum renderMode = GL_TRIANGLES;
-
 bool hasTexture = false;
-
-struct Light {
-	glm::vec3 position;
-	glm::vec3 intensities;
-};
-
-Light gLight;
 
 // Update view
 void update() {
@@ -311,7 +304,6 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos){
 	float sensitivity = 0.1f;
 
 	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
-		//if (zoom >= 1.0f && zoom <= 45.0f)
 		if (zoom >= 100.0f)
 				zoom -= yoffset * deltaTime * sensitivity;
 		if (zoom <= 100.0f)
@@ -424,17 +416,7 @@ int main()
 	//GROUND
 	float colValues[4] = { 1.0, 1.0, 1.0, 1.0 };
 
-	//AXIS
-	std::vector<glm::vec3> colors;
-
-	glm::vec3 red = glm::vec3(1.0f, 0.0f, 0.0f);
-	glm::vec3 green = glm::vec3(0.0f, 1.0f, 0.0f);
-	glm::vec3 blue = glm::vec3(0.0f, 0.0f, 1.0f);
-	colors.push_back(red);
-	colors.push_back(green);
-	colors.push_back(blue);
-
-	glClearColor(0.7f, 0.7f, 0.7f, 0.0f);
+	glClearColor(0.529f, 0.808f, 0.922f, 0.0f);
 	GLuint x = b.getGridVAO();
 	GLuint c = b.getGroundVAO();
 
@@ -452,47 +434,24 @@ int main()
 		glUniformMatrix4fv(viewMatrixLoc, 1, GL_FALSE, glm::value_ptr(viewMatrix));
 		glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
 
-		//DISABLE TEXTURE
+		//Toggle Texture
 		if (hasTexture == false) {
-			//b.deleteTex();
-			//glDisable(GL_TEXTURE_2D);
-			glUniform1i(hasTextureLoc, 0);
-
-			//GROUND
-			r.setVAO(b.getGroundVAO());
-			glm::mat4 ground;
-			r.drawGround(GL_TRIANGLES, colValues, ground, 0);
-			r.setVAO(0);
-
-			//AXIS
-			//r.setVAO(b.getAxisVAO());
-			//glm::mat4 axis;
-			//r.drawAxis(colors[0], axis, 0);
-			//r.drawAxis(colors[1], axis, 2);
-			//r.drawAxis(colors[2], axis, 4);
-			//r.setVAO(0);
-
-			//HORSE
-			r.setVAO(b.getHorseVAO());
-			r.drawHorse(renderMode, 0);
-			r.setVAO(0);
+			glUniform1i(hasTextureLoc, 0); //turn off texture
 		}
-		//ENABLE TEXTURE
 		else {
-			//b.loadTex();
-			glUniform1i(hasTextureLoc, 1);
-
-			//GROUND
-			r.setVAO(b.getGroundVAO());
-			glm::mat4 ground;
-			r.drawGround(GL_TRIANGLES, colValues, ground, groundTEX);
-			r.setVAO(0);
-
-			//HORSE
-			r.setVAO(b.getHorseVAO());
-			r.drawHorse(renderMode, horseTEX);
-			r.setVAO(0);
+			glUniform1i(hasTextureLoc, 1); //turn on texture
 		}
+
+		//GROUND
+		r.setVAO(b.getGroundVAO());
+		glm::mat4 ground;
+		r.drawGround(colValues, ground, groundTEX);
+		r.setVAO(0);
+
+		//HORSE
+		r.setVAO(b.getHorseVAO());
+		r.drawHorse(renderMode, horseTEX);
+		r.setVAO(0);
 
 		glfwSwapBuffers(window);
 	}
