@@ -73,12 +73,14 @@ void Renderer::drawHorse(GLenum renderMode, GLuint texture) {
 };
 
 void Renderer::drawGround(GLenum renderMode, float colValues[4], glm::mat4 matrix, GLuint texture) {
+	glm::mat4 translate = glm::translate(matrix, glm::vec3(-50.0f, 0.0f, -50.0f));
+	matrix *= translate;
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, texture);
 	glUniform1i(texLoc, 0);
 	glProgramUniform4fv(shaderProgram, colorLoc, 1, colValues);
 	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(matrix));
-	glDrawArrays(renderMode, 0, 800);
+	glDrawArrays(GL_TRIANGLES, 0, 800);
 };
 
 void Renderer::drawAxis(glm::vec3 colours, glm::mat4 matrix, int i) {

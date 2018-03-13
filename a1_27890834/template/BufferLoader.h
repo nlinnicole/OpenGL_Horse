@@ -11,6 +11,7 @@ public:
 	GLuint getHorseVAO();
 	GLuint getGroundVAO();
 	GLuint getAxisVAO();
+	GLuint getGridVAO();
 
 	GLuint getHorseTex();
 	GLuint getGroundTex();
@@ -18,21 +19,26 @@ public:
 	void loadTex();
 
 private:
-	GLuint VAO[3];
-	GLuint VBO[5];
+	GLuint VAO[4];
+	GLuint VBO[7];
 	GLuint EBO;
 	GLuint tex[2];
 
 	GLuint texLoc;
 
-	std::vector<glm::vec3> vertices;
-	std::vector<glm::vec3> normals;
-	std::vector<glm::vec2> uvCoord;
+	std::vector<glm::vec3> hVertices;
+	std::vector<glm::vec3> hNormals;
+	std::vector<glm::vec2> hUvCoord;
+
+	std::vector<glm::vec3> gVertices;
+	std::vector<glm::vec3> gNormals;
+	std::vector<glm::vec2> gUvCoord;
 
 	std::vector<glm::vec3> ground;
 
 	void setHorseVAO();
 	void setGroundVAO();
 	void setAxisVAO();
+	void setGridVAO();
 };
 

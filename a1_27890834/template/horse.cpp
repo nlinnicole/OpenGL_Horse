@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "Horse.h"
 
-
 Horse::Horse()
 {
 	setTorso(horseScale, horseRotateAngle, horseRotation, horseTranslation);

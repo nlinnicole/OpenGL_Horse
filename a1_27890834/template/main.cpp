@@ -22,8 +22,6 @@
 using namespace std;
 
 // Window dimensions
-//const GLfloat WIDTH = 800;
-//const GLfloat HEIGHT = 800;
 GLFWwindow* window;
 int windowWidth = 800;
 int windowHeight= 800;
@@ -54,7 +52,7 @@ float mouseSpeed = 0.0005f;
 Horse h;
 glm::vec3 initScale = glm::vec3(2.0f, 1.0f, 1.0f);
 glm::vec3 initRotation = glm::vec3(0.0f, 0.0f, 1.0f);
-glm::vec3 initTranslation = glm::vec3(0.0f, 4.0f, 0.0f);
+glm::vec3 initTranslation = glm::vec3(0.0f, 0.0f, 0.0f);
 float initRotateAngle = 0.0f;
 
 glm::vec3 newScale = initScale;
@@ -456,17 +454,26 @@ int main()
 		glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
 
 		//AXIS
-		r.setup(b.getAxisVAO());
-		glm::mat4 axis;
-		r.drawAxis(colors[0], axis, 0);
-		r.drawAxis(colors[1], axis, 2);
-		r.drawAxis(colors[2], axis, 4);
-		r.setup(0);
+		if (hasTexture == false) {
+			//AXIS
+			r.setup(b.getAxisVAO());
+			glm::mat4 axis;
+			r.drawAxis(colors[0], axis, 0);
+			r.drawAxis(colors[1], axis, 2);
+			r.drawAxis(colors[2], axis, 4);
+			r.setup(0);
+
+			////GRID
+			//r.setup(b.getGridVAO());
+			//glm::mat4 ground;
+			//r.drawGround(groundRenderMode, colValues, ground, groundTEX);
+			//r.setup(0);
+		}
 
 		//GROUND
 		r.setup(b.getGroundVAO());
 		glm::mat4 ground;
-		r.drawGround(groundRenderMode, colValues, ground, groundTEX);
+		r.drawGround(GL_TRIANGLES, colValues, ground, groundTEX);
 		r.setup(0);
 
 		//HORSE
