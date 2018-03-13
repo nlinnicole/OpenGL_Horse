@@ -17,10 +17,11 @@ public:
 	GLuint getGroundTex();
 
 	void loadTex();
+	void deleteTex();
 
 private:
 	GLuint VAO[4];
-	GLuint VBO[7];
+	GLuint VBO[8];
 	GLuint EBO;
 	GLuint tex[2];
 

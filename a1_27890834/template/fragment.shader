@@ -4,6 +4,8 @@ uniform vec4 color = vec4(1.0, 1.0, 1.0, 1.0);
 uniform vec3 lightPos;
 uniform vec3 cameraPos;
 
+uniform int hasTexture;
+
 uniform sampler2D tex;
 
 out vec4 outputF;
@@ -31,7 +33,12 @@ void main()
 	vec3 specular = 0.5f * pow(spec, 256.0) * lightCol;
 
 	vec4 result = vec4(diffuse + ambient + specular, 1);
-	outputF = result * texCol;
-	//outputF = result * color;
+
+	if (hasTexture == 1) {
+		outputF = result * texCol;
+	}
+	else {
+		outputF = result * color;
+	}
 
 }

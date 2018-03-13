@@ -61,7 +61,6 @@ glm::vec3 newTranslation = initTranslation;
 float newRotateAngle[14];
 
 GLenum renderMode = GL_TRIANGLES;
-GLenum groundRenderMode = GL_LINES;
 
 bool hasTexture = false;
 
@@ -206,10 +205,8 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	if (key == GLFW_KEY_X && action == GLFW_PRESS) {
 		hasTexture = !hasTexture;
 		if (hasTexture) {
-			groundRenderMode = GL_TRIANGLE_STRIP;
 		}
 		else {
-			groundRenderMode = GL_LINES;
 		}
 	}
 	if (key == GLFW_KEY_0 && action == GLFW_PRESS) {
@@ -404,6 +401,7 @@ int main()
 
 	//Texture
 	GLuint texLoc = glGetUniformLocation(shaderProgram, "tex");
+	GLuint hasTextureLoc = glGetUniformLocation(shaderProgram, "hasTexture");
 
 	//Initialize Renderer with Shader Uniforms
 	GLuint transformLoc = glGetUniformLocation(shaderProgram, "model_matrix");
@@ -411,7 +409,7 @@ int main()
 	Renderer r = Renderer(transformLoc, colorLoc, shaderProgram, texLoc, h);
 
 	//Light
-	glm::vec3 light_position = glm::vec3(0.0f, 20.0f, 0.0f);
+	glm::vec3 light_position = glm::vec3(0.0f, 20.0f, 10.0f);
 	GLuint lightPosLoc = glGetUniformLocation(shaderProgram, "lightPos");
 	GLuint cameraPosLoc = glGetUniformLocation(shaderProgram, "cameraPos");
 	glUniform3fv(lightPosLoc, 1, glm::value_ptr(light_position));
@@ -437,7 +435,8 @@ int main()
 	colors.push_back(blue);
 
 	glClearColor(0.7f, 0.7f, 0.7f, 0.0f);
-
+	GLuint x = b.getGridVAO();
+	GLuint c = b.getGroundVAO();
 
 	// Game loop
 	while (!glfwWindowShouldClose(window))
@@ -453,34 +452,48 @@ int main()
 		glUniformMatrix4fv(viewMatrixLoc, 1, GL_FALSE, glm::value_ptr(viewMatrix));
 		glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
 
-		//AXIS
+		//DISABLE TEXTURE
 		if (hasTexture == false) {
-			//AXIS
-			r.setup(b.getAxisVAO());
-			glm::mat4 axis;
-			r.drawAxis(colors[0], axis, 0);
-			r.drawAxis(colors[1], axis, 2);
-			r.drawAxis(colors[2], axis, 4);
-			r.setup(0);
+			//b.deleteTex();
+			//glDisable(GL_TEXTURE_2D);
+			glUniform1i(hasTextureLoc, 0);
 
-			////GRID
-			//r.setup(b.getGridVAO());
-			//glm::mat4 ground;
-			//r.drawGround(groundRenderMode, colValues, ground, groundTEX);
-			//r.setup(0);
+			//GROUND
+			r.setVAO(b.getGroundVAO());
+			glm::mat4 ground;
+			r.drawGround(GL_TRIANGLES, colValues, ground, 0);
+			r.setVAO(0);
+
+			//AXIS
+			//r.setVAO(b.getAxisVAO());
+			//glm::mat4 axis;
+			//r.drawAxis(colors[0], axis, 0);
+			//r.drawAxis(colors[1], axis, 2);
+			//r.drawAxis(colors[2], axis, 4);
+			//r.setVAO(0);
+
+			//HORSE
+			r.setVAO(b.getHorseVAO());
+			r.drawHorse(renderMode, 0);
+			r.setVAO(0);
+		}
+		//ENABLE TEXTURE
+		else {
+			//b.loadTex();
+			glUniform1i(hasTextureLoc, 1);
+
+			//GROUND
+			r.setVAO(b.getGroundVAO());
+			glm::mat4 ground;
+			r.drawGround(GL_TRIANGLES, colValues, ground, groundTEX);
+			r.setVAO(0);
+
+			//HORSE
+			r.setVAO(b.getHorseVAO());
+			r.drawHorse(renderMode, horseTEX);
+			r.setVAO(0);
 		}
 
-		//GROUND
-		r.setup(b.getGroundVAO());
-		glm::mat4 ground;
-		r.drawGround(GL_TRIANGLES, colValues, ground, groundTEX);
-		r.setup(0);
-
-		//HORSE
-		r.setup(b.getHorseVAO());
-		r.drawHorse(renderMode, horseTEX);
-		r.setup(0);
-		
 		glfwSwapBuffers(window);
 	}
 
