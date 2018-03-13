@@ -63,6 +63,9 @@ glm::vec3 newTranslation = initTranslation;
 float newRotateAngle[14];
 
 GLenum renderMode = GL_TRIANGLES;
+GLenum groundRenderMode = GL_LINES;
+
+bool hasTexture = false;
 
 struct Light {
 	glm::vec3 position;
@@ -189,17 +192,27 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		newTranslation = glm::vec3(randX, 0.0f, randZ);
 		h.setTorso(initScale, initRotateAngle, initRotation, newTranslation);
 	}
-	//Change render mode to points
+	//Change horse render mode to points
 	if (key == GLFW_KEY_P && action == GLFW_PRESS) {
 		renderMode = GL_POINTS;
 	}
-	//Change render mode to lines
+	//Change horse render mode to lines
 	if (key == GLFW_KEY_L && action == GLFW_PRESS) {
 		renderMode = GL_LINES;
 	}
-	//Change render mode to triangles
+	//Change horse render mode to triangles
 	if (key == GLFW_KEY_T && action == GLFW_PRESS) {
 		renderMode = GL_TRIANGLES;
+	}
+	//Turn texture on and off
+	if (key == GLFW_KEY_X && action == GLFW_PRESS) {
+		hasTexture = !hasTexture;
+		if (hasTexture) {
+			groundRenderMode = GL_TRIANGLE_STRIP;
+		}
+		else {
+			groundRenderMode = GL_LINES;
+		}
 	}
 	if (key == GLFW_KEY_0 && action == GLFW_PRESS) {
 		if (mode == GLFW_MOD_SHIFT) {
@@ -391,11 +404,13 @@ int main()
 	projectionMatrix = glm::perspective(zoom, (float)windowWidth / windowHeight, 0.0f, 100.0f);
 	GLuint projectionLoc = glGetUniformLocation(shaderProgram, "projection_matrix");
 
+	//Texture
+	GLuint texLoc = glGetUniformLocation(shaderProgram, "tex");
+
 	//Initialize Renderer with Shader Uniforms
 	GLuint transformLoc = glGetUniformLocation(shaderProgram, "model_matrix");
 	GLuint colorLoc = glGetUniformLocation(shaderProgram, "color");
-	GLuint texLoc = glGetAttribLocation(shaderProgram, "tex");
-	Renderer r = Renderer(transformLoc, colorLoc, texLoc, shaderProgram, h);
+	Renderer r = Renderer(transformLoc, colorLoc, shaderProgram, texLoc, h);
 
 	//Light
 	glm::vec3 light_position = glm::vec3(0.0f, 20.0f, 0.0f);
@@ -406,7 +421,9 @@ int main()
 
 	//Buffer Loader
 	BufferLoader b;
-	r.loadTex();
+	b.loadTex();
+	GLuint horseTEX = b.getHorseTex();
+	GLuint groundTEX = b.getGroundTex();
 
 	//GROUND
 	float colValues[4] = { 1.0, 1.0, 1.0, 1.0 };
@@ -438,24 +455,24 @@ int main()
 		glUniformMatrix4fv(viewMatrixLoc, 1, GL_FALSE, glm::value_ptr(viewMatrix));
 		glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
 
-		//GROUND
-		r.setVAO(b.getGroundVAO());
-		glm::mat4 ground;
-		r.drawGround(colValues, ground);
-		r.setVAO(0);
-
 		//AXIS
-		r.setVAO(b.getAxisVAO());
+		r.setup(b.getAxisVAO());
 		glm::mat4 axis;
 		r.drawAxis(colors[0], axis, 0);
 		r.drawAxis(colors[1], axis, 2);
 		r.drawAxis(colors[2], axis, 4);
-		r.setVAO(0);
+		r.setup(0);
+
+		//GROUND
+		r.setup(b.getGroundVAO());
+		glm::mat4 ground;
+		r.drawGround(groundRenderMode, colValues, ground, groundTEX);
+		r.setup(0);
 
 		//HORSE
-		r.setVAO(b.getHorseVAO());
-		r.drawHorse(renderMode);
-		r.setVAO(0);
+		r.setup(b.getHorseVAO());
+		r.drawHorse(renderMode, horseTEX);
+		r.setup(0);
 		
 		glfwSwapBuffers(window);
 	}

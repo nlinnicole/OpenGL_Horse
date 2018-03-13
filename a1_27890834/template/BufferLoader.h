@@ -11,14 +11,19 @@ public:
 	GLuint getHorseVAO();
 	GLuint getGroundVAO();
 	GLuint getAxisVAO();
-	void loadTex();
 
+	GLuint getHorseTex();
+	GLuint getGroundTex();
+
+	void loadTex();
 
 private:
 	GLuint VAO[3];
 	GLuint VBO[5];
 	GLuint EBO;
-	GLuint tex;
+	GLuint tex[2];
+
+	GLuint texLoc;
 
 	std::vector<glm::vec3> vertices;
 	std::vector<glm::vec3> normals;

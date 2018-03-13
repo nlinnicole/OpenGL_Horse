@@ -7,12 +7,12 @@ Renderer::Renderer()
 
 }
 
-Renderer::Renderer(GLuint tl, GLuint cl, GLuint texL, GLuint sp, Horse h)
+Renderer::Renderer(GLuint tl, GLuint cl, GLuint sp, GLuint txL, Horse h)
 {
 	transformLoc = tl;
 	colorLoc = cl;
 	shaderProgram = sp;
-	texLoc = texL;
+	texLoc = txL;
 	this->h = h;
 }
 
@@ -28,7 +28,7 @@ void Renderer::setColorLoc(GLuint c) {
 	colorLoc = c;
 }
 
-void Renderer::setVAO(GLuint v) {
+void Renderer::setup(GLuint v) {
 	VAO = v;
 	glBindVertexArray(VAO);
 }
@@ -61,7 +61,10 @@ void Renderer::horseInit() {
 
 }
 
-void Renderer::drawHorse(GLenum renderMode) {
+void Renderer::drawHorse(GLenum renderMode, GLuint texture) {
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glUniform1i(texLoc, 0);
 	for (int i = 0; i < h.components.size(); ++i) {
 		glProgramUniform4fv(shaderProgram, colorLoc, 1, h.components[i]->colour);
 		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(h.components[i]->matrix));
@@ -69,10 +72,13 @@ void Renderer::drawHorse(GLenum renderMode) {
 	}
 };
 
-void Renderer::drawGround(float colValues[4], glm::mat4 matrix) {
+void Renderer::drawGround(GLenum renderMode, float colValues[4], glm::mat4 matrix, GLuint texture) {
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glUniform1i(texLoc, 0);
 	glProgramUniform4fv(shaderProgram, colorLoc, 1, colValues);
 	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(matrix));
-	glDrawArrays(GL_LINES, 0, 800);
+	glDrawArrays(renderMode, 0, 800);
 };
 
 void Renderer::drawAxis(glm::vec3 colours, glm::mat4 matrix, int i) {
@@ -81,24 +87,3 @@ void Renderer::drawAxis(glm::vec3 colours, glm::mat4 matrix, int i) {
 	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(matrix));
 	glDrawArrays(GL_LINES, i, 2);
 };
-
-
-void Renderer::loadTex() {
-	glActiveTexture(GL_TEXTURE0);
-
-	GLuint horseTex;
-	glGenTextures(1, &horseTex);
-	glBindTexture(GL_TEXTURE_2D, horseTex);
-	glEnableVertexAttribArray(texLoc);
-	glVertexAttribPointer(texLoc, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void*)(5 * sizeof(float)));
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-	int texWidth, texHeight;
-	unsigned char* image = SOIL_load_image("horseTEX.jpg", &texWidth, &texHeight, 0, SOIL_LOAD_RGB);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, texWidth, texHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
-	SOIL_free_image_data(image);
-}
