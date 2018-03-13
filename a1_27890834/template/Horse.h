@@ -26,7 +26,7 @@ public:
 
 	std::vector<HorseObject*> components;
 
-	void Horse::setTorso(glm::vec3 horseScale, float horseRotateAngle, glm::vec3 horseRotation, glm::vec3 horseTranslation);
+	void setTorso(glm::vec3 horseScale, float horseRotateAngle, glm::vec3 horseRotation, glm::vec3 horseTranslation);
 	void setNeck(float angle);
 	void setHead(float angle);
 	void setUpperArmL(float angle);
@@ -37,7 +37,6 @@ public:
 	void setLowerLegL(float angle);
 	void setUpperLegR(float angle);
 	void setLowerLegR(float angle);
-	void setTail(float angle);
 
 	glm::vec3 horseScale = glm::vec3(2.0f, 1.0f, 1.0f);
 	glm::vec3 horseRotation = glm::vec3(0.0f, 0.0f, 1.0f);
@@ -62,6 +61,7 @@ private:
 	HorseObject lowerLegLObj;
 	HorseObject upperLegRObj;
 	HorseObject lowerLegRObj;
-	HorseObject tailObj;
+
+	void setHorseRender();
 };
 

@@ -63,13 +63,16 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="ground_tex.jpg">
-      <Filter>Source</Filter>
-    </Image>
-  </ItemGroup>
-  <ItemGroup>
     <Text Include="ReadMe.txt">
       <Filter>Source</Filter>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="groundTEX.jpg">
+      <Filter>Source</Filter>
+    </Image>
+    <Image Include="horseTEX.jpg">
+      <Filter>Source</Filter>
+    </Image>
   </ItemGroup>
 </Project>

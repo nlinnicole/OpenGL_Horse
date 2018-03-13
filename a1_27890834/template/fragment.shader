@@ -31,7 +31,7 @@ void main()
 	vec3 specular = 0.5f * pow(spec, 256.0) * lightCol;
 
 	vec4 result = vec4(diffuse + ambient + specular, 1);
-	//outputF = result * texCol;
-	outputF = result * color;
+	outputF = result * texCol;
+	//outputF = result * color;
 
 }

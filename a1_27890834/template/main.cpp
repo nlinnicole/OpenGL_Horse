@@ -362,6 +362,7 @@ int init() {
 	glfwMakeContextCurrent(window);
 
 	glewExperimental = GL_TRUE;
+	glEnable(GL_CULL_FACE);
 
 	if (glewInit() != 0) {
 		std::cout << "Failed to initialize GLEW" << std::endl;
@@ -397,7 +398,7 @@ int main()
 	Renderer r = Renderer(transformLoc, colorLoc, texLoc, shaderProgram, h);
 
 	//Light
-	glm::vec3 light_position = glm::vec3(1, 20, 0);
+	glm::vec3 light_position = glm::vec3(0.0f, 20.0f, 0.0f);
 	GLuint lightPosLoc = glGetUniformLocation(shaderProgram, "lightPos");
 	GLuint cameraPosLoc = glGetUniformLocation(shaderProgram, "cameraPos");
 	glUniform3fv(lightPosLoc, 1, glm::value_ptr(light_position));

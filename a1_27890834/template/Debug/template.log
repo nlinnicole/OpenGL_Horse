@@ -1,15 +1,28 @@
-﻿Build started 3/8/2018 7:31:28 PM.
-     1>Project "C:\Users\Nicole\Documents\OpenGL_Assignments\a1_27890834\template\template.vcxproj" on node 2 (Build target(s)).
-     1>Link:
-         template.vcxproj -> C:\Users\Nicole\Documents\OpenGL_Assignments\a1_27890834\Debug\a1_27890834.exe
-       PostBuildEvent:
-         xcopy /y /d "C:\Users\Nicole\Documents\OpenGL_Assignments\a1_27890834\template\..\glfw\glfw3.dll" "C:\Users\Nicole\Documents\OpenGL_Assignments\a1_27890834\Debug\"
-         xcopy /y /d "C:\Users\Nicole\Documents\OpenGL_Assignments\a1_27890834\template\..\glew\glew32.dll" "C:\Users\Nicole\Documents\OpenGL_Assignments\a1_27890834\Debug\"
-         :VCEnd
-         0 File(s) copied
-         0 File(s) copied
-     1>Done Building Project "C:\Users\Nicole\Documents\OpenGL_Assignments\a1_27890834\template\template.vcxproj" (Build target(s)).
-
-Build succeeded.
-
-Time Elapsed 00:00:00.12
+﻿  main.cpp
+c:\users\nicole\documents\comp371\a1_27890834\template\main.cpp(43): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\users\nicole\documents\comp371\a1_27890834\template\main.cpp(44): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\users\nicole\documents\comp371\a1_27890834\template\main.cpp(123): warning C4305: '+=': truncation from 'double' to 'float'
+c:\users\nicole\documents\comp371\a1_27890834\template\main.cpp(124): warning C4305: '+=': truncation from 'double' to 'float'
+c:\users\nicole\documents\comp371\a1_27890834\template\main.cpp(125): warning C4305: '+=': truncation from 'double' to 'float'
+c:\users\nicole\documents\comp371\a1_27890834\template\main.cpp(130): warning C4305: '-=': truncation from 'double' to 'float'
+c:\users\nicole\documents\comp371\a1_27890834\template\main.cpp(131): warning C4305: '-=': truncation from 'double' to 'float'
+c:\users\nicole\documents\comp371\a1_27890834\template\main.cpp(132): warning C4305: '-=': truncation from 'double' to 'float'
+c:\users\nicole\documents\comp371\a1_27890834\template\main.cpp(187): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+c:\users\nicole\documents\comp371\a1_27890834\template\main.cpp(188): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+c:\users\nicole\documents\comp371\a1_27890834\template\main.cpp(295): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+c:\users\nicole\documents\comp371\a1_27890834\template\main.cpp(296): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+c:\users\nicole\documents\comp371\a1_27890834\template\main.cpp(299): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\users\nicole\documents\comp371\a1_27890834\template\main.cpp(300): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\users\nicole\documents\comp371\a1_27890834\template\main.cpp(301): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+c:\users\nicole\documents\comp371\a1_27890834\template\main.cpp(302): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+c:\users\nicole\documents\comp371\a1_27890834\template\main.cpp(430): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  Generating Code...
+  Compiling...
+  Renderer.cpp
+c:\users\nicole\documents\comp371\a1_27890834\template\renderer.cpp(65): warning C4018: '<': signed/unsigned mismatch
+  Horse.cpp
+  Generating Code...
+  template.vcxproj -> C:\Users\nicole\Documents\COMP371\a1_27890834\Debug\a1_27890834.exe
+  template.vcxproj -> C:\Users\nicole\Documents\COMP371\a1_27890834\Debug\a1_27890834.pdb (Partial PDB)
+  0 File(s) copied
+  0 File(s) copied
