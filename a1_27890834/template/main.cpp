@@ -390,11 +390,18 @@ int main()
 	projectionMatrix = glm::perspective(zoom, (float)windowWidth / windowHeight, 0.0f, 100.0f);
 	GLuint projectionLoc = glGetUniformLocation(shaderProgram, "projection_matrix");
 
-	//Initialize Renderer
+	//Initialize Renderer with Shader Uniforms
 	GLuint transformLoc = glGetUniformLocation(shaderProgram, "model_matrix");
 	GLuint colorLoc = glGetUniformLocation(shaderProgram, "color");
 	GLuint texLoc = glGetAttribLocation(shaderProgram, "tex");
 	Renderer r = Renderer(transformLoc, colorLoc, texLoc, shaderProgram, h);
+
+	//Light
+	glm::vec3 light_position = glm::vec3(1, 20, 0);
+	GLuint lightPosLoc = glGetUniformLocation(shaderProgram, "lightPos");
+	GLuint cameraPosLoc = glGetUniformLocation(shaderProgram, "cameraPos");
+	glUniform3fv(lightPosLoc, 1, glm::value_ptr(light_position));
+	glUniform3fv(cameraPosLoc, 1, glm::value_ptr(c_pos));
 
 	//Buffer Loader
 	BufferLoader b;
