@@ -122,6 +122,7 @@ void Horse::setUpperArmR(float angle)
 	rotate = glm::rotate(upperArmR, glm::radians(0.0f + angle), glm::vec3(0.0f, 0.0f, 1.0f));
 	translate = glm::translate(upperArmR, glm::vec3(-5.4f, -1.5f, -3.0f));
 	rotate *= translate;
+	//local translation vs global translation
 	translate = glm::translate(upperArmR, glm::vec3(5.4f, 0.02f, 10.0f));
 	upperArmR *= torsoObj.matrix * scale * rotate * translate;
 	colValues[0] = 0.690f;

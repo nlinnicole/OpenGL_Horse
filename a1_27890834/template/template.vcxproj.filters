@@ -53,6 +53,9 @@
     <None Include="vertex.shader">
       <Filter>Source</Filter>
     </None>
+    <None Include="skyVertex.shader">
+      <Filter>Source</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source">
@@ -72,12 +75,33 @@
     <Text Include="depthFragment.shader">
       <Filter>Source</Filter>
     </Text>
+    <Text Include="skyFragment.shader">
+      <Filter>Source</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <Image Include="groundTEX.jpg">
       <Filter>Source</Filter>
     </Image>
     <Image Include="horseTEX.jpg">
+      <Filter>Source</Filter>
+    </Image>
+    <Image Include="top.jpg">
+      <Filter>Source</Filter>
+    </Image>
+    <Image Include="back.jpg">
+      <Filter>Source</Filter>
+    </Image>
+    <Image Include="bottom.jpg">
+      <Filter>Source</Filter>
+    </Image>
+    <Image Include="front.jpg">
+      <Filter>Source</Filter>
+    </Image>
+    <Image Include="left.jpg">
+      <Filter>Source</Filter>
+    </Image>
+    <Image Include="right.jpg">
       <Filter>Source</Filter>
     </Image>
   </ItemGroup>

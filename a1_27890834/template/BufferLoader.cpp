@@ -5,7 +5,7 @@ BufferLoader::BufferLoader()
 {
 	loadOBJ("cube.obj", hVertices, hNormals, hUvCoord);
 	loadOBJ("plane.obj", gVertices, gNormals, gUvCoord);
-	setHorseVAO();
+	setCubeVAO();
 	setAxisVAO();
 	setGroundVAO();
 }
@@ -14,7 +14,7 @@ BufferLoader::~BufferLoader()
 {
 }
 
-GLuint BufferLoader::getHorseVAO()
+GLuint BufferLoader::getCubeVAO()
 {
 	return VAO[0];
 }
@@ -35,7 +35,19 @@ unsigned int BufferLoader::getFBO() {
 	return FBO;
 }
 
-void BufferLoader::setHorseVAO() {
+GLuint BufferLoader::getHorseTex() {
+	return tex[0];
+}
+
+GLuint BufferLoader::getGroundTex() {
+	return tex[1];
+}
+
+GLuint BufferLoader::getSkyTex() {
+	return skyTex;
+}
+
+void BufferLoader::setCubeVAO() {
 	glGenVertexArrays(1, &VAO[0]);
 	glBindVertexArray(VAO[0]);
 
@@ -164,17 +176,34 @@ void BufferLoader::loadTex() {
 
 }
 
-void BufferLoader::deleteTex() {
-	glDeleteTextures(2, tex);
+void BufferLoader::loadSkybox() {
+	int width, height;
+	unsigned char* image;
+
+	std::vector<const GLchar*> faces;
+	faces.push_back("right.jpg");
+	faces.push_back("left.jpg");
+	faces.push_back("top.jpg");
+	faces.push_back("bottom.jpg");
+	faces.push_back("back.jpg");
+	faces.push_back("front.jpg");
+
+	glGenTextures(1, &skyTex);
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, skyTex);
+	for (GLuint i = 0; i < faces.size(); ++i) {
+		image = SOIL_load_image(faces[i], &width, &height, 0, SOIL_LOAD_RGB);
+		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+		SOIL_free_image_data(image);
+	}
+
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 }
 
-GLuint BufferLoader::getHorseTex() {
-	return tex[0];
-}
-
-GLuint BufferLoader::getGroundTex() {
-	return tex[1];
-}
 
 void BufferLoader::loadDepthMap() {
 	const unsigned int SHADOW_WIDTH = 1024;
@@ -193,5 +222,5 @@ void BufferLoader::loadDepthMap() {
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap, 0);
 	glDrawBuffer(GL_NONE);
 	glReadBuffer(GL_NONE);
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);	
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }

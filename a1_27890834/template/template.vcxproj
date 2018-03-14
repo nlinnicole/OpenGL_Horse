@@ -88,6 +88,7 @@ xcopy /y /d "$(ProjectDir)..\glew\glew32.dll" "$(OutDir)"</Command>
     <Text Include="ReadMe.txt" />
     <Text Include="depthVertex.shader" />
     <Text Include="depthFragment.shader" />
+    <Text Include="skyFragment.shader" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BufferLoader.h" />
@@ -112,11 +113,18 @@ xcopy /y /d "$(ProjectDir)..\glew\glew32.dll" "$(OutDir)"</Command>
   </ItemGroup>
   <ItemGroup>
     <None Include="fragment.shader" />
+    <None Include="skyVertex.shader" />
     <None Include="vertex.shader" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="back.jpg" />
+    <Image Include="bottom.jpg" />
+    <Image Include="front.jpg" />
     <Image Include="groundTEX.jpg" />
     <Image Include="horseTEX.jpg" />
+    <Image Include="left.jpg" />
+    <Image Include="right.jpg" />
+    <Image Include="top.jpg" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

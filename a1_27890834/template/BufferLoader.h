@@ -8,7 +8,7 @@ public:
 	BufferLoader();
 	~BufferLoader();
 
-	GLuint getHorseVAO();
+	GLuint getCubeVAO();
 	GLuint getGroundVAO();
 	GLuint getAxisVAO();
 	GLuint getGridVAO();
@@ -17,22 +17,21 @@ public:
 
 	GLuint getHorseTex();
 	GLuint getGroundTex();
+	GLuint getSkyTex();
 
 	void loadTex();
-	void deleteTex();
-
 	void loadDepthMap();
+	void loadSkybox();
 
 private:
 	GLuint VAO[4];
 	GLuint VBO[8];
 	GLuint EBO;
 	GLuint tex[2];
+	GLuint skyTex;
 
 	unsigned int FBO;
 	unsigned int depthMap;
-
-	GLuint texLoc;
 
 	std::vector<glm::vec3> hVertices;
 	std::vector<glm::vec3> hNormals;
@@ -44,7 +43,7 @@ private:
 
 	std::vector<glm::vec3> ground;
 
-	void setHorseVAO();
+	void setCubeVAO();
 	void setGroundVAO();
 	void setAxisVAO();
 	void setGridVAO();

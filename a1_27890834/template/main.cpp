@@ -357,7 +357,7 @@ void renderScene(Renderer r, BufferLoader b, GLuint groundTEX, GLuint horseTEX) 
 	r.setVAO(0);
 
 	//HORSE
-	r.setVAO(b.getHorseVAO());
+	r.setVAO(b.getCubeVAO());
 	r.drawHorse(renderMode, horseTEX);
 	r.setVAO(0);
 }
@@ -407,8 +407,9 @@ int main()
 
 	ShaderLoader s;
 	GLuint shaderProgram = s.loadShaders("vertex.shader", "fragment.shader");
-	GLuint depthShaderProgram = s.loadShaders("depthVertex.shader", "depthFragment.shader");
-	//glUseProgram(shaderProgram);
+	//GLuint depthShaderProgram = s.loadShaders("depthVertex.shader", "depthFragment.shader");
+	GLuint skyShaderProgram = s.loadShaders("skyVertex.shader", "skyFragment.shader");
+	glUseProgram(shaderProgram);
 	//glUseProgram(depthShaderProgram);
 
 	//View Matrix
@@ -441,19 +442,30 @@ int main()
 	b.loadTex();
 	GLuint horseTEX = b.getHorseTex();
 	GLuint groundTEX = b.getGroundTex();
+	GLuint skyTEX = b.getSkyTex();
+
+	//Skybox
+	b.loadSkybox();
+	glm::mat4 sky;
+	GLuint skyTexLoc = glGetUniformLocation(skyShaderProgram, "tex");
+	GLuint skyProjectionLoc = glGetUniformLocation(skyShaderProgram, "projection_matrix");
+	GLuint skyTransformLoc = glGetUniformLocation(skyShaderProgram, "model_matrix");
+	GLuint skyViewLoc = glGetUniformLocation(skyShaderProgram, "view_matrix");
+	glUniformMatrix4fv(skyViewLoc, 1, GL_FALSE, glm::value_ptr(viewMatrix));
+	glUniformMatrix4fv(skyProjectionLoc, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
 
 	//Shadows
-	b.loadDepthMap();
-	float near = 1.0f;
-	float far = 7.5f;
-	glm::mat4 lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near, far);
-	glm::mat4 lightView = glm::lookAt(lightPos, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	glm::mat4 lightSpaceMat = lightProjection * lightView;
-	
-	GLuint lightMatrixLoc = glGetUniformLocation(depthShaderProgram, "light_matrix");
-	glUniformMatrix4fv(lightMatrixLoc, 1, GL_FALSE, glm::value_ptr(lightSpaceMat));
+	//b.loadDepthMap();
+	//float near = 1.0f;
+	//float far = 7.5f;
+	//glm::mat4 lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near, far);
+	//glm::mat4 lightView = glm::lookAt(lightPos, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	//glm::mat4 lightSpaceMat = lightProjection * lightView;
+	//
+	//GLuint lightMatrixLoc = glGetUniformLocation(depthShaderProgram, "light_matrix");
+	//glUniformMatrix4fv(lightMatrixLoc, 1, GL_FALSE, glm::value_ptr(lightSpaceMat));
 
-	GLuint depthModelLoc = glGetUniformLocation(depthShaderProgram, "model");
+	//GLuint depthModelLoc = glGetUniformLocation(depthShaderProgram, "model");
 
 	// Game loop
 	while (!glfwWindowShouldClose(window))
@@ -461,7 +473,7 @@ int main()
 		float currentFrame = glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT);
 		
 		//UPDATE VIEW
 		glUniformMatrix4fv(viewMatrixLoc, 1, GL_FALSE, glm::value_ptr(viewMatrix));
@@ -475,27 +487,36 @@ int main()
 			glUniform1i(hasTextureLoc, 1); //turn on texture
 		}
 
-		//renderScene(r, b, groundTEX, horseTEX);
+		glUseProgram(shaderProgram);
+		renderScene(r, b, groundTEX, horseTEX);
+
+		//SKYBOX
+		glDepthMask(GL_FALSE);
+		glUseProgram(skyShaderProgram);
+		r.setVAO(b.getCubeVAO());
+		r.drawSkyBox(sky, skyTEX, skyTransformLoc, skyTexLoc);
+		r.setVAO(0);
+		glDepthMask(GL_TRUE);
 
 		//SHADOWS
 		//----use depth shader----
-		glUseProgram(depthShaderProgram);
-		r.setShaderProgram(depthShaderProgram);
-		r.setTransformLoc(depthModelLoc);
+		//glUseProgram(depthShaderProgram);
+		//r.setShaderProgram(depthShaderProgram);
+		//r.setTransformLoc(depthModelLoc);
 
-		glViewport(0, 0, 1024, 1024);
-		glBindFramebuffer(GL_FRAMEBUFFER, b.getFBO());
-		glClear(GL_DEPTH_BUFFER_BIT);
-		renderScene(r, b, groundTEX, horseTEX);
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		//glViewport(0, 0, 1024, 1024);
+		//glBindFramebuffer(GL_FRAMEBUFFER, b.getFBO());
+		//glClear(GL_DEPTH_BUFFER_BIT);
+		//renderScene(r, b, groundTEX, horseTEX);
+		//glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 		//----use normal shader-----
-		glUseProgram(shaderProgram);
+	/*	glUseProgram(shaderProgram);
 		r.setShaderProgram(shaderProgram);
 		r.setTransformLoc(transformLoc);
 		glViewport(0, 0, windowWidth, windowHeight);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		renderScene(r, b, groundTEX, horseTEX);
+		renderScene(r, b, groundTEX, horseTEX);*/
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();

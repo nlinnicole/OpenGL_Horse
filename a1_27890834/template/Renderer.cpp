@@ -61,3 +61,13 @@ void Renderer::drawAxis(glm::vec3 colours, glm::mat4 matrix, int i) {
 	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(matrix));
 	glDrawArrays(GL_LINES, i, 2);
 };
+
+void Renderer::drawSkyBox(glm::mat4 matrix, GLuint texture, GLuint transformLoc, GLuint skyTexLoc) {
+	//glm::mat4 scale = glm::scale(matrix, glm::vec3(5.0, 5.0, 5.0));
+	//matrix *= scale;
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, texture);
+	glUniform1i(skyTexLoc, 1);
+	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(matrix));
+	glDrawArrays(GL_TRIANGLES, 0, 12 * 3);
+}
