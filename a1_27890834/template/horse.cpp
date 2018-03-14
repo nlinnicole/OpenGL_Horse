@@ -7,20 +7,39 @@ Horse::Horse() {
 
 Horse::Horse(glm::vec3 horseScale, float horseRotateAngle, glm::vec3 horseRotation, glm::vec3 horseTranslation)
 {
-	setTorso(horseScale, horseRotateAngle, horseRotation, horseTranslation);
+	scaling = horseScale;
+	angle = horseRotateAngle;
+	rotation = horseRotation;
+	translation = horseTranslation;
+	setTorso();
 	setHorseRender();
 }
-
 
 Horse::~Horse()
 {
 }
 
-void Horse::setTorso(glm::vec3 horseScale, float horseRotateAngle, glm::vec3 horseRotation, glm::vec3 horseTranslation) {
+void Horse::translateHorse(glm::vec3 translate) {
+	translation = translate;
+	setTorso();
+}
+
+void Horse::scaleHorse(glm::vec3 scale) {
+	scaling = scale;
+	setTorso();
+}
+
+void Horse::rotateHorse(float ag, glm::vec3 rotate) {	 
+	angle = ag;
+	rotation = rotate;
+	setTorso();
+}
+
+void Horse::setTorso() {
 	glm::mat4 torso;
-	scale = glm::scale(torso, horseScale);
-	rotate = glm::rotate(torso, glm::radians(0.0f + horseRotateAngle), horseRotation);
-	translate = glm::translate(torso, horseTranslation);
+	scale = glm::scale(torso, scaling);
+	rotate = glm::rotate(torso, glm::radians(0.0f + angle), rotation);
+	translate = glm::translate(torso, translation);
 	torso*= scale * rotate * translate;
 	colValues[0] = 0.275f;
 	colValues[1] = 0.510f;
