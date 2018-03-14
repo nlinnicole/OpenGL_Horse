@@ -59,7 +59,7 @@ Horse h = Horse(initScale, initRotateAngle, initRotation, initTranslation);
 glm::vec3 newScale = initScale;
 glm::vec3 newRotation = initRotation;
 glm::vec3 newTranslation = initTranslation;
-float newRotateAngle[14];
+float newRotateAngle[12];
 
 GLenum renderMode = GL_TRIANGLES;
 bool hasTexture = false;
@@ -99,15 +99,16 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	//Move camera down
 	if (key == GLFW_KEY_DOWN && action == GLFW_PRESS) {
 		--c_pos.y;
-		std::cout << c_pos.y << std::endl;
 		update();
 	}
-	//Reset camera position
+	//Reset scene
 	if (key == GLFW_KEY_HOME && action == GLFW_PRESS) {
 		c_pos = glm::vec3(0.0f, 3.0f, 15.0f);
 		c_eye = glm::normalize(glm::vec3(0.0f, 0.0f, -15.0f));
 		c_up = glm::vec3(0.0f, 1.0f, 0.0f);
-
+		for (int i = 0; i < sizeof(newRotateAngle) / sizeof(newRotateAngle[0]); ++i) {
+			newRotateAngle[i] = 0.0f;
+		}
 		h.setTorso(initScale, initRotateAngle, initRotation, initTranslation);
 		update();
 	}
@@ -133,7 +134,19 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		}
 		//Rotate horse upwards on z axis
 		else {
-			newRotateAngle[10] += 0.1f;
+			newRotateAngle[10] += 5.0f;
+			h.setTorso(initScale, newRotateAngle[10], initRotation, newTranslation);
+		}
+	}
+	//Move horse down
+	if (key == GLFW_KEY_S && action == GLFW_PRESS) {
+		if (mode == GLFW_MOD_SHIFT) {
+			--newTranslation.y;
+			h.setTorso(initScale, initRotateAngle, initRotation, newTranslation);
+		}
+		//Rotate horse downwards on z axis
+		else {
+			newRotateAngle[10] -= 5.0f;
 			h.setTorso(initScale, newRotateAngle[10], initRotation, newTranslation);
 		}
 	}
@@ -145,21 +158,9 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		}
 		//Rotate horse left on y axis
 		else {
-			newRotateAngle[11] -= 0.1f;
+			newRotateAngle[11] -= 5.0f;
 			newRotation = glm::vec3(0.0f, 1.0f, 0.0f);
 			h.setTorso(initScale, newRotateAngle[11], newRotation, newTranslation);
-		}
-	}
-	//Move horse down
-	if (key == GLFW_KEY_S && action == GLFW_PRESS) {
-		if (mode == GLFW_MOD_SHIFT) {
-			--newTranslation.y;
-			h.setTorso(initScale, initRotateAngle, initRotation, newTranslation);
-		}
-		//Rotate horse downwards on z axis
-		else {
-			newRotateAngle[12] -= 0.1f;
-			h.setTorso(initScale, newRotateAngle[12], initRotation, newTranslation);
 		}
 	}
 	//Move horse right
@@ -170,9 +171,9 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		}
 		//Rotate horse right on y axis
 		else {
-			newRotateAngle[13] += 0.1f;
+			newRotateAngle[11] += 5.0f;
 			newRotation = glm::vec3(0.0f, 1.0f, 0.0f);
-			h.setTorso(initScale, newRotateAngle[13], newRotation, newTranslation);
+			h.setTorso(initScale, newRotateAngle[11], newRotation, newTranslation);
 		}
 	}
 	//Re-position horse to a random position on grid

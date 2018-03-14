@@ -1,8 +1,4 @@
-﻿  Renderer.cpp
-c:\users\nicole\documents\comp371\a1_27890834\template\renderer.cpp(36): warning C4018: '<': signed/unsigned mismatch
-  Generating Code...
-  Skipping... (no relevant changes detected)
-  main.cpp
+﻿  Horse.cpp
   template.vcxproj -> C:\Users\nicole\Documents\COMP371\a1_27890834\Debug\a1_27890834.exe
   template.vcxproj -> C:\Users\nicole\Documents\COMP371\a1_27890834\Debug\a1_27890834.pdb (Partial PDB)
   0 File(s) copied
