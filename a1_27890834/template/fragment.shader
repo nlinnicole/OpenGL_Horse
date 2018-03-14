@@ -7,12 +7,14 @@ uniform vec3 cameraPos;
 uniform int hasTexture;
 
 uniform sampler2D tex;
+uniform sampler2D shadow;
 
 out vec4 outputF;
 
 in vec3 outNormal;
 in vec3 fragPosition;
 in vec2 outUV;
+in vec4 fragPosLightSpace;
 
 void main()
 {
@@ -37,13 +39,22 @@ void main()
 	float spec = max(an, 0.0);
 	vec3 specular = 0.5f * pow(spec, 256.0) * lightCol;
 
-	vec4 result = vec4(diffuse + ambient + specular, 1);
+	//SHADOW
+	//float shadow = shadowCalc(fragPosLightSpace);
+
+	vec4 lightResult = vec4(diffuse + ambient + specular, 1);
+	//vec4 lightResult = (ambient + (1.0 - shadow) * (diffuse + specular));
 
 	if (hasTexture == 1) {
-		outputF = result * texCol;
+		outputF = lightResult * texCol;
 	}
 	else {
-		outputF = result * color;
+		outputF = lightResult * color;
 	}
-
 }
+
+//float shadowCalc(vec4 fragPosLightSpace) {
+//	vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
+//	projCoords = projCoords * 0.5 + 0.5;
+//	float closestDepth = texture()
+//}

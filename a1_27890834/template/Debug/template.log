@@ -1,5 +1,15 @@
-﻿  Horse.cpp
-  template.vcxproj -> C:\Users\nicole\Documents\COMP371\a1_27890834\Debug\a1_27890834.exe
-  template.vcxproj -> C:\Users\nicole\Documents\COMP371\a1_27890834\Debug\a1_27890834.pdb (Partial PDB)
-  0 File(s) copied
-  0 File(s) copied
+﻿Build started 3/14/2018 4:00:24 PM.
+     1>Project "C:\Users\Nicole\Documents\OpenGL_Assignments\a1_27890834\template\template.vcxproj" on node 2 (Build target(s)).
+     1>Link:
+         template.vcxproj -> C:\Users\Nicole\Documents\OpenGL_Assignments\a1_27890834\Debug\a1_27890834.exe
+       PostBuildEvent:
+         xcopy /y /d "C:\Users\Nicole\Documents\OpenGL_Assignments\a1_27890834\template\..\glfw\glfw3.dll" "C:\Users\Nicole\Documents\OpenGL_Assignments\a1_27890834\Debug\"
+         xcopy /y /d "C:\Users\Nicole\Documents\OpenGL_Assignments\a1_27890834\template\..\glew\glew32.dll" "C:\Users\Nicole\Documents\OpenGL_Assignments\a1_27890834\Debug\"
+         :VCEnd
+         0 File(s) copied
+         0 File(s) copied
+     1>Done Building Project "C:\Users\Nicole\Documents\OpenGL_Assignments\a1_27890834\template\template.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:00.14

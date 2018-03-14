@@ -362,21 +362,6 @@ void renderScene(Renderer r, BufferLoader b, GLuint groundTEX, GLuint horseTEX) 
 	r.setVAO(0);
 }
 
-void depthShaderSetup(GLuint depthShader) {
-	float near = 1.0f;
-	float far = 7.5f;
-	glm::mat4 lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near, far);
-	glm::mat4 lightView = glm::lookAt(lightPos, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	glm::mat4 lightSpaceMat = lightProjection * lightView;
-
-	GLuint lightMatrixLoc = glGetUniformLocation(depthShader, "light_matrix");
-	glUniformMatrix4fv(lightMatrixLoc, 1, GL_FALSE, glm::value_ptr(lightSpaceMat));
-}
-
-void shaderSetup(GLuint shader) {
-
-}
-
 int init() {
 	std::cout << "Starting GLFW context, OpenGL 3.3" << std::endl;
 	glfwInit();
@@ -418,10 +403,13 @@ int main()
 		return -1;
 	}
 
+	glClearColor(0.529f, 0.808f, 0.922f, 0.0f);
+
 	ShaderLoader s;
 	GLuint shaderProgram = s.loadShaders("vertex.shader", "fragment.shader");
 	GLuint depthShaderProgram = s.loadShaders("depthVertex.shader", "depthFragment.shader");
-	glUseProgram(shaderProgram);
+	//glUseProgram(shaderProgram);
+	//glUseProgram(depthShaderProgram);
 
 	//View Matrix
 	viewMatrix = glm::lookAt(c_pos, c_pos + c_eye, c_up);
@@ -456,11 +444,16 @@ int main()
 
 	//Shadows
 	b.loadDepthMap();
-	depthShaderSetup(depthShaderProgram);
+	float near = 1.0f;
+	float far = 7.5f;
+	glm::mat4 lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near, far);
+	glm::mat4 lightView = glm::lookAt(lightPos, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	glm::mat4 lightSpaceMat = lightProjection * lightView;
+	
+	GLuint lightMatrixLoc = glGetUniformLocation(depthShaderProgram, "light_matrix");
+	glUniformMatrix4fv(lightMatrixLoc, 1, GL_FALSE, glm::value_ptr(lightSpaceMat));
 
-	glClearColor(0.529f, 0.808f, 0.922f, 0.0f);
-	GLuint x = b.getGridVAO();
-	GLuint c = b.getGroundVAO();
+	GLuint depthModelLoc = glGetUniformLocation(depthShaderProgram, "model");
 
 	// Game loop
 	while (!glfwWindowShouldClose(window))
@@ -468,15 +461,13 @@ int main()
 		float currentFrame = glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
-
-		glfwPollEvents();
-		glClear(GL_COLOR_BUFFER_BIT);
-
-		//Update View
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		
+		//UPDATE VIEW
 		glUniformMatrix4fv(viewMatrixLoc, 1, GL_FALSE, glm::value_ptr(viewMatrix));
 		glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
 
-		//TEXTURE
+		//TOGGLE TEXTURE
 		if (hasTexture == false) {
 			glUniform1i(hasTextureLoc, 0); //turn off texture
 		}
@@ -484,19 +475,31 @@ int main()
 			glUniform1i(hasTextureLoc, 1); //turn on texture
 		}
 
+		//renderScene(r, b, groundTEX, horseTEX);
+
 		//SHADOWS
+		//----use depth shader----
+		glUseProgram(depthShaderProgram);
+		r.setShaderProgram(depthShaderProgram);
+		r.setTransformLoc(depthModelLoc);
+
 		glViewport(0, 0, 1024, 1024);
 		glBindFramebuffer(GL_FRAMEBUFFER, b.getFBO());
 		glClear(GL_DEPTH_BUFFER_BIT);
 		renderScene(r, b, groundTEX, horseTEX);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
+		//----use normal shader-----
+		glUseProgram(shaderProgram);
+		r.setShaderProgram(shaderProgram);
+		r.setTransformLoc(transformLoc);
 		glViewport(0, 0, windowWidth, windowHeight);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		renderScene(r, b, groundTEX, horseTEX);
 
-		
 		glfwSwapBuffers(window);
+		glfwPollEvents();
+
 	}
 	// Terminate GLFW, clearing any resources allocated by GLFW.
 	glfwTerminate();

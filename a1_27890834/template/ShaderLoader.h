@@ -16,5 +16,6 @@ public:
 	ShaderLoader();
 	~ShaderLoader();
 	GLuint loadShaders(std::string vertex_shader_path, std::string fragment_shader_path);
+
 };
 

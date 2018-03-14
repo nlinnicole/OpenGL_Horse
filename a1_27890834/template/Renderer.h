@@ -13,6 +13,8 @@ public:
 	~Renderer();
 	
 	void setVAO(GLuint v);
+	void setShaderProgram(GLuint shaderProgram);
+	void setTransformLoc(GLuint transformLoc);
 
 	void drawHorse(GLenum renderMode, GLuint texture);
 	void drawGround(float colValues[4], glm::mat4 matrix, GLuint texture);

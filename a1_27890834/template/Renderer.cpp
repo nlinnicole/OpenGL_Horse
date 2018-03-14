@@ -20,6 +20,14 @@ Renderer::~Renderer()
 {
 }
 
+void Renderer::setShaderProgram(GLuint sp) {
+	shaderProgram = sp;
+}
+
+void Renderer::setTransformLoc(GLuint tl) {
+	transformLoc = tl;
+}
+
 void Renderer::setVAO(GLuint v) {
 	VAO = v;
 	glBindVertexArray(VAO);

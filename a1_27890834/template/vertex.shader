@@ -11,8 +11,9 @@ uniform mat4 projection_matrix;
 uniform mat4 light_matrix;
 
 out vec3 outNormal;
-out vec3 fragPosition;
 out vec2 outUV;
+out vec3 fragPosition;
+out vec3 fragPosLightSpace;
 
 void main()
 {
@@ -22,4 +23,6 @@ void main()
 	fragPosition = vec3(model_matrix * vec4(position, 1.0f));
 	
 	outUV = UV;
+
+	//fragPosLightSpace = light_matrix * vec4(fragPosition, 1.0);
 }
