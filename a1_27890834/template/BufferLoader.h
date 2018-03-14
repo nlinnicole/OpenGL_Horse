@@ -13,17 +13,24 @@ public:
 	GLuint getAxisVAO();
 	GLuint getGridVAO();
 
+	unsigned int getFBO();
+
 	GLuint getHorseTex();
 	GLuint getGroundTex();
 
 	void loadTex();
 	void deleteTex();
 
+	void loadDepthMap();
+
 private:
 	GLuint VAO[4];
 	GLuint VBO[8];
 	GLuint EBO;
 	GLuint tex[2];
+
+	unsigned int FBO;
+	unsigned int depthMap;
 
 	GLuint texLoc;
 

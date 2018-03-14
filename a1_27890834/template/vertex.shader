@@ -8,6 +8,8 @@ uniform mat4 model_matrix;
 uniform mat4 view_matrix;
 uniform mat4 projection_matrix;
 
+uniform mat4 light_matrix;
+
 out vec3 outNormal;
 out vec3 fragPosition;
 out vec2 outUV;

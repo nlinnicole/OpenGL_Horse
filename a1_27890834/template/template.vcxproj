@@ -86,6 +86,8 @@ xcopy /y /d "$(ProjectDir)..\glew\glew32.dll" "$(OutDir)"</Command>
   </ItemDefinitionGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
+    <Text Include="depthVertex.shader" />
+    <Text Include="depthFragment.shader" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BufferLoader.h" />

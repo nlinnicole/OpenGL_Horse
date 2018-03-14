@@ -64,6 +64,9 @@ float newRotateAngle[12];
 GLenum renderMode = GL_TRIANGLES;
 bool hasTexture = false;
 
+//Light
+glm::vec3 lightPos = glm::vec3(0.0f, 20.0f, 10.0f);
+
 // Update view
 void update() {
 	viewMatrix = glm::lookAt(c_pos, c_pos + c_eye, c_up);
@@ -344,6 +347,36 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
 	update();
 }
 
+void renderScene(Renderer r, BufferLoader b, GLuint groundTEX, GLuint horseTEX) {
+	float colValues[4] = { 1.0, 1.0, 1.0, 1.0 };
+
+	//GROUND
+	r.setVAO(b.getGroundVAO());
+	glm::mat4 ground;
+	r.drawGround(colValues, ground, groundTEX);
+	r.setVAO(0);
+
+	//HORSE
+	r.setVAO(b.getHorseVAO());
+	r.drawHorse(renderMode, horseTEX);
+	r.setVAO(0);
+}
+
+void depthShaderSetup(GLuint depthShader) {
+	float near = 1.0f;
+	float far = 7.5f;
+	glm::mat4 lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near, far);
+	glm::mat4 lightView = glm::lookAt(lightPos, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	glm::mat4 lightSpaceMat = lightProjection * lightView;
+
+	GLuint lightMatrixLoc = glGetUniformLocation(depthShader, "light_matrix");
+	glUniformMatrix4fv(lightMatrixLoc, 1, GL_FALSE, glm::value_ptr(lightSpaceMat));
+}
+
+void shaderSetup(GLuint shader) {
+
+}
+
 int init() {
 	std::cout << "Starting GLFW context, OpenGL 3.3" << std::endl;
 	glfwInit();
@@ -387,6 +420,7 @@ int main()
 
 	ShaderLoader s;
 	GLuint shaderProgram = s.loadShaders("vertex.shader", "fragment.shader");
+	GLuint depthShaderProgram = s.loadShaders("depthVertex.shader", "depthFragment.shader");
 	glUseProgram(shaderProgram);
 
 	//View Matrix
@@ -407,20 +441,22 @@ int main()
 	Renderer r = Renderer(transformLoc, colorLoc, shaderProgram, texLoc, h);
 
 	//Light
-	glm::vec3 light_position = glm::vec3(0.0f, 20.0f, 10.0f);
 	GLuint lightPosLoc = glGetUniformLocation(shaderProgram, "lightPos");
 	GLuint cameraPosLoc = glGetUniformLocation(shaderProgram, "cameraPos");
-	glUniform3fv(lightPosLoc, 1, glm::value_ptr(light_position));
+	glUniform3fv(lightPosLoc, 1, glm::value_ptr(lightPos));
 	glUniform3fv(cameraPosLoc, 1, glm::value_ptr(c_pos));
 
 	//Buffer Loader
 	BufferLoader b;
+
+	//Textures
 	b.loadTex();
 	GLuint horseTEX = b.getHorseTex();
 	GLuint groundTEX = b.getGroundTex();
 
-	//GROUND
-	float colValues[4] = { 1.0, 1.0, 1.0, 1.0 };
+	//Shadows
+	b.loadDepthMap();
+	depthShaderSetup(depthShaderProgram);
 
 	glClearColor(0.529f, 0.808f, 0.922f, 0.0f);
 	GLuint x = b.getGridVAO();
@@ -440,7 +476,7 @@ int main()
 		glUniformMatrix4fv(viewMatrixLoc, 1, GL_FALSE, glm::value_ptr(viewMatrix));
 		glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
 
-		//Toggle Texture
+		//TEXTURE
 		if (hasTexture == false) {
 			glUniform1i(hasTextureLoc, 0); //turn off texture
 		}
@@ -448,22 +484,22 @@ int main()
 			glUniform1i(hasTextureLoc, 1); //turn on texture
 		}
 
-		//GROUND
-		r.setVAO(b.getGroundVAO());
-		glm::mat4 ground;
-		r.drawGround(colValues, ground, groundTEX);
-		r.setVAO(0);
+		//SHADOWS
+		glViewport(0, 0, 1024, 1024);
+		glBindFramebuffer(GL_FRAMEBUFFER, b.getFBO());
+		glClear(GL_DEPTH_BUFFER_BIT);
+		renderScene(r, b, groundTEX, horseTEX);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-		//HORSE
-		r.setVAO(b.getHorseVAO());
-		r.drawHorse(renderMode, horseTEX);
-		r.setVAO(0);
+		glViewport(0, 0, windowWidth, windowHeight);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		renderScene(r, b, groundTEX, horseTEX);
 
+		
 		glfwSwapBuffers(window);
 	}
-
 	// Terminate GLFW, clearing any resources allocated by GLFW.
 	glfwTerminate();
 	return 0;
-	
 }
+

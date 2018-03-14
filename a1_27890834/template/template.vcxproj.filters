@@ -66,6 +66,12 @@
     <Text Include="ReadMe.txt">
       <Filter>Source</Filter>
     </Text>
+    <Text Include="depthVertex.shader">
+      <Filter>Source</Filter>
+    </Text>
+    <Text Include="depthFragment.shader">
+      <Filter>Source</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <Image Include="groundTEX.jpg">
