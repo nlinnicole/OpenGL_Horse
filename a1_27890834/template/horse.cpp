@@ -213,3 +213,38 @@ void Horse::setHorseRender() {
 	components.push_back(&neckObj);
 	components.push_back(&headObj);
 }
+
+void Horse::animateHorse() {
+	if (!maxReached) {
+		if (aniAngle < maxAngle) {
+			aniAngle += deltaX;
+			setUpperArmL(aniAngle);
+			setUpperLegR(aniAngle);
+		}
+		if ((int)aniAngle == maxAngle) {
+			maxReached = true;
+		}
+	}
+	else {
+		if (aniAngle > minAngle) {
+			aniAngle -= deltaX;
+			setUpperArmL(aniAngle);
+			setUpperLegR(aniAngle);
+		}
+		if ((int)aniAngle == minAngle) {
+			maxReached = false;
+		}
+	}
+}
+
+void Horse::resetHorse() {
+	scaling = glm::vec3(2.0f, 1.0f, 1.0f);
+	angle = 0.0f;
+	rotation = glm::vec3(0.0f, 0.0f, 1.0f);
+	translation = glm::vec3(0.0f, 4.0f, 0.0f);
+
+	GLfloat aniAngle = 0.0f;
+	maxReached = false;
+
+	setTorso();
+}

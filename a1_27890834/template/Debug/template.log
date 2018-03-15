@@ -1,4 +1,7 @@
 ﻿  Horse.cpp
+c:\users\nicole\documents\comp371\a1_27890834\template\horse.h(76): warning C4305: 'initializing': truncation from 'double' to 'GLfloat'
+c:\users\nicole\documents\comp371\a1_27890834\template\horse.h(77): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+c:\users\nicole\documents\comp371\a1_27890834\template\horse.h(78): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
   template.vcxproj -> C:\Users\nicole\Documents\COMP371\a1_27890834\Debug\a1_27890834.exe
   template.vcxproj -> C:\Users\nicole\Documents\COMP371\a1_27890834\Debug\a1_27890834.pdb (Partial PDB)
   0 File(s) copied

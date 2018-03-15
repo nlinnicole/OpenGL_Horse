@@ -24,7 +24,7 @@ using namespace std;
 // Window dimensions
 GLFWwindow* window;
 int windowWidth = 800;
-int windowHeight= 800;
+int windowHeight = 800;
 
 //Global view variables
 glm::vec3 c_pos = glm::vec3(0.0f, 3.0f, 15.0f);
@@ -49,9 +49,9 @@ float speed = 3.0f;
 float mouseSpeed = 0.0005f;
 
 //Initial Horse Values
-glm::vec3 initScale = glm::vec3(2.0f, 1.0f, 1.0f);
-glm::vec3 initRotation = glm::vec3(0.0f, 0.0f, 1.0f);
-glm::vec3 initTranslation = glm::vec3(0.0f, 4.0f, 0.0f);
+const glm::vec3 initScale = glm::vec3(2.0f, 1.0f, 1.0f);
+const glm::vec3 initRotation = glm::vec3(0.0f, 0.0f, 1.0f);
+const glm::vec3 initTranslation = glm::vec3(0.0f, 4.0f, 0.0f);
 float initRotateAngle = 0.0f;
 
 Horse h = Horse(initScale, initRotateAngle, initRotation, initTranslation);
@@ -63,6 +63,7 @@ float newRotateAngle[12];
 
 GLenum renderMode = GL_TRIANGLES;
 bool hasTexture = false;
+bool hasAnimation = false;
 
 //Light
 glm::vec3 lightPos = glm::vec3(0.0f, 20.0f, 10.0f);
@@ -112,9 +113,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		for (int i = 0; i < sizeof(newRotateAngle) / sizeof(newRotateAngle[0]); ++i) {
 			newRotateAngle[i] = 0.0f;
 		}
-		h.translateHorse(initTranslation);
-		h.scaleHorse(initScale);
-		h.rotateHorse(initRotateAngle, initRotation);
+		h.resetHorse();
 		update();
 	}
 	//Scale horse up
@@ -206,9 +205,12 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	//Turn texture on and off
 	if (key == GLFW_KEY_X && action == GLFW_PRESS) {
 		hasTexture = !hasTexture;
-		if (hasTexture) {
-		}
-		else {
+	}
+	//Toggle Animation
+	if (key == GLFW_KEY_R && action == GLFW_PRESS) {
+		hasAnimation = !hasAnimation;
+		if (!hasAnimation) {
+			h.resetHorse();
 		}
 	}
 	if (key == GLFW_KEY_0 && action == GLFW_PRESS) {
@@ -407,7 +409,7 @@ int main()
 
 	ShaderLoader s;
 	GLuint shaderProgram = s.loadShaders("vertex.shader", "fragment.shader");
-	GLuint depthShaderProgram = s.loadShaders("depthVertex.shader", "depthFragment.shader");
+	//GLuint depthShaderProgram = s.loadShaders("depthVertex.shader", "depthFragment.shader");
 	//GLuint skyShaderProgram = s.loadShaders("skyVertex.shader", "skyFragment.shader");
 	glUseProgram(shaderProgram);
 	//glUseProgram(depthShaderProgram);
@@ -462,10 +464,10 @@ int main()
 	glm::mat4 lightView = glm::lookAt(lightPos, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	glm::mat4 lightSpaceMat = lightProjection * lightView;
 	
-	GLuint lightMatrixLoc = glGetUniformLocation(depthShaderProgram, "light_matrix");
-	glUniformMatrix4fv(lightMatrixLoc, 1, GL_FALSE, glm::value_ptr(lightSpaceMat));
+	//GLuint lightMatrixLoc = glGetUniformLocation(depthShaderProgram, "light_matrix");
+	//glUniformMatrix4fv(lightMatrixLoc, 1, GL_FALSE, glm::value_ptr(lightSpaceMat));
 
-	GLuint depthModelLoc = glGetUniformLocation(depthShaderProgram, "model");
+	//GLuint depthModelLoc = glGetUniformLocation(depthShaderProgram, "model");
 
 	// Game loop
 	while (!glfwWindowShouldClose(window))
@@ -480,15 +482,19 @@ int main()
 		glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
 
 		//TOGGLE TEXTURE
-		if (hasTexture == false) {
-			glUniform1i(hasTextureLoc, 0); //turn off texture
-		}
-		else {
+		if (hasTexture) {
 			glUniform1i(hasTextureLoc, 1); //turn on texture
 		}
+		else {
+			glUniform1i(hasTextureLoc, 0); //turn off texture
+		}
 
-		//glUseProgram(shaderProgram);
-		//renderScene(r, b, groundTEX, horseTEX);
+		//TOGGLE ANIMATION
+		if (hasAnimation)
+			h.animateHorse();
+
+		glUseProgram(shaderProgram);
+		renderScene(r, b, groundTEX, horseTEX);
 
 		//SKYBOX
 		//glDepthMask(GL_FALSE);
@@ -500,23 +506,23 @@ int main()
 
 		//SHADOWS
 		//----use depth shader----
-		glUseProgram(depthShaderProgram);
-		r.setShaderProgram(depthShaderProgram);
-		r.setTransformLoc(depthModelLoc);
+		//glUseProgram(depthShaderProgram);
+		//r.setShaderProgram(depthShaderProgram);
+		//r.setTransformLoc(depthModelLoc);
 
-		glViewport(0, 0, 1024, 1024);
-		glBindFramebuffer(GL_FRAMEBUFFER, b.getFBO());
-		glClear(GL_DEPTH_BUFFER_BIT);
-		renderScene(r, b, groundTEX, horseTEX);
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		//glViewport(0, 0, 1024, 1024);
+		//glBindFramebuffer(GL_FRAMEBUFFER, b.getFBO());
+		//glClear(GL_DEPTH_BUFFER_BIT);
+		//renderScene(r, b, groundTEX, horseTEX);
+		//glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-		//----use normal shader-----
-		glUseProgram(shaderProgram);
-		r.setShaderProgram(shaderProgram);
-		r.setTransformLoc(transformLoc);
-		glViewport(0, 0, windowWidth, windowHeight);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		renderScene(r, b, groundTEX, horseTEX);
+		////----use normal shader-----
+		//glUseProgram(shaderProgram);
+		//r.setShaderProgram(shaderProgram);
+		//r.setTransformLoc(transformLoc);
+		//glViewport(0, 0, windowWidth, windowHeight);
+		//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		//renderScene(r, b, groundTEX, horseTEX);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
