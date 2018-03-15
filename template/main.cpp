@@ -375,7 +375,7 @@ void renderScene(Renderer r, BufferLoader b, GLuint groundTEX, GLuint horseTEX) 
 	//GROUND
 	r.setVAO(b.getGroundVAO());
 	glm::mat4 ground;
-	r.drawGround(colValues, ground, groundTEX);
+	r.drawGround(renderMode, colValues, ground, groundTEX);
 	r.setVAO(0);
 
 	//HORSE
@@ -471,8 +471,10 @@ int main()
 	float near = 1.0f;
 	float far = 7.5f;
 	glm::mat4 lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near, far);
-	glm::mat4 lightView = glm::lookAt(lightPos, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	glm::mat4 lightSpaceMat = lightProjection * lightView;
+	glm::vec3 lightInvEye = glm::vec3(0.0f, 5.0f, -2.0f);
+	glm::mat4 lightView = glm::lookAt(lightInvEye, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	glm::mat4 lightModel = glm::mat4(1.0);
+	glm::mat4 lightSpaceMat = lightProjection * lightView * lightModel;
 
 	//Configure depthShaderProgram
 	glUseProgram(depthShaderProgram);
