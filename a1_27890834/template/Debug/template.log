@@ -1,16 +1,6 @@
-﻿Build started 3/14/2018 6:25:30 PM.
+﻿Build started 3/14/2018 6:36:26 PM.
      1>Project "C:\Users\Nicole\Documents\OpenGL_Assignments\a1_27890834\template\template.vcxproj" on node 2 (Build target(s)).
-     1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\CL.exe /c /I..\glm /I..\glfw /I..\glew /IC:\Users\Nicole\Documents\OpenGL_Assignments\a1_27890834\soil /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Yu"stdafx.h" /Fp"Debug\a1_27890834.pch" /Fo"Debug\\" /Fd"Debug\vc140.pdb" /Gd /TP /analyze- /errorReport:prompt Horse.cpp
-         Horse.cpp
-       Link:
-         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Nicole\Documents\OpenGL_Assignments\a1_27890834\Debug\a1_27890834.exe" /INCREMENTAL /NOLOGO /LIBPATH:..\glfw /LIBPATH:..\glew /LIBPATH:C:\Users\Nicole\Documents\OpenGL_Assignments\a1_27890834\soil glew32.lib glu32.lib opengl32.lib glfw3dll.lib glfw3.lib SOIL.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /Debug /PDB:"C:\Users\Nicole\Documents\OpenGL_Assignments\a1_27890834\Debug\a1_27890834.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Nicole\Documents\OpenGL_Assignments\a1_27890834\Debug\a1_27890834.lib" /MACHINE:X86 Debug\BufferLoader.obj
-         Debug\Horse.obj
-         Debug\main.obj
-         Debug\objloader.obj
-         Debug\Renderer.obj
-         Debug\ShaderLoader.obj
-         Debug\stdafx.obj
+     1>Link:
          template.vcxproj -> C:\Users\Nicole\Documents\OpenGL_Assignments\a1_27890834\Debug\a1_27890834.exe
        PostBuildEvent:
          xcopy /y /d "C:\Users\Nicole\Documents\OpenGL_Assignments\a1_27890834\template\..\glfw\glfw3.dll" "C:\Users\Nicole\Documents\OpenGL_Assignments\a1_27890834\Debug\"
@@ -22,4 +12,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:00.75
+Time Elapsed 00:00:00.14
