@@ -55,13 +55,20 @@ void main()
 	float shadow = 1 - sh;
 	vec4 lightResult = vec4(diffuse + ambient + specular, 1);
 
-	vec4 shadowLightResult = vec4(ambient + shadow * (diffuse + specular), 1);
+	//vec4 shadowLightResult = vec4(ambient + shadow * (diffuse + specular), 1);
+	vec4 shadowLightResult = vec4(ambient + (shadow * diffuse) + (shadow * specular), 1);
 
 	if (renderStyle == 1) {
+		//Texture, no shadow
 		outputF = lightResult * texCol;
 	}
 	else if (renderStyle == 2){
-		outputF = shadowLightResult;
+		//No texture, shadow
+		outputF = shadowLightResult * color;
+	}
+	else if (renderStyle == 3) {
+		//Texture and shadow
+		outputF = shadowLightResult * texCol;
 	}
 	else {
 		outputF = lightResult * color;

@@ -21,12 +21,13 @@
 
 using namespace std;
 
+//--------------------------GLOBAL VARIABLES--------------------------
 // Window dimensions
 GLFWwindow* window;
 int windowWidth = 800;
 int windowHeight = 800;
 
-//Global view variables
+// View variables
 glm::vec3 c_pos = glm::vec3(0.0f, 3.0f, 15.0f);
 glm::vec3 c_eye = glm::normalize(glm::vec3(0.0f, 0.0f, -15.0f));
 glm::vec3 c_up = glm::vec3(0.0f, 1.0f, 0.0f);
@@ -48,7 +49,7 @@ float verticalAngle = 0.0f;
 float speed = 3.0f;
 float mouseSpeed = 0.0005f;
 
-//Initial Horse Values
+// Initial Horse Values
 const glm::vec3 initScale = glm::vec3(2.0f, 1.0f, 1.0f);
 const glm::vec3 initRotation = glm::vec3(0.0f, 0.0f, 1.0f);
 const glm::vec3 initTranslation = glm::vec3(0.0f, 4.0f, 0.0f);
@@ -56,11 +57,13 @@ float initRotateAngle = 0.0f;
 
 Horse h = Horse(initScale, initRotateAngle, initRotation, initTranslation);
 
+// Horse values used to transform horse
 glm::vec3 newScale = initScale;
 glm::vec3 newRotation = initRotation;
 glm::vec3 newTranslation = initTranslation;
 float newRotateAngle[12];
 
+// Variables to set render style
 GLenum renderMode = GL_TRIANGLES;
 bool hasTexture = false;
 bool hasAnimation = false;
@@ -394,7 +397,6 @@ int init() {
 
 	glewExperimental = GL_TRUE;
 	glEnable(GL_CULL_FACE);
-	//glEnable(GL_DEPTH_TEST);
 
 	if (glewInit() != 0) {
 		std::cout << "Failed to initialize GLEW" << std::endl;
@@ -419,7 +421,6 @@ int main()
 	GLuint depthShaderProgram = s.loadShaders("depthVertex.shader", "depthFragment.shader");
 	//GLuint skyShaderProgram = s.loadShaders("skyVertex.shader", "skyFragment.shader");
 	glUseProgram(shaderProgram);
-	//glUseProgram(depthShaderProgram);
 
 	//View Matrix
 	viewMatrix = glm::lookAt(c_pos, c_pos + c_eye, c_up);
@@ -461,8 +462,11 @@ int main()
 	glm::mat4 lightView = glm::lookAt(lightPos, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	glm::mat4 lightSpaceMat = lightProjection * lightView;
 
-	//set shadow texture
+	GLuint depthMap = b.getDepthMap();
 	GLuint shadowLoc = glGetUniformLocation(shaderProgram, "shadowMap");
+
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, depthMap);
 	glUniform1i(shadowLoc, 1);
 	
 	//depth shader
@@ -497,16 +501,23 @@ int main()
 		glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
 
 		//TOGGLE TEXTURE
-		if (hasTexture) {
-			glUniform1i(renderStyleLoc, 1); //turn on texture
+		if (hasTexture && !hasShadow) {
+			//Texture, no shadow
+			glUniform1i(renderStyleLoc, 1); 
 		}
-		else {
-			glUniform1i(renderStyleLoc, 0); //turn off texture
-		}
-
-		if (hasShadow) {
+		else if (!hasTexture && hasShadow) {
+			//No texture, shadow
 			glUniform1i(renderStyleLoc, 2);
 		}
+		else if (hasTexture && hasShadow) {
+			//Has texture and shadow
+			glUniform1i(renderStyleLoc, 3);
+		}
+		else {
+			//No texture, no shadow
+			glUniform1i(renderStyleLoc, 0); 
+		}
+
 
 		//TOGGLE ANIMATION
 		if (hasAnimation)
@@ -531,8 +542,10 @@ int main()
 		glUseProgram(shaderProgram);
 		r.setShaderProgram(shaderProgram);
 		r.setTransformLoc(transformLoc);
+
 		glViewport(0, 0, windowWidth, windowHeight);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glBindTexture(GL_TEXTURE_2D, depthMap);
 		renderScene(r, b, groundTEX, horseTEX);
 
 		//SKYBOX
