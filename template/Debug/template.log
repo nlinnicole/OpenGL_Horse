@@ -1,10 +1,4 @@
-﻿SOIL.lib(image_DXT.obj) : warning LNK4099: PDB 'SOIL.pdb' was not found with 'SOIL.lib(image_DXT.obj)' or at 'C:\Users\nicole\Documents\COMP371\Debug\SOIL.pdb'; linking object as if no debug info
-SOIL.lib(image_helper.obj) : warning LNK4099: PDB 'SOIL.pdb' was not found with 'SOIL.lib(image_helper.obj)' or at 'C:\Users\nicole\Documents\COMP371\Debug\SOIL.pdb'; linking object as if no debug info
-SOIL.lib(SOIL.obj) : warning LNK4099: PDB 'SOIL.pdb' was not found with 'SOIL.lib(SOIL.obj)' or at 'C:\Users\nicole\Documents\COMP371\Debug\SOIL.pdb'; linking object as if no debug info
-SOIL.lib(stb_image_aug.obj) : warning LNK4099: PDB 'SOIL.pdb' was not found with 'SOIL.lib(stb_image_aug.obj)' or at 'C:\Users\nicole\Documents\COMP371\Debug\SOIL.pdb'; linking object as if no debug info
-  template.vcxproj -> C:\Users\nicole\Documents\COMP371\Debug\a1_27890834.exe
+﻿  template.vcxproj -> C:\Users\nicole\Documents\COMP371\Debug\a1_27890834.exe
   template.vcxproj -> C:\Users\nicole\Documents\COMP371\Debug\a1_27890834.pdb (Partial PDB)
-  C:\Users\nicole\Documents\COMP371\template\..\glfw\glfw3.dll
-  1 File(s) copied
-  C:\Users\nicole\Documents\COMP371\template\..\glew\glew32.dll
-  1 File(s) copied
+  0 File(s) copied
+  0 File(s) copied

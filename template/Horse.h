@@ -73,7 +73,7 @@ private:
 	void setHorseRender();
 
 	//HORSE ANIMATION
-	GLfloat deltaX = 0.2;
+	GLfloat deltaX = 0.3;
 	GLfloat aniAngle[5];
 	int maxAngle = 20.0f;
 	int minAngle = -20.0f;

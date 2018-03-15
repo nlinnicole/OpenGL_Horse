@@ -13,7 +13,8 @@ public:
 	GLuint getAxisVAO();
 	GLuint getGridVAO();
 
-	unsigned int getFBO();
+	GLuint getFBO();
+	GLuint getDepthMap();
 
 	GLuint getHorseTex();
 	GLuint getGroundTex();
@@ -24,14 +25,14 @@ public:
 	void loadSkybox();
 
 private:
-	GLuint VAO[4];
-	GLuint VBO[8];
+	GLuint VAO[5];
+	GLuint VBO[9];
 	GLuint EBO;
 	GLuint tex[2];
 	GLuint skyTex;
 
-	unsigned int FBO;
-	unsigned int depthMap;
+	GLuint FBO;
+	GLuint depthMap;
 
 	std::vector<glm::vec3> hVertices;
 	std::vector<glm::vec3> hNormals;
@@ -46,6 +47,5 @@ private:
 	void setCubeVAO();
 	void setGroundVAO();
 	void setAxisVAO();
-	void setGridVAO();
 };
 

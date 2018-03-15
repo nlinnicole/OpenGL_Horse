@@ -64,6 +64,7 @@ float newRotateAngle[12];
 GLenum renderMode = GL_TRIANGLES;
 bool hasTexture = false;
 bool hasAnimation = false;
+bool hasShadow = false;
 
 //Light
 glm::vec3 lightPos = glm::vec3(0.0f, 20.0f, 10.0f);
@@ -206,6 +207,9 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	//Turn texture on and off
 	if (key == GLFW_KEY_X && action == GLFW_PRESS) {
 		hasTexture = !hasTexture;
+	}
+	if (key == GLFW_KEY_B && action == GLFW_PRESS) {
+		hasShadow = !hasShadow;
 	}
 	//Toggle Animation
 	if (key == GLFW_KEY_R && action == GLFW_PRESS) {
@@ -390,6 +394,7 @@ int init() {
 
 	glewExperimental = GL_TRUE;
 	glEnable(GL_CULL_FACE);
+	//glEnable(GL_DEPTH_TEST);
 
 	if (glewInit() != 0) {
 		std::cout << "Failed to initialize GLEW" << std::endl;
@@ -408,9 +413,10 @@ int main()
 
 	glClearColor(0.529f, 0.808f, 0.922f, 0.0f);
 
+	//------------------LOAD SHADERS------------------
 	ShaderLoader s;
 	GLuint shaderProgram = s.loadShaders("vertex.shader", "fragment.shader");
-	//GLuint depthShaderProgram = s.loadShaders("depthVertex.shader", "depthFragment.shader");
+	GLuint depthShaderProgram = s.loadShaders("depthVertex.shader", "depthFragment.shader");
 	//GLuint skyShaderProgram = s.loadShaders("skyVertex.shader", "skyFragment.shader");
 	glUseProgram(shaderProgram);
 	//glUseProgram(depthShaderProgram);
@@ -425,9 +431,9 @@ int main()
 
 	//Texture
 	GLuint texLoc = glGetUniformLocation(shaderProgram, "tex");
-	GLuint hasTextureLoc = glGetUniformLocation(shaderProgram, "hasTexture");
+	GLuint renderStyleLoc = glGetUniformLocation(shaderProgram, "renderStyle");
 
-	//Initialize Renderer with Shader Uniforms
+	//Model and Colour
 	GLuint transformLoc = glGetUniformLocation(shaderProgram, "model_matrix");
 	GLuint colorLoc = glGetUniformLocation(shaderProgram, "color");
 	Renderer r = Renderer(transformLoc, colorLoc, shaderProgram, texLoc, h);
@@ -447,6 +453,27 @@ int main()
 	GLuint groundTEX = b.getGroundTex();
 	//GLuint skyTEX = b.getSkyTex();
 
+	//Shadows
+	b.loadDepthMap();
+	float near = 1.0f;
+	float far = 7.5f;
+	glm::mat4 lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near, far);
+	glm::mat4 lightView = glm::lookAt(lightPos, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	glm::mat4 lightSpaceMat = lightProjection * lightView;
+
+	//set shadow texture
+	GLuint shadowLoc = glGetUniformLocation(shaderProgram, "shadowMap");
+	glUniform1i(shadowLoc, 1);
+	
+	//depth shader
+	GLuint depthLightMatrixLoc = glGetUniformLocation(depthShaderProgram, "light_matrix");
+	glUniformMatrix4fv(depthLightMatrixLoc, 1, GL_FALSE, glm::value_ptr(lightSpaceMat));
+	GLuint depthModelLoc = glGetUniformLocation(depthShaderProgram, "model");
+
+	//shader
+	GLuint lightMatrixLoc = glGetUniformLocation(shaderProgram, "light_matrix");
+	glUniformMatrix4fv(lightMatrixLoc, 1, GL_FALSE, glm::value_ptr(lightSpaceMat));
+	
 	//Skybox
 	//b.loadSkybox();
 	//glm::mat4 sky;
@@ -456,19 +483,6 @@ int main()
 	//GLuint skyViewLoc = glGetUniformLocation(skyShaderProgram, "view_matrix");
 	//glUniformMatrix4fv(skyViewLoc, 1, GL_FALSE, glm::value_ptr(viewMatrix));
 	//glUniformMatrix4fv(skyProjectionLoc, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
-
-	//Shadows
-	b.loadDepthMap();
-	float near = 1.0f;
-	float far = 7.5f;
-	glm::mat4 lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near, far);
-	glm::mat4 lightView = glm::lookAt(lightPos, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	glm::mat4 lightSpaceMat = lightProjection * lightView;
-	
-	//GLuint lightMatrixLoc = glGetUniformLocation(depthShaderProgram, "light_matrix");
-	//glUniformMatrix4fv(lightMatrixLoc, 1, GL_FALSE, glm::value_ptr(lightSpaceMat));
-
-	//GLuint depthModelLoc = glGetUniformLocation(depthShaderProgram, "model");
 
 	// Game loop
 	while (!glfwWindowShouldClose(window))
@@ -484,10 +498,14 @@ int main()
 
 		//TOGGLE TEXTURE
 		if (hasTexture) {
-			glUniform1i(hasTextureLoc, 1); //turn on texture
+			glUniform1i(renderStyleLoc, 1); //turn on texture
 		}
 		else {
-			glUniform1i(hasTextureLoc, 0); //turn off texture
+			glUniform1i(renderStyleLoc, 0); //turn off texture
+		}
+
+		if (hasShadow) {
+			glUniform1i(renderStyleLoc, 2);
 		}
 
 		//TOGGLE ANIMATION
@@ -497,6 +515,26 @@ int main()
 		glUseProgram(shaderProgram);
 		renderScene(r, b, groundTEX, horseTEX);
 
+		//SHADOWS
+		//----use depth shader----
+		glUseProgram(depthShaderProgram);
+		r.setShaderProgram(depthShaderProgram);
+		r.setTransformLoc(depthModelLoc);
+
+		glViewport(0, 0, 1024, 1024);
+		glBindFramebuffer(GL_FRAMEBUFFER, b.getFBO());
+		glClear(GL_DEPTH_BUFFER_BIT);
+		renderScene(r, b, groundTEX, horseTEX);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+		//----use normal shader-----
+		glUseProgram(shaderProgram);
+		r.setShaderProgram(shaderProgram);
+		r.setTransformLoc(transformLoc);
+		glViewport(0, 0, windowWidth, windowHeight);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		renderScene(r, b, groundTEX, horseTEX);
+
 		//SKYBOX
 		//glDepthMask(GL_FALSE);
 		//glUseProgram(skyShaderProgram);
@@ -504,26 +542,6 @@ int main()
 		//r.drawSkyBox(sky, skyTEX, skyTransformLoc, skyTexLoc);
 		//r.setVAO(0);
 		//glDepthMask(GL_TRUE);
-
-		//SHADOWS
-		//----use depth shader----
-		//glUseProgram(depthShaderProgram);
-		//r.setShaderProgram(depthShaderProgram);
-		//r.setTransformLoc(depthModelLoc);
-
-		//glViewport(0, 0, 1024, 1024);
-		//glBindFramebuffer(GL_FRAMEBUFFER, b.getFBO());
-		//glClear(GL_DEPTH_BUFFER_BIT);
-		//renderScene(r, b, groundTEX, horseTEX);
-		//glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-		////----use normal shader-----
-		//glUseProgram(shaderProgram);
-		//r.setShaderProgram(shaderProgram);
-		//r.setTransformLoc(transformLoc);
-		//glViewport(0, 0, windowWidth, windowHeight);
-		//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		//renderScene(r, b, groundTEX, horseTEX);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();

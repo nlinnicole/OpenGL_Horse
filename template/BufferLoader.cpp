@@ -47,6 +47,10 @@ GLuint BufferLoader::getSkyTex() {
 	return skyTex;
 }
 
+GLuint BufferLoader::getDepthMap() {
+	return depthMap;
+}
+
 void BufferLoader::setCubeVAO() {
 	glGenVertexArrays(1, &VAO[0]);
 	glBindVertexArray(VAO[0]);
@@ -88,37 +92,6 @@ void BufferLoader::setAxisVAO() {
 	glBindBuffer(GL_ARRAY_BUFFER, VBO[3]);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(axis), axis, GL_STATIC_DRAW);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
-	glEnableVertexAttribArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
-}
-
-void BufferLoader::setGridVAO() {
-	for (int i = -100; i < 100; ++i) {
-		float x = i;
-		float y = 0;
-		float z = 100;
-		ground.push_back(glm::vec3(x, y, z));
-		x = i;
-		z = -100;
-		ground.push_back(glm::vec3(x, y, z));
-	}
-	for (int i = -100; i < 100; ++i) {
-		float x = 100;
-		float y = 0;
-		float z = i;
-		ground.push_back(glm::vec3(x, y, z));
-		x = -100;
-		z = i;
-		ground.push_back(glm::vec3(x, y, z));
-	}
-
-	glGenVertexArrays(1, &VAO[2]);
-	glBindVertexArray(VAO[2]);
-	glGenBuffers(1, &VBO[4]);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO[4]);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3)*ground.size(), &ground[0], GL_STATIC_DRAW);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
 	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
@@ -211,10 +184,11 @@ void BufferLoader::loadDepthMap() {
 
 	glGenFramebuffers(1, &FBO);
 	glGenTextures(1, &depthMap);
+	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, depthMap);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
