@@ -29,7 +29,9 @@ float shadowCalc(vec4 fragPosLightSpace) {
 
 void main()
 {
-	vec4 texCol = texture(tex, outUV);
+	vec2 UV2 = outUV;
+	UV2 = UV2 * 3 + 3;
+	vec4 texCol = texture(tex, UV2);
 	vec3 lightCol = vec3(1.0, 1.0, 1.0);
 
 	//AMBIENT LIGHT
