@@ -58,8 +58,8 @@ void Horse::setNeck(float angle) {
 	glm::mat4 neck;
 	scale = glm::scale(neck, glm::vec3(0.5f, 0.5f, 0.5f));
 	rotate = glm::rotate(neck, glm::radians(-25.0f + angle), glm::vec3(0.0f, 0.0f, 1.0f));
-	translate = glm::translate(neck, glm::vec3(-3.2f, 0.5f, 0.0f));
-	neck *= torsoObj.matrix * scale * rotate * translate;
+	translate = glm::translate(neck, glm::vec3(-2.7f, 1.5f, 0.0f));
+	neck *= torsoObj.matrix * scale * translate * rotate;
 	colValues[0] = 0.529f;
 	colValues[1] = 0.808f;
 	colValues[2] = 0.922f;
@@ -75,7 +75,7 @@ void Horse::setHead(float angle)
 	scale = glm::scale(head, glm::vec3(0.5f, 0.8f, 0.8f));
 	rotate = glm::rotate(head, glm::radians(160.0f + angle), glm::vec3(0.0f, 0.0f, 1.0f));
 	translate = glm::translate(head, glm::vec3(1.0f, 2.0f, 0.0f));
-	head *= neckObj.matrix * scale * rotate * translate; //use neck
+	head *= neckObj.matrix * scale * rotate * translate;
 	colValues[0] = 0.690f;
 	colValues[1] = 0.878f;
 	colValues[2] = 0.902f;
@@ -89,9 +89,7 @@ void Horse::setUpperArmL(float angle)
 	scale = glm::scale(upperArmL, glm::vec3(0.15f, 0.9f, 0.15f));
 	rotate = glm::rotate(upperArmL, glm::radians(0.0f + angle), glm::vec3(0.0f, 0.0f, 1.0f));
 	translate = glm::translate(upperArmL, glm::vec3(-5.4f, -1.5f, 3.0f));
-	//rotate *= translate;
-	//translate = glm::translate(upperArmL, glm::vec3(5.4f, 1.5f, -3.0f));
-	upperArmL *= torsoObj.matrix * scale * rotate * translate;
+	upperArmL *= torsoObj.matrix * scale * translate * rotate;
 
 	colValues[0] = 0.690f;
 	colValues[1] = 0.769f;
@@ -121,10 +119,7 @@ void Horse::setUpperArmR(float angle)
 	scale = glm::scale(upperArmR, glm::vec3(0.15f, 0.9f, 0.15f));
 	rotate = glm::rotate(upperArmR, glm::radians(0.0f + angle), glm::vec3(0.0f, 0.0f, 1.0f));
 	translate = glm::translate(upperArmR, glm::vec3(-5.4f, -1.5f, -3.0f));
-	rotate *= translate;
-	//local translation vs global translation
-	translate = glm::translate(upperArmR, glm::vec3(5.4f, 0.02f, 10.0f));
-	upperArmR *= torsoObj.matrix * scale * rotate * translate;
+	upperArmR *= torsoObj.matrix * scale * translate * rotate;
 	colValues[0] = 0.690f;
 	colValues[1] = 0.769f;
 	colValues[2] = 0.871f;
@@ -153,7 +148,7 @@ void Horse::setUpperLegL(float angle)
 	scale = glm::scale(upperLegL, glm::vec3(0.15f, 0.9f, 0.15f));
 	rotate = glm::rotate(upperLegL, glm::radians(0.0f + angle), glm::vec3(0.0f, 0.0f, 1.0f));
 	translate = glm::translate(upperLegL, glm::vec3(5.4f, -1.5f, 3.0f));
-	upperLegL *= torsoObj.matrix * scale * rotate * translate; 
+	upperLegL *= torsoObj.matrix * scale * translate * rotate; 
 	colValues[0] = 0.690f;
 	colValues[1] = 0.769f;
 	colValues[2] = 0.871f;
@@ -182,7 +177,7 @@ void Horse::setUpperLegR(float angle)
 	scale = glm::scale(upperLegR, glm::vec3(0.15f, 0.9f, 0.15f));
 	rotate = glm::rotate(upperLegR, glm::radians(0.0f + angle), glm::vec3(0.0f, 0.0f, 1.0f));
 	translate = glm::translate(upperLegR, glm::vec3(5.4f, -1.5f, -3.0f));
-	upperLegR *= torsoObj.matrix * scale * rotate * translate;
+	upperLegR *= torsoObj.matrix * scale * translate * rotate;
 	colValues[0] = 0.690f;
 	colValues[1] = 0.769f;
 	colValues[2] = 0.871f;
