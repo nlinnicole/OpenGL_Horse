@@ -114,6 +114,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 			newRotateAngle[i] = 0.0f;
 		}
 		h.resetHorse();
+		hasAnimation = false;
 		update();
 	}
 	//Scale horse up

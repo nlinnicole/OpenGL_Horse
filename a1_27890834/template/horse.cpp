@@ -102,7 +102,7 @@ void Horse::setUpperArmL(float angle)
 void Horse::setLowerArmL(float angle)
 {
 	glm::mat4 lowerArmL;
-	scale = glm::scale(lowerArmL, glm::vec3(1.2f, 1.0f, 1.2f));
+	scale = glm::scale(lowerArmL, glm::vec3(1.0f, 1.0f, 1.0f));
 	rotate = glm::rotate(lowerArmL, glm::radians(0.0f + angle), glm::vec3(0.0f, 0.0f, 1.0f));
 	translate = glm::translate(lowerArmL, glm::vec3(0.0f, -2.0f, 0.0f));
 	lowerArmL *= upperArmLObj.matrix * scale * rotate * translate;
@@ -131,7 +131,7 @@ void Horse::setUpperArmR(float angle)
 void Horse::setLowerArmR(float angle)
 {
 	glm::mat4 lowerArmR;
-	scale = glm::scale(lowerArmR, glm::vec3(1.2f, 1.0f, 1.2f));
+	scale = glm::scale(lowerArmR, glm::vec3(1.0f, 1.0f, 1.0f));
 	rotate = glm::rotate(lowerArmR, glm::radians(0.0f + angle), glm::vec3(0.0f, 0.0f, 1.0f));
 	translate = glm::translate(lowerArmR, glm::vec3(0.0f, -2.0f, 0.0f));
 	lowerArmR *= upperArmRObj.matrix * scale * rotate * translate; 
@@ -160,7 +160,7 @@ void Horse::setUpperLegL(float angle)
 void Horse::setLowerLegL(float angle)
 {
 	glm::mat4 lowerLegL;
-	scale = glm::scale(lowerLegL, glm::vec3(1.2f, 1.0f, 1.2f));
+	scale = glm::scale(lowerLegL, glm::vec3(1.0f, 1.0f, 1.0f));
 	rotate = glm::rotate(lowerLegL, glm::radians(0.0f + angle), glm::vec3(0.0f, 0.0f, 1.0f));
 	translate = glm::translate(lowerLegL, glm::vec3(0.0f, -2.0f, 0.0f));
 	lowerLegL *= upperLegLObj.matrix * scale * rotate * translate; //use UpperLegL
@@ -189,7 +189,7 @@ void Horse::setUpperLegR(float angle)
 void Horse::setLowerLegR(float angle)
 {
 	glm::mat4 lowerLegR;
-	scale = glm::scale(lowerLegR, glm::vec3(1.2f, 1.0f, 1.2f));
+	scale = glm::scale(lowerLegR, glm::vec3(1.0f, 1.0f, 1.0f));
 	rotate = glm::rotate(lowerLegR, glm::radians(0.0f + angle), glm::vec3(0.0f, 0.0f, 1.0f));
 	translate = glm::translate(lowerLegR, glm::vec3(0.0f, -2.0f, 0.0f));
 	lowerLegR *= upperLegRObj.matrix * scale * rotate * translate; //use UpperLegR
@@ -215,24 +215,55 @@ void Horse::setHorseRender() {
 }
 
 void Horse::animateHorse() {
-	if (!maxReached) {
-		if (aniAngle < maxAngle) {
-			aniAngle += deltaX;
-			setUpperArmL(aniAngle);
-			setUpperLegR(aniAngle);
+	//Animate Legs and Head
+	if (!maxAngleReached) {
+		if (aniAngle[0] < maxAngle) {
+			aniAngle[0] += deltaX;
+			setUpperArmL(aniAngle[0]);
+			setUpperLegL(aniAngle[0]);
+
+			aniAngle[1] -= deltaX;
+			setUpperArmR(aniAngle[1]);
+			setUpperLegR(aniAngle[1]);
+
+			aniAngle[2] += deltaX;
+			setLowerArmL(aniAngle[2]);
+			setLowerLegL(aniAngle[2]);
+
+			aniAngle[3] -= deltaX;
+			setLowerArmR(aniAngle[3]);
+			setLowerLegR(aniAngle[3]);
+
+			aniAngle[4] += deltaX;
+			setNeck(aniAngle[4]);
 		}
-		if ((int)aniAngle == maxAngle) {
-			maxReached = true;
+		if ((int)aniAngle[0] == maxAngle) {
+			maxAngleReached = true;
 		}
 	}
 	else {
-		if (aniAngle > minAngle) {
-			aniAngle -= deltaX;
-			setUpperArmL(aniAngle);
-			setUpperLegR(aniAngle);
+		if (aniAngle[0] > minAngle) {
+			aniAngle[0] -= deltaX;
+			setUpperArmL(aniAngle[0]);
+			setUpperLegL(aniAngle[0]);
+
+			aniAngle[1] += deltaX;
+			setUpperArmR(aniAngle[1]);
+			setUpperLegR(aniAngle[1]);
+
+			aniAngle[2] -= deltaX;
+			setLowerArmL(aniAngle[2]);
+			setLowerLegL(aniAngle[2]);
+
+			aniAngle[3] += deltaX;
+			setLowerArmR(aniAngle[3]);
+			setLowerLegR(aniAngle[3]);
+
+			aniAngle[4] -= deltaX;
+			setNeck(aniAngle[4]);
 		}
-		if ((int)aniAngle == minAngle) {
-			maxReached = false;
+		if ((int)aniAngle[0] == minAngle) {
+			maxAngleReached = false;
 		}
 	}
 }
@@ -243,8 +274,11 @@ void Horse::resetHorse() {
 	rotation = glm::vec3(0.0f, 0.0f, 1.0f);
 	translation = glm::vec3(0.0f, 4.0f, 0.0f);
 
-	GLfloat aniAngle = 0.0f;
-	maxReached = false;
+	//Reset angles for animation
+	for (int i = 0; i < sizeof(aniAngle) / sizeof(aniAngle[0]); ++i) {
+		aniAngle[i] = 0.0f;
+	}
+	maxAngleReached = false;
 
 	setTorso();
 }

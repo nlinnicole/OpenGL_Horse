@@ -74,9 +74,9 @@ private:
 
 	//HORSE ANIMATION
 	GLfloat deltaX = 0.2;
-	int maxAngle = 30.0f;
-	int minAngle = -30.0f;
-	GLfloat aniAngle = 0.0f;
-	bool maxReached = false;
+	GLfloat aniAngle[5];
+	int maxAngle = 20.0f;
+	int minAngle = -20.0f;
+	bool maxAngleReached = false;
 };
 
