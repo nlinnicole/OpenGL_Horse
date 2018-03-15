@@ -20,7 +20,6 @@ public:
 	void drawGround(float colValues[4], glm::mat4 matrix, GLuint texture);
 	void drawAxis(glm::vec3 colours, glm::mat4 matrix, int i);
 	void drawSkyBox(glm::mat4 matrix, GLuint texture,GLuint transformLoc, GLuint skyTexLoc);
-	void drawSkyBox(glm::mat4 matrix, GLuint transformLoc);
 
 private:
 	GLuint transformLoc;

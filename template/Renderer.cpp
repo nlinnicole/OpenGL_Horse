@@ -71,10 +71,3 @@ void Renderer::drawSkyBox(glm::mat4 matrix, GLuint texture, GLuint transformLoc,
 	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(matrix));
 	glDrawArrays(GL_TRIANGLES, 0, 12 * 3);
 }
-
-void Renderer::drawSkyBox(glm::mat4 matrix, GLuint transformLoc) {
-	//glm::mat4 scale = glm::scale(matrix, glm::vec3(5.0, 5.0, 5.0));
-	//matrix *= scale;
-	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(matrix));
-	glDrawArrays(GL_TRIANGLES, 0, 12 * 3);
-}

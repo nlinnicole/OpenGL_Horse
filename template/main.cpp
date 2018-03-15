@@ -72,7 +72,7 @@ bool hasShadow = false;
 //Light
 glm::vec3 lightPos = glm::vec3(0.0f, 20.0f, 10.0f);
 
-// Update view
+//--------------------------UPDATE VIEW--------------------------
 void update() {
 	viewMatrix = glm::lookAt(c_pos, c_pos + c_eye, c_up);
 	glfwGetWindowSize(window, &windowWidth, &windowHeight);
@@ -82,10 +82,11 @@ void update() {
 // Is called whenever a key is pressed/released via GLFW
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode)
 {
+	//--------------------------CAMERA CONTROLS--------------------------
+	//Close window
 	std::cout << key << std::endl;
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, GL_TRUE);
-
 	//Move camera left
 	if (key == GLFW_KEY_LEFT) {
 		--c_pos.x;
@@ -121,6 +122,36 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		hasAnimation = false;
 		update();
 	}
+	//--------------------------RENDER MODE--------------------------
+	//Change horse render mode to points
+	if (key == GLFW_KEY_P && action == GLFW_PRESS) {
+		renderMode = GL_POINTS;
+	}
+	//Change horse render mode to lines
+	if (key == GLFW_KEY_L && action == GLFW_PRESS) {
+		renderMode = GL_LINES;
+	}
+	//Change horse render mode to triangles
+	if (key == GLFW_KEY_T && action == GLFW_PRESS) {
+		renderMode = GL_TRIANGLES;
+	}
+	//--------------------------RENDER STYLE--------------------------
+	//Toggle Texture
+	if (key == GLFW_KEY_X && action == GLFW_PRESS) {
+		hasTexture = !hasTexture;
+	}
+	//Toggle Shadow
+	if (key == GLFW_KEY_B && action == GLFW_PRESS) {
+		hasShadow = !hasShadow;
+	}
+	//Toggle Animation
+	if (key == GLFW_KEY_R && action == GLFW_PRESS) {
+		hasAnimation = !hasAnimation;
+		if (!hasAnimation) {
+			h.resetHorse();
+		}
+	}
+	//--------------------------HORSE CONTROLS--------------------------
 	//Scale horse up
 	if (key == GLFW_KEY_U && action == GLFW_PRESS) {
 		newScale.x += 0.2;
@@ -195,32 +226,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		newTranslation = glm::vec3(randX, 0.0f, randZ);
 		h.translateHorse(newTranslation);
 	}
-	//Change horse render mode to points
-	if (key == GLFW_KEY_P && action == GLFW_PRESS) {
-		renderMode = GL_POINTS;
-	}
-	//Change horse render mode to lines
-	if (key == GLFW_KEY_L && action == GLFW_PRESS) {
-		renderMode = GL_LINES;
-	}
-	//Change horse render mode to triangles
-	if (key == GLFW_KEY_T && action == GLFW_PRESS) {
-		renderMode = GL_TRIANGLES;
-	}
-	//Turn texture on and off
-	if (key == GLFW_KEY_X && action == GLFW_PRESS) {
-		hasTexture = !hasTexture;
-	}
-	if (key == GLFW_KEY_B && action == GLFW_PRESS) {
-		hasShadow = !hasShadow;
-	}
-	//Toggle Animation
-	if (key == GLFW_KEY_R && action == GLFW_PRESS) {
-		hasAnimation = !hasAnimation;
-		if (!hasAnimation) {
-			h.resetHorse();
-		}
-	}
+	//Rotate Head
 	if (key == GLFW_KEY_0 && action == GLFW_PRESS) {
 		if (mode == GLFW_MOD_SHIFT) {
 			newRotateAngle[0] -= 5.0f;
@@ -229,6 +235,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		}
 		h.setHead(newRotateAngle[0]);
 	}
+	//Rotate Neck
 	if (key == GLFW_KEY_1 && action == GLFW_PRESS) {
 		if (mode == GLFW_MOD_SHIFT) {
 			newRotateAngle[1] -= 5.0f;
@@ -237,6 +244,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		}
 		h.setNeck(newRotateAngle[1]);
 	}
+	//Rotate Right Arm
 	if (key == GLFW_KEY_2 && action == GLFW_PRESS) {
 		if (mode == GLFW_MOD_SHIFT) {
 			newRotateAngle[2] -= 5.0f;
@@ -254,6 +262,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		}
 		h.setLowerArmR(newRotateAngle[3]);
 	}
+	//Rotate Right Leg
 	if (key == GLFW_KEY_4 && action == GLFW_PRESS) {
 		if (mode == GLFW_MOD_SHIFT) {
 			newRotateAngle[4] -= 5.0f;
@@ -272,6 +281,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		}
 		h.setLowerLegR(newRotateAngle[5]);
 	}
+	//Rotate Left Arm
 	if (key == GLFW_KEY_6 && action == GLFW_PRESS) {
 		if (mode == GLFW_MOD_SHIFT) {
 			newRotateAngle[6] -= 5.0f;
@@ -290,6 +300,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		}
 		h.setLowerArmL(newRotateAngle[7]);
 	}
+	//Rotate Left Leg
 	if (key == GLFW_KEY_8 && action == GLFW_PRESS) {
 		if (mode == GLFW_MOD_SHIFT) {
 			newRotateAngle[8] -= 5.0f;
@@ -357,6 +368,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
 	update();
 }
 
+//--------------------------DRAW GROUND AND HORSE--------------------------
 void renderScene(Renderer r, BufferLoader b, GLuint groundTEX, GLuint horseTEX) {
 	float colValues[4] = { 1.0, 1.0, 1.0, 1.0 };
 
@@ -415,7 +427,7 @@ int main()
 
 	glClearColor(0.529f, 0.808f, 0.922f, 0.0f);
 
-	//------------------LOAD SHADERS------------------
+	//--------------------------LOAD AND CONFIGURE SHADERS--------------------------
 	ShaderLoader s;
 	GLuint shaderProgram = s.loadShaders("vertex.shader", "fragment.shader");
 	GLuint depthShaderProgram = s.loadShaders("depthVertex.shader", "depthFragment.shader");
@@ -462,6 +474,8 @@ int main()
 	glm::mat4 lightView = glm::lookAt(lightPos, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	glm::mat4 lightSpaceMat = lightProjection * lightView;
 
+	//Configure depthShaderProgram
+	glUseProgram(depthShaderProgram);
 	GLuint depthMap = b.getDepthMap();
 	GLuint shadowLoc = glGetUniformLocation(shaderProgram, "shadowMap");
 
@@ -469,12 +483,12 @@ int main()
 	glBindTexture(GL_TEXTURE_2D, depthMap);
 	glUniform1i(shadowLoc, 1);
 	
-	//depth shader
 	GLuint depthLightMatrixLoc = glGetUniformLocation(depthShaderProgram, "light_matrix");
 	glUniformMatrix4fv(depthLightMatrixLoc, 1, GL_FALSE, glm::value_ptr(lightSpaceMat));
 	GLuint depthModelLoc = glGetUniformLocation(depthShaderProgram, "model");
 
-	//shader
+	//Configure normal shader
+	glUseProgram(shaderProgram);
 	GLuint lightMatrixLoc = glGetUniformLocation(shaderProgram, "light_matrix");
 	glUniformMatrix4fv(lightMatrixLoc, 1, GL_FALSE, glm::value_ptr(lightSpaceMat));
 	
@@ -488,19 +502,19 @@ int main()
 	//glUniformMatrix4fv(skyViewLoc, 1, GL_FALSE, glm::value_ptr(viewMatrix));
 	//glUniformMatrix4fv(skyProjectionLoc, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
 
-	// Game loop
+	//--------------------------GAME LOOP--------------------------
 	while (!glfwWindowShouldClose(window))
 	{
+		//--------------------------UPDATE VIEW--------------------------
 		float currentFrame = glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
 		glClear(GL_COLOR_BUFFER_BIT);
 		
-		//UPDATE VIEW
 		glUniformMatrix4fv(viewMatrixLoc, 1, GL_FALSE, glm::value_ptr(viewMatrix));
 		glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
 
-		//TOGGLE TEXTURE
+		//--------------------------RENDER STYLE--------------------------
 		if (hasTexture && !hasShadow) {
 			//Texture, no shadow
 			glUniform1i(renderStyleLoc, 1); 
@@ -518,16 +532,12 @@ int main()
 			glUniform1i(renderStyleLoc, 0); 
 		}
 
-
-		//TOGGLE ANIMATION
+		//--------------------------TOGGLE ANIMATION--------------------------
 		if (hasAnimation)
 			h.animateHorse();
 
-		glUseProgram(shaderProgram);
-		renderScene(r, b, groundTEX, horseTEX);
-
-		//SHADOWS
-		//----use depth shader----
+		//--------------------------DRAW SCENE--------------------------
+		//depth shader
 		glUseProgram(depthShaderProgram);
 		r.setShaderProgram(depthShaderProgram);
 		r.setTransformLoc(depthModelLoc);
@@ -538,7 +548,7 @@ int main()
 		renderScene(r, b, groundTEX, horseTEX);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-		//----use normal shader-----
+		//normal shader
 		glUseProgram(shaderProgram);
 		r.setShaderProgram(shaderProgram);
 		r.setTransformLoc(transformLoc);
