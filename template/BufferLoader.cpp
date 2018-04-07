@@ -74,6 +74,16 @@ void BufferLoader::setCubeVAO() {
 	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec2)*hUvCoord.size(), &hUvCoord[0], GL_STATIC_DRAW);
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, 0);
 	glEnableVertexAttribArray(2);
+
+	//Instancing
+	setInstancing();
+	glGenBuffers(1, &VBO[9]);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO[9]);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * 20, &translations[0], GL_STATIC_DRAW);
+	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glVertexAttribDivisor(3, 1);
+	glEnableVertexAttribArray(3);
 }
 
 void BufferLoader::setAxisVAO() {
@@ -198,4 +208,22 @@ void BufferLoader::loadDepthMap() {
 	glDrawBuffer(GL_NONE);
 	glReadBuffer(GL_NONE);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void BufferLoader::setInstancing() {
+	std::cout << "instancing" << std::endl;
+	int index = 0;
+	float offset = 5.0f;
+	for (int i = 0; i < 20; i += 5) {
+		for (int j = 0; j < 20; j += 5) {
+			glm::vec3 translation;
+			//change to random positions
+			translation.x = i + offset;
+			translation.y = j + offset;
+			translation.z = 0;
+			translations[index++] = translation;
+			std::cout << translation.x << translation.y << std::endl;
+
+		}
+	}
 }

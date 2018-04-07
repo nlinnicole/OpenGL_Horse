@@ -1,15 +1,11 @@
-﻿Build started 3/15/2018 6:35:57 PM.
-     1>Project "C:\Users\Nicole\Documents\OpenGL_Assignments\template\template.vcxproj" on node 2 (Build target(s)).
-     1>Link:
-         template.vcxproj -> C:\Users\Nicole\Documents\OpenGL_Assignments\Debug\a1_27890834.exe
-       PostBuildEvent:
-         xcopy /y /d "C:\Users\Nicole\Documents\OpenGL_Assignments\template\..\glfw\glfw3.dll" "C:\Users\Nicole\Documents\OpenGL_Assignments\Debug\"
-         xcopy /y /d "C:\Users\Nicole\Documents\OpenGL_Assignments\template\..\glew\glew32.dll" "C:\Users\Nicole\Documents\OpenGL_Assignments\Debug\"
-         :VCEnd
-         0 File(s) copied
-         0 File(s) copied
-     1>Done Building Project "C:\Users\Nicole\Documents\OpenGL_Assignments\template\template.vcxproj" (Build target(s)).
-
-Build succeeded.
-
-Time Elapsed 00:00:00.15
+﻿  Renderer.cpp
+c:\users\nicole\documents\comp371\template\horse.h(76): warning C4305: 'initializing': truncation from 'double' to 'GLfloat'
+c:\users\nicole\documents\comp371\template\horse.h(78): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+c:\users\nicole\documents\comp371\template\horse.h(79): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+c:\users\nicole\documents\comp371\template\renderer.cpp(40): warning C4018: '<': signed/unsigned mismatch
+  BufferLoader.cpp
+  Generating Code...
+  template.vcxproj -> C:\Users\nicole\Documents\COMP371\Debug\a1_27890834.exe
+  template.vcxproj -> C:\Users\nicole\Documents\COMP371\Debug\a1_27890834.pdb (Partial PDB)
+  0 File(s) copied
+  0 File(s) copied

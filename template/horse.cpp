@@ -282,3 +282,4 @@ void Horse::resetHorse() {
 
 	setTorso();
 }
+
