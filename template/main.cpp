@@ -68,6 +68,7 @@ GLenum renderMode = GL_TRIANGLES;
 bool hasTexture = false;
 bool hasAnimation = false;
 bool hasShadow = false;
+bool horseMoving = false;
 
 //Light
 glm::vec3 lightPos = glm::vec3(0.0f, 20.0f, 10.0f);
@@ -218,6 +219,11 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 			newRotation = glm::vec3(0.0f, 1.0f, 0.0f);
 			h.rotateHorse(newRotateAngle[11], newRotation);
 		}
+	}
+	//Move horse
+	if (key == GLFW_KEY_H && action == GLFW_PRESS) {
+		horseMoving = true;
+		//h.moveHorse();
 	}
 	//Re-position horse to a random position on grid
 	if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) {
@@ -537,6 +543,9 @@ int main()
 		//--------------------------TOGGLE ANIMATION--------------------------
 		if (hasAnimation)
 			h.animateHorse();
+
+		if (horseMoving)
+			h.moveHorse();
 
 		//--------------------------DRAW SCENE--------------------------
 		//depth shader

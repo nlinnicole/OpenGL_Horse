@@ -46,6 +46,8 @@ public:
 	void animateHorse();
 	void resetHorse();
 
+	void moveHorse();
+
 private:
 	float colValues[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
 
@@ -78,5 +80,11 @@ private:
 	int maxAngle = 20.0f;
 	int minAngle = -20.0f;
 	bool maxAngleReached = false;
+
+	int steps = rand() & 30 + 10;
+	int s = 0;
+	int axi = rand() % 2;
+	int dir = rand() % 2;
+	glm::vec3 t = glm::vec3(0.0f, 4.0f, 0.0f);
 };
 

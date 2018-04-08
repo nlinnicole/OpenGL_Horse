@@ -283,3 +283,11 @@ void Horse::resetHorse() {
 	setTorso();
 }
 
+void Horse::moveHorse() {
+	if (s != steps) {
+		s++;
+		t.x += deltaX;
+		translateHorse(t);
+	}
+}
+

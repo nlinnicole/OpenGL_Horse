@@ -187,7 +187,6 @@ void BufferLoader::loadSkybox() {
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 }
 
-
 void BufferLoader::loadDepthMap() {
 	const unsigned int SHADOW_WIDTH = 1024;
 	const unsigned int SHADOW_HEIGHT = 1024;
@@ -213,17 +212,16 @@ void BufferLoader::loadDepthMap() {
 void BufferLoader::setInstancing() {
 	std::cout << "instancing" << std::endl;
 	int index = 0;
-	float offset = 5.0f;
+	float offset = 1.0f;
 	for (int i = 0; i < 20; i += 5) {
 		for (int j = 0; j < 20; j += 5) {
 			glm::vec3 translation;
-			//change to random positions
-			translation.x = i + offset;
-			translation.y = j + offset;
-			translation.z = 0;
+			if (i % 2 == 0) {
+				translation.x = i;
+				translation.y = j;
+				translation.z = 0;
+			}
 			translations[index++] = translation;
-			std::cout << translation.x << translation.y << std::endl;
-
 		}
 	}
 }
