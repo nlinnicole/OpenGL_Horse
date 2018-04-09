@@ -53,9 +53,14 @@ float mouseSpeed = 0.0005f;
 const glm::vec3 initScale = glm::vec3(2.0f, 1.0f, 1.0f);
 const glm::vec3 initRotation = glm::vec3(0.0f, 0.0f, 1.0f);
 const glm::vec3 initTranslation = glm::vec3(0.0f, 4.0f, 0.0f);
+const glm::vec3 t = glm::vec3(2.0f, 4.0f, 0.0f);
 float initRotateAngle = 0.0f;
 
 Horse h = Horse(initScale, initRotateAngle, initRotation, initTranslation);
+Horse h1 = Horse(initScale, initRotateAngle, initRotation, t);
+Horse h2 = Horse(initScale, initRotateAngle, initRotation, initTranslation);
+std::vector<Horse> horses;
+glm::vec3 translations[20];
 
 // Horse values used to transform horse
 glm::vec3 newScale = initScale;
@@ -327,7 +332,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	}
 }
 
-void mouse_callback(GLFWwindow* window, double xpos, double ypos){
+void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
 	if (firstMouse) {
 		lastX = xpos;
 		lastY = ypos;
@@ -341,7 +346,7 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos){
 
 	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
 		if (zoom >= 100.0f)
-				zoom -= yoffset * deltaTime * sensitivity;
+			zoom -= yoffset * deltaTime * sensitivity;
 		if (zoom <= 100.0f)
 			zoom += yoffset * deltaTime * sensitivity;
 		update();
@@ -359,7 +364,7 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos){
 		update();
 	}
 	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS) {
-		if (c_pos.x >= 100.0f) 
+		if (c_pos.x >= 100.0f)
 			c_pos.x -= xoffset * deltaTime * sensitivity;
 		if (c_pos.x <= 100.0f)
 			c_pos.x += xoffset * deltaTime * sensitivity;
@@ -386,8 +391,39 @@ void renderScene(Renderer r, BufferLoader b, GLuint groundTEX, GLuint horseTEX) 
 
 	//HORSE
 	r.setVAO(b.getCubeVAO());
-	r.drawHorse(renderMode, horseTEX);
+	for (int i = 0; i < horses.size(); ++i){
+		r.drawHorse(renderMode, horseTEX, horses[i]);
+	}
 	r.setVAO(0);
+}
+
+void setHorses() {
+	int index = 0;
+	float offset = 1.0f;
+	for (int i = 0; i < 20; i += 5) {
+		for (int j = 0; j < 20; j += 5) {
+			glm::vec3 t;
+			t.x = i;
+			t.y = j;
+			t.z = 0;
+			translations[index++] = t;
+		}
+	}
+
+	index = 0;
+	glm::vec3 t = glm::vec3(0.0f, 4.0f, 0.0f);
+	glm::vec3 g = glm::vec3(3.0f, 4.0f, 0.0f);
+	for (int i = 0; i < 20; ++i) {
+		float randX = rand() % 50;
+		float randZ = rand() % 50;
+		newTranslation = glm::vec3(randX, 0.0f, randZ);
+		Horse temp = Horse(initScale, initRotateAngle, initRotation, t);
+		horses.push_back(temp);
+	}
+
+	//horses.push_back(h);
+	//horses.push_back(h1);
+	//horses.push_back(h2);
 }
 
 int init() {
@@ -455,7 +491,7 @@ int main()
 	//Model and Colour
 	GLuint transformLoc = glGetUniformLocation(shaderProgram, "model_matrix");
 	GLuint colorLoc = glGetUniformLocation(shaderProgram, "color");
-	Renderer r = Renderer(transformLoc, colorLoc, shaderProgram, texLoc, h);
+	Renderer r = Renderer(transformLoc, colorLoc, shaderProgram, texLoc);
 
 	//Light
 	GLuint lightPosLoc = glGetUniformLocation(shaderProgram, "lightPos");
@@ -465,6 +501,9 @@ int main()
 
 	//Buffer Loader
 	BufferLoader b;
+
+	setHorses();
+	r.horses = horses;
 
 	//Textures
 	b.loadTex();

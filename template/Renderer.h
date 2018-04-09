@@ -9,17 +9,19 @@ class Renderer
 {
 public:
 	Renderer();
-	Renderer(GLuint transformLoc, GLuint colorLoc, GLuint shaderProgram, GLuint texLoc, Horse h);
+	Renderer(GLuint transformLoc, GLuint colorLoc, GLuint shaderProgram, GLuint texLoc);
 	~Renderer();
 	
 	void setVAO(GLuint v);
 	void setShaderProgram(GLuint shaderProgram);
 	void setTransformLoc(GLuint transformLoc);
 
-	void drawHorse(GLenum renderMode, GLuint texture);
+	void drawHorse(GLenum renderMode, GLuint texture, Horse h);
 	void drawGround(GLenum renderMode, float colValues[4], glm::mat4 matrix, GLuint texture);
 	void drawAxis(glm::vec3 colours, glm::mat4 matrix, int i);
 	void drawSkyBox(glm::mat4 matrix, GLuint texture,GLuint transformLoc, GLuint skyTexLoc);
+
+	std::vector<Horse> horses;
 
 private:
 	GLuint transformLoc;
@@ -28,7 +30,5 @@ private:
 	GLuint shaderProgram;
 	GLenum mode;
 	GLuint texLoc;
-
-	Horse horse;
 };
 

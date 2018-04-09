@@ -7,13 +7,12 @@ Renderer::Renderer()
 
 }
 
-Renderer::Renderer(GLuint tl, GLuint cl, GLuint sp, GLuint txL, Horse h)
+Renderer::Renderer(GLuint tl, GLuint cl, GLuint sp, GLuint txL)
 {
 	transformLoc = tl;
 	colorLoc = cl;
 	shaderProgram = sp;
 	texLoc = txL;
-	horse = h;
 }
 
 Renderer::~Renderer()
@@ -33,7 +32,7 @@ void Renderer::setVAO(GLuint v) {
 	glBindVertexArray(VAO);
 }
 
-void Renderer::drawHorse(GLenum renderMode, GLuint texture) {
+void Renderer::drawHorse(GLenum renderMode, GLuint texture, Horse horse) {
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, texture);
 	glUniform1i(texLoc, 0);

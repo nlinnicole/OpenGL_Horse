@@ -26,6 +26,8 @@ public:
 	void loadDepthMap();
 	void loadSkybox();
 
+	glm::vec3 translations[20];
+
 private:
 	GLuint VAO[5];
 	GLuint VBO[10];
@@ -35,8 +37,6 @@ private:
 
 	GLuint FBO;
 	GLuint depthMap;
-
-	glm::vec3 translations[100];
 
 	std::vector<glm::vec3> hVertices;
 	std::vector<glm::vec3> hNormals;
@@ -52,6 +52,5 @@ private:
 	void setGroundVAO();
 	void setAxisVAO();
 	void setInstancing();
-
 };
 
