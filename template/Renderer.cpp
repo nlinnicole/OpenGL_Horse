@@ -32,7 +32,7 @@ void Renderer::setVAO(GLuint v) {
 	glBindVertexArray(VAO);
 }
 
-void Renderer::drawHorse(GLenum renderMode, GLuint texture, Horse horse) {
+void Renderer::drawHorse(GLenum renderMode, GLuint texture, Horse &horse) {
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, texture);
 	glUniform1i(texLoc, 0);

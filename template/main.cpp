@@ -53,14 +53,11 @@ float mouseSpeed = 0.0005f;
 const glm::vec3 initScale = glm::vec3(2.0f, 1.0f, 1.0f);
 const glm::vec3 initRotation = glm::vec3(0.0f, 0.0f, 1.0f);
 const glm::vec3 initTranslation = glm::vec3(0.0f, 4.0f, 0.0f);
-const glm::vec3 t = glm::vec3(2.0f, 4.0f, 0.0f);
 float initRotateAngle = 0.0f;
 
-Horse h = Horse(initScale, initRotateAngle, initRotation, initTranslation);
-Horse h1 = Horse(initScale, initRotateAngle, initRotation, t);
-Horse h2 = Horse(initScale, initRotateAngle, initRotation, initTranslation);
-std::vector<Horse> horses;
-glm::vec3 translations[20];
+Horse h = Horse();
+Horse *h1;
+std::vector<Horse *> horses;
 
 // Horse values used to transform horse
 glm::vec3 newScale = initScale;
@@ -391,39 +388,30 @@ void renderScene(Renderer r, BufferLoader b, GLuint groundTEX, GLuint horseTEX) 
 
 	//HORSE
 	r.setVAO(b.getCubeVAO());
-	for (int i = 0; i < horses.size(); ++i){
-		r.drawHorse(renderMode, horseTEX, horses[i]);
+	//for (std::vector<Horse *>::iterator it = horses.begin(); it != horses.end(); ++it) {
+	//	r.drawHorse(renderMode, horseTEX, it);
+	//}
+	for (auto horse : horses) {
+		r.drawHorse(renderMode, horseTEX, *horse);
 	}
 	r.setVAO(0);
 }
 
 void setHorses() {
-	int index = 0;
-	float offset = 1.0f;
-	for (int i = 0; i < 20; i += 5) {
-		for (int j = 0; j < 20; j += 5) {
-			glm::vec3 t;
-			t.x = i;
-			t.y = j;
-			t.z = 0;
-			translations[index++] = t;
-		}
-	}
-
-	index = 0;
-	glm::vec3 t = glm::vec3(0.0f, 4.0f, 0.0f);
-	glm::vec3 g = glm::vec3(3.0f, 4.0f, 0.0f);
 	for (int i = 0; i < 20; ++i) {
-		float randX = rand() % 50;
-		float randZ = rand() % 50;
-		newTranslation = glm::vec3(randX, 0.0f, randZ);
-		Horse temp = Horse(initScale, initRotateAngle, initRotation, t);
+		glm::vec3 t;
+		float randX = rand() % 200 -100 ;
+		float randZ = rand() % 200 -100;
+		t = glm::vec3(randX, 0.0f, randZ);
+		Horse *temp = new Horse();
+		temp->translateHorse(t);
 		horses.push_back(temp);
 	}
-
-	//horses.push_back(h);
-	//horses.push_back(h1);
+	//h1 = new Horse();
+	//Horse *h2 = new Horse();
 	//horses.push_back(h2);
+	//horses.push_back(h1);
+	std::cout << horses.size() << std::endl;
 }
 
 int init() {
@@ -456,6 +444,7 @@ int init() {
 		std::cout << "Failed to initialize GLEW" << std::endl;
 		return -1;
 	}
+
 	return 0;
 }
 

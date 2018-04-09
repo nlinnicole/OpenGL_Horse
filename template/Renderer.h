@@ -16,12 +16,12 @@ public:
 	void setShaderProgram(GLuint shaderProgram);
 	void setTransformLoc(GLuint transformLoc);
 
-	void drawHorse(GLenum renderMode, GLuint texture, Horse h);
+	void drawHorse(GLenum renderMode, GLuint texture, Horse &h);
 	void drawGround(GLenum renderMode, float colValues[4], glm::mat4 matrix, GLuint texture);
 	void drawAxis(glm::vec3 colours, glm::mat4 matrix, int i);
 	void drawSkyBox(glm::mat4 matrix, GLuint texture,GLuint transformLoc, GLuint skyTexLoc);
 
-	std::vector<Horse> horses;
+	std::vector<Horse *> horses;
 
 private:
 	GLuint transformLoc;

@@ -2,15 +2,9 @@
 #include "Horse.h"
 
 Horse::Horse() {
-
-}
-
-Horse::Horse(glm::vec3 horseScale, float horseRotateAngle, glm::vec3 horseRotation, glm::vec3 horseTranslation)
-{
-	scaling = horseScale;
-	angle = horseRotateAngle;
-	rotation = horseRotation;
-	translation = horseTranslation;
+	scaling = initScale;
+	rotation = initRotation;
+	translation = initTranslation;
 	setTorso();
 	setHorseRender();
 }
