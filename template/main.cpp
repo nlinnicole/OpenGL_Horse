@@ -55,8 +55,7 @@ const glm::vec3 initRotation = glm::vec3(0.0f, 0.0f, 1.0f);
 const glm::vec3 initTranslation = glm::vec3(0.0f, 4.0f, 0.0f);
 float initRotateAngle = 0.0f;
 
-Horse h = Horse();
-Horse *h1;
+Horse *h =  new Horse();
 std::vector<Horse *> horses;
 
 // Horse values used to transform horse
@@ -70,7 +69,7 @@ GLenum renderMode = GL_TRIANGLES;
 bool hasTexture = false;
 bool hasAnimation = false;
 bool hasShadow = false;
-bool horseMoving = false;
+bool horseTroop = false;
 
 //Light
 glm::vec3 lightPos = glm::vec3(0.0f, 20.0f, 10.0f);
@@ -121,7 +120,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		for (int i = 0; i < sizeof(newRotateAngle) / sizeof(newRotateAngle[0]); ++i) {
 			newRotateAngle[i] = 0.0f;
 		}
-		h.resetHorse();
+		h->resetHorse();
 		hasAnimation = false;
 		update();
 	}
@@ -150,9 +149,14 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	//Toggle Animation
 	if (key == GLFW_KEY_R && action == GLFW_PRESS) {
 		hasAnimation = !hasAnimation;
-		if (!hasAnimation) {
-			h.resetHorse();
-		}
+		if (!hasAnimation)
+			h->resetHorse();
+	}
+	//Toggle Horse Troop
+	if (key == GLFW_KEY_H && action == GLFW_PRESS) {
+		horseTroop = !horseTroop;
+		if(!horseTroop)
+			h->resetHorse();
 	}
 	//--------------------------HORSE CONTROLS--------------------------
 	//Scale horse up
@@ -160,7 +164,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		newScale.x += 0.2;
 		newScale.y += 0.1;
 		newScale.z += 0.1;
-		h.scaleHorse(newScale);
+		h->scaleHorse(newScale);
 		//h.setTorso(newScale, initRotateAngle, initRotation, initTranslation);
 	}
 	//Scale horse down
@@ -168,71 +172,66 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		newScale.x -= 0.2;
 		newScale.y -= 0.1;
 		newScale.z -= 0.1;
-		h.scaleHorse(newScale);
+		h->scaleHorse(newScale);
 	}
 	//Move horse up
 	if (key == GLFW_KEY_W && action == GLFW_PRESS) {
 		if (mode == GLFW_MOD_SHIFT) {
 			++newTranslation.y;
-			h.translateHorse(newTranslation);
+			h->translateHorse(newTranslation);
 		}
 		//Rotate horse upwards on z axis
 		else {
 			newRotateAngle[10] += 5.0f;
 			newRotation = glm::vec3(0.0f, 0.0f, 1.0f);
-			h.rotateHorse(newRotateAngle[10], newRotation);
+			h->rotateHorse(newRotateAngle[10], newRotation);
 		}
 	}
 	//Move horse down
 	if (key == GLFW_KEY_S && action == GLFW_PRESS) {
 		if (mode == GLFW_MOD_SHIFT) {
 			--newTranslation.y;
-			h.translateHorse(newTranslation);
+			h->translateHorse(newTranslation);
 		}
 		//Rotate horse downwards on z axis
 		else {
 			newRotateAngle[10] -= 5.0f;
 			newRotation = glm::vec3(0.0f, 0.0f, 1.0f);
-			h.rotateHorse(newRotateAngle[10], newRotation);
+			h->rotateHorse(newRotateAngle[10], newRotation);
 		}
 	}
 	//Move horse left
 	if (key == GLFW_KEY_A && action == GLFW_PRESS) {
 		if (mode == GLFW_MOD_SHIFT) {
 			--newTranslation.x;
-			h.translateHorse(newTranslation);
+			h->translateHorse(newTranslation);
 		}
 		//Rotate horse left on y axis
 		else {
 			newRotateAngle[11] -= 5.0f;
 			newRotation = glm::vec3(0.0f, 1.0f, 0.0f);
-			h.rotateHorse(newRotateAngle[11], newRotation);
+			h->rotateHorse(newRotateAngle[11], newRotation);
 		}
 	}
 	//Move horse right
 	if (key == GLFW_KEY_D && action == GLFW_PRESS) {
 		if (mode == GLFW_MOD_SHIFT) {
 			++newTranslation.x;
-			h.translateHorse(newTranslation);
+			h->translateHorse(newTranslation);
 		}
 		//Rotate horse right on y axis
 		else {
 			newRotateAngle[11] += 5.0f;
 			newRotation = glm::vec3(0.0f, 1.0f, 0.0f);
-			h.rotateHorse(newRotateAngle[11], newRotation);
+			h->rotateHorse(newRotateAngle[11], newRotation);
 		}
-	}
-	//Move horse
-	if (key == GLFW_KEY_H && action == GLFW_PRESS) {
-		horseMoving = true;
-		//h.moveHorse();
 	}
 	//Re-position horse to a random position on grid
 	if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) {
 		float randX = rand() % 50;
 		float randZ = rand() % 50;
 		newTranslation = glm::vec3(randX, 0.0f, randZ);
-		h.translateHorse(newTranslation);
+		h->translateHorse(newTranslation);
 	}
 	//Rotate Head
 	if (key == GLFW_KEY_0 && action == GLFW_PRESS) {
@@ -241,7 +240,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		} else {
 			newRotateAngle[0] += 5.0f;
 		}
-		h.setHead(newRotateAngle[0]);
+		h->setHead(newRotateAngle[0]);
 	}
 	//Rotate Neck
 	if (key == GLFW_KEY_1 && action == GLFW_PRESS) {
@@ -250,7 +249,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		} else {
 			newRotateAngle[1] += 5.0f;
 		}
-		h.setNeck(newRotateAngle[1]);
+		h->setNeck(newRotateAngle[1]);
 	}
 	//Rotate Right Arm
 	if (key == GLFW_KEY_2 && action == GLFW_PRESS) {
@@ -259,7 +258,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		} else {
 			newRotateAngle[2] += 5.0f;
 		}
-		h.setUpperArmR(newRotateAngle[2]);
+		h->setUpperArmR(newRotateAngle[2]);
 	}
 	if (key == GLFW_KEY_3 && action == GLFW_PRESS) {
 		if (mode == GLFW_MOD_SHIFT) {
@@ -268,7 +267,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		else {
 			newRotateAngle[3] += 5.0f;
 		}
-		h.setLowerArmR(newRotateAngle[3]);
+		h->setLowerArmR(newRotateAngle[3]);
 	}
 	//Rotate Right Leg
 	if (key == GLFW_KEY_4 && action == GLFW_PRESS) {
@@ -278,7 +277,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		else {
 			newRotateAngle[4] += 5.0f;
 		}
-		h.setUpperLegR(newRotateAngle[4]);
+		h->setUpperLegR(newRotateAngle[4]);
 	}
 	if (key == GLFW_KEY_5 && action == GLFW_PRESS) {
 		if (mode == GLFW_MOD_SHIFT) {
@@ -287,7 +286,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		else {
 			newRotateAngle[5] += 5.0f;
 		}
-		h.setLowerLegR(newRotateAngle[5]);
+		h->setLowerLegR(newRotateAngle[5]);
 	}
 	//Rotate Left Arm
 	if (key == GLFW_KEY_6 && action == GLFW_PRESS) {
@@ -297,7 +296,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		else {
 			newRotateAngle[6] += 5.0f;
 		}
-		h.setUpperArmL(newRotateAngle[6]);
+		h->setUpperArmL(newRotateAngle[6]);
 	}
 	if (key == GLFW_KEY_7 && action == GLFW_PRESS) {
 		if (mode == GLFW_MOD_SHIFT) {
@@ -306,7 +305,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		else {
 			newRotateAngle[7] += 5.0f;
 		}
-		h.setLowerArmL(newRotateAngle[7]);
+		h->setLowerArmL(newRotateAngle[7]);
 	}
 	//Rotate Left Leg
 	if (key == GLFW_KEY_8 && action == GLFW_PRESS) {
@@ -316,7 +315,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		else {
 			newRotateAngle[8] += 5.0f;
 		}
-		h.setUpperLegL(newRotateAngle[8]);
+		h->setUpperLegL(newRotateAngle[8]);
 	}
 	if (key == GLFW_KEY_9 && action == GLFW_PRESS) {
 		if (mode == GLFW_MOD_SHIFT) {
@@ -325,7 +324,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		else {
 			newRotateAngle[9] += 5.0f;
 		}
-		h.setLowerLegL(newRotateAngle[9]);
+		h->setLowerLegL(newRotateAngle[9]);
 	}
 }
 
@@ -388,11 +387,13 @@ void renderScene(Renderer r, BufferLoader b, GLuint groundTEX, GLuint horseTEX) 
 
 	//HORSE
 	r.setVAO(b.getCubeVAO());
-	//for (std::vector<Horse *>::iterator it = horses.begin(); it != horses.end(); ++it) {
-	//	r.drawHorse(renderMode, horseTEX, it);
-	//}
-	for (auto horse : horses) {
-		r.drawHorse(renderMode, horseTEX, *horse);
+	if (horseTroop) {
+		for (std::vector<Horse *>::iterator it = horses.begin(); it != horses.end(); ++it) {
+			r.drawHorse(renderMode, horseTEX, **it);
+		}
+	}
+	else {
+		r.drawHorse(renderMode, horseTEX, *h);
 	}
 	r.setVAO(0);
 }
@@ -400,18 +401,13 @@ void renderScene(Renderer r, BufferLoader b, GLuint groundTEX, GLuint horseTEX) 
 void setHorses() {
 	for (int i = 0; i < 20; ++i) {
 		glm::vec3 t;
-		float randX = rand() % 200 -100 ;
-		float randZ = rand() % 200 -100;
+		float randX = rand() % 150 - 100;
+		float randZ = rand() % 150 - 100;
 		t = glm::vec3(randX, 0.0f, randZ);
 		Horse *temp = new Horse();
 		temp->translateHorse(t);
 		horses.push_back(temp);
 	}
-	//h1 = new Horse();
-	//Horse *h2 = new Horse();
-	//horses.push_back(h2);
-	//horses.push_back(h1);
-	std::cout << horses.size() << std::endl;
 }
 
 int init() {
@@ -570,10 +566,10 @@ int main()
 
 		//--------------------------TOGGLE ANIMATION--------------------------
 		if (hasAnimation)
-			h.animateHorse();
+			h->animateHorse();
 
-		if (horseMoving)
-			h.moveHorse();
+		if (horseTroop)
+			h->moveHorse();
 
 		//--------------------------DRAW SCENE--------------------------
 		//depth shader
