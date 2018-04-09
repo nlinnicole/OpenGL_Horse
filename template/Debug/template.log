@@ -19,10 +19,16 @@ c:\users\nicole\documents\comp371\template\main.cpp(338): warning C4244: 'initia
 c:\users\nicole\documents\comp371\template\main.cpp(339): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
 c:\users\nicole\documents\comp371\template\main.cpp(340): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
 c:\users\nicole\documents\comp371\template\main.cpp(400): warning C4018: '<': signed/unsigned mismatch
-c:\users\nicole\documents\comp371\template\main.cpp(416): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
 c:\users\nicole\documents\comp371\template\main.cpp(417): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
 c:\users\nicole\documents\comp371\template\main.cpp(418): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-c:\users\nicole\documents\comp371\template\main.cpp(558): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\users\nicole\documents\comp371\template\main.cpp(419): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+c:\users\nicole\documents\comp371\template\main.cpp(420): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+c:\users\nicole\documents\comp371\template\main.cpp(563): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  Horse.cpp
+c:\users\nicole\documents\comp371\template\horse.h(80): warning C4305: 'initializing': truncation from 'double' to 'GLfloat'
+c:\users\nicole\documents\comp371\template\horse.h(82): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+c:\users\nicole\documents\comp371\template\horse.h(83): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+  Generating Code...
   template.vcxproj -> C:\Users\nicole\Documents\COMP371\Debug\a1_27890834.exe
   template.vcxproj -> C:\Users\nicole\Documents\COMP371\Debug\a1_27890834.pdb (Partial PDB)
   0 File(s) copied
