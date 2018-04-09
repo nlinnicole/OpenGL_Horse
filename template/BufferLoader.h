@@ -14,6 +14,7 @@ public:
 	GLuint getGroundVAO();
 	GLuint getAxisVAO();
 	GLuint getGridVAO();
+	GLuint getTreeVAO();
 
 	GLuint getFBO();
 	GLuint getDepthMap();
@@ -30,7 +31,7 @@ public:
 
 private:
 	GLuint VAO[5];
-	GLuint VBO[10];
+	GLuint VBO[13];
 	GLuint EBO;
 	GLuint tex[2];
 	GLuint skyTex;
@@ -46,11 +47,16 @@ private:
 	std::vector<glm::vec3> gNormals;
 	std::vector<glm::vec2> gUvCoord;
 
+	std::vector<glm::vec3> tVertices;
+	std::vector<glm::vec3> tNormals;
+	std::vector<glm::vec2> tUvCoord;
+
 	std::vector<glm::vec3> ground;
 
 	void setCubeVAO();
 	void setGroundVAO();
 	void setAxisVAO();
+	void setTreeVAO();
 	void setInstancing();
 };
 

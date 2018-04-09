@@ -263,10 +263,9 @@ void Horse::animateHorse() {
 }
 
 void Horse::resetHorse() {
-	scaling = glm::vec3(2.0f, 1.0f, 1.0f);
-	angle = 0.0f;
-	rotation = glm::vec3(0.0f, 0.0f, 1.0f);
-	translation = glm::vec3(0.0f, 4.0f, 0.0f);
+	scaling = initScale;
+	rotation = initRotation;
+	translation = initTranslation;
 
 	//Reset angles for animation
 	for (int i = 0; i < sizeof(aniAngle) / sizeof(aniAngle[0]); ++i) {
@@ -277,11 +276,13 @@ void Horse::resetHorse() {
 	setTorso();
 }
 
-void Horse::moveHorse() {
-	if (s != steps) {
-		s++;
-		t.x += deltaX;
-		translateHorse(t);
+void Horse::moveHorse(int steps) {
+	glm::vec3 t = translation;
+	for (int i = 0; i < steps; ++i) {
+		if (t.x <= 90 && t.z <= 90 && t.x >= -100 && t.z >= -100) {
+			t.x -= deltaX;
+			translateHorse(t);
+		}
 	}
 }
 

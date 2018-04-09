@@ -61,6 +61,12 @@ void Renderer::drawAxis(glm::vec3 colours, glm::mat4 matrix, int i) {
 	glDrawArrays(GL_LINES, i, 2);
 };
 
+void Renderer::drawTree(float colValues[4], glm::mat4 matrix) {
+	glProgramUniform4fv(shaderProgram, colorLoc, 1, colValues);
+	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(matrix));
+	glDrawArraysInstanced(GL_TRIANGLE_FAN, 0, 408, 10);
+}
+
 void Renderer::drawSkyBox(glm::mat4 matrix, GLuint texture, GLuint transformLoc, GLuint skyTexLoc) {
 	//glm::mat4 scale = glm::scale(matrix, glm::vec3(5.0, 5.0, 5.0));
 	//matrix *= scale;

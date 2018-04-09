@@ -23,6 +23,6 @@ void main()
 	outUV = UV;
 
 	fragPosLightSpace = light_matrix * vec4(fragPosition, 1.0);
-	gl_Position = projection_matrix * view_matrix * model_matrix * vec4(position, 1.0f);
-	//gl_Position = projection_matrix * view_matrix * model_matrix * vec4(position + aOffset, 1.0f);
+	//gl_Position = projection_matrix * view_matrix * model_matrix * vec4(position, 1.0f);
+	gl_Position = projection_matrix * view_matrix * model_matrix * vec4(position + aOffset, 1.0f);
 }

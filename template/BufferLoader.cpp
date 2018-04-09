@@ -5,9 +5,11 @@ BufferLoader::BufferLoader()
 {
 	loadOBJ("cube.obj", hVertices, hNormals, hUvCoord);
 	loadOBJ("plane.obj", gVertices, gNormals, gUvCoord);
+	loadOBJ("tree.obj", tVertices, tNormals, tUvCoord);
 	setCubeVAO();
 	setAxisVAO();
 	setGroundVAO();
+	setTreeVAO();
 }
 
 BufferLoader::~BufferLoader()
@@ -29,6 +31,10 @@ GLuint BufferLoader::getGridVAO() {
 
 GLuint BufferLoader::getGroundVAO() {
 	return VAO[3];
+}
+
+GLuint BufferLoader::getTreeVAO() {
+	return VAO[4];
 }
 
 unsigned int BufferLoader::getFBO() {
@@ -74,16 +80,6 @@ void BufferLoader::setCubeVAO() {
 	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec2)*hUvCoord.size(), &hUvCoord[0], GL_STATIC_DRAW);
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, 0);
 	glEnableVertexAttribArray(2);
-
-	//Instancing
-	//setInstancing();
-	//glGenBuffers(1, &VBO[9]);
-	//glBindBuffer(GL_ARRAY_BUFFER, VBO[9]);
-	//glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * 20, &translations[0], GL_STATIC_DRAW);
-	//glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
-	//glBindBuffer(GL_ARRAY_BUFFER, 0);
-	//glVertexAttribDivisor(3, 1);
-	//glEnableVertexAttribArray(3);
 }
 
 void BufferLoader::setAxisVAO() {
@@ -130,6 +126,41 @@ void BufferLoader::setGroundVAO() {
 	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec2)*gUvCoord.size(), &gUvCoord[0], GL_STATIC_DRAW);
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, 0);
 	glEnableVertexAttribArray(2);
+}
+
+void BufferLoader::setTreeVAO() {
+	glGenVertexArrays(1, &VAO[4]);
+	glBindVertexArray(VAO[4]);
+
+	glGenBuffers(1, &VBO[9]);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO[9]);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3)*tVertices.size(), &tVertices[0], GL_STATIC_DRAW);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	glEnableVertexAttribArray(0);
+
+	//VBOnormals
+	glGenBuffers(1, &VBO[10]);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO[10]);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3)*tNormals.size(), &tNormals[0], GL_STATIC_DRAW);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	glEnableVertexAttribArray(1);
+
+	//UV
+	glGenBuffers(1, &VBO[11]);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO[11]);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec2)*tUvCoord.size(), &tUvCoord[0], GL_STATIC_DRAW);
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, 0);
+	glEnableVertexAttribArray(2);
+
+	//Instancing
+	setInstancing();
+	glGenBuffers(1, &VBO[12]);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO[12]);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * 20, &translations[0], GL_STATIC_DRAW);
+	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glVertexAttribDivisor(3, 1);
+	glEnableVertexAttribArray(3);
 }
 
 void BufferLoader::loadTex() {
@@ -216,11 +247,9 @@ void BufferLoader::setInstancing() {
 	for (int i = 0; i < 20; i += 5) {
 		for (int j = 0; j < 20; j += 5) {
 			glm::vec3 translation;
-			if (i % 2 == 0) {
-				translation.x = i;
-				translation.y = j;
-				translation.z = 0;
-			}
+			float randX = rand() % 150 - 100;
+			float randZ = rand() % 150 - 100;
+			translation = glm::vec3(randX, 0.0f, randZ);
 			translations[index++] = translation;
 		}
 	}

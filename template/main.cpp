@@ -385,11 +385,22 @@ void renderScene(Renderer r, BufferLoader b, GLuint groundTEX, GLuint horseTEX) 
 	r.drawGround(renderMode, colValues, ground, groundTEX);
 	r.setVAO(0);
 
+	//TREE
+	//r.setVAO(b.getTreeVAO());
+	//glm::mat4 tree;
+	//r.drawTree(colValues, tree);
+	//r.setVAO(0);
+
 	//HORSE
 	r.setVAO(b.getCubeVAO());
 	if (horseTroop) {
 		for (std::vector<Horse *>::iterator it = horses.begin(); it != horses.end(); ++it) {
 			r.drawHorse(renderMode, horseTEX, **it);
+		}
+		for (int i = 0; i < horses.size(); ++i) {
+			horses[i]->animateHorse();
+			int steps = rand() % 30 + 10;
+			//horses[i]->moveHorse(steps);
 		}
 	}
 	else {
@@ -401,11 +412,16 @@ void renderScene(Renderer r, BufferLoader b, GLuint groundTEX, GLuint horseTEX) 
 void setHorses() {
 	for (int i = 0; i < 20; ++i) {
 		glm::vec3 t;
+		glm::vec3 s;
 		float randX = rand() % 150 - 100;
 		float randZ = rand() % 150 - 100;
+		float randS = rand() % 3;
+
+		s = glm::vec3(randS + 1.0f, randS, randS);
 		t = glm::vec3(randX, 0.0f, randZ);
 		Horse *temp = new Horse();
 		temp->translateHorse(t);
+		temp->scaleHorse(s);
 		horses.push_back(temp);
 	}
 }
@@ -435,6 +451,7 @@ int init() {
 
 	glewExperimental = GL_TRUE;
 	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
 
 	if (glewInit() != 0) {
 		std::cout << "Failed to initialize GLEW" << std::endl;
@@ -566,10 +583,7 @@ int main()
 
 		//--------------------------TOGGLE ANIMATION--------------------------
 		if (hasAnimation)
-			h->animateHorse();
-
-		if (horseTroop)
-			h->moveHorse();
+			h->animateHorse();		
 
 		//--------------------------DRAW SCENE--------------------------
 		//depth shader

@@ -45,7 +45,7 @@ public:
 	void animateHorse();
 	void resetHorse();
 
-	void moveHorse();
+	void moveHorse(int steps);
 
 private:
 	float colValues[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
