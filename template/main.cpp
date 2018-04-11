@@ -28,8 +28,8 @@ int windowWidth = 800;
 int windowHeight = 800;
 
 // View variables
-glm::vec3 c_pos = glm::vec3(0.0f, 3.0f, 15.0f);
-glm::vec3 c_eye = glm::normalize(glm::vec3(0.0f, 0.0f, -15.0f));
+glm::vec3 c_pos = glm::vec3(0.0f, 15.0f, 50.0f);
+glm::vec3 c_eye = glm::normalize(glm::vec3(0.01f, 0.0f, -45.0f));
 glm::vec3 c_up = glm::vec3(0.0f, 1.0f, 0.0f);
 glm::mat4 viewMatrix;
 glm::mat4 projectionMatrix;
@@ -397,12 +397,6 @@ void renderScene(Renderer r, BufferLoader b, GLuint groundTEX, GLuint horseTEX) 
 		for (std::vector<Horse *>::iterator it = horses.begin(); it != horses.end(); ++it) {
 			r.drawHorse(renderMode, horseTEX, **it);
 		}
-		for (int i = 0; i < horses.size(); ++i) {
-			horses[i]->animateHorse();
-			int steps = rand() % 30 + 10;
-			horses[i]->moveHorse(steps);
-			horses[i]->rotateHorse(5.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-		}
 	}
 	else {
 		r.drawHorse(renderMode, horseTEX, *h);
@@ -411,7 +405,7 @@ void renderScene(Renderer r, BufferLoader b, GLuint groundTEX, GLuint horseTEX) 
 }
 
 void setHorses() {
-	for (int i = 0; i < 26; ++i) {
+	for (int i = 0; i < 10; ++i) {
 		glm::vec3 t;
 		glm::vec3 s;
 		float randX = rand() % 100 - 50;
@@ -419,15 +413,18 @@ void setHorses() {
 		float randS = rand() % 3;
 		float randR = rand() % 360;
 
-		s = glm::vec3(randS + 1.0f, randS, randS);
 		t = glm::vec3(randX, 0.0f, randZ);
 		Horse *temp = new Horse();
 		temp->translateHorse(t);
-		temp->scaleHorse(s);
+		temp->rotateHorse(randR, glm::vec3(0.0f, 1.0f, 0.0f));
 		horses.push_back(temp);
 	}
 	std::cout << horses.size() << std::endl;
 }
+
+//bool checkCol() {
+//
+//}
 
 int init() {
 	std::cout << "Starting GLFW context, OpenGL 3.3" << std::endl;
@@ -456,6 +453,9 @@ int init() {
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
 
+	//glEnable(GL_DEPTH_TEST);
+	//glDepthFunc(GL_LESS);
+
 	if (glewInit() != 0) {
 		std::cout << "Failed to initialize GLEW" << std::endl;
 		return -1;
@@ -473,6 +473,7 @@ int main()
 	}
 
 	glClearColor(0.529f, 0.808f, 0.922f, 0.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	//--------------------------LOAD AND CONFIGURE SHADERS--------------------------
 	ShaderLoader s;
@@ -561,7 +562,8 @@ int main()
 		float currentFrame = glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
-		glClear(GL_COLOR_BUFFER_BIT);
+
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
 		glUniformMatrix4fv(viewMatrixLoc, 1, GL_FALSE, glm::value_ptr(viewMatrix));
 		glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
@@ -586,7 +588,21 @@ int main()
 
 		//--------------------------TOGGLE ANIMATION--------------------------
 		if (hasAnimation)
-			h->animateHorse();		
+			h->animateHorse();
+
+		if (horseTroop) {
+			h->animateHorse();
+			for (int i = 0; i < horses.size(); ++i) {
+				double steps = rand() % 50 + 30;
+				int axis = rand() % 2;
+				int dir = rand() % 2;
+
+				horses[i]->moveHorse(steps, axis, dir);
+
+				//horses[i]->rotateHorse(5.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+			}
+
+		}
 
 		//--------------------------DRAW SCENE--------------------------
 		//depth shader

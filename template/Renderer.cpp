@@ -40,7 +40,12 @@ void Renderer::drawHorse(GLenum renderMode, GLuint texture, Horse &horse) {
 		glProgramUniform4fv(shaderProgram, colorLoc, 1, horse.components[i]->colour);
 		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(horse.components[i]->matrix));
 		glDrawArrays(renderMode, 0, 12 * 3);
+
+		//Render collision box
+		//glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(horse.hColObj.matrix));
+		//glDrawArrays(GL_LINES, 0, 12 * 3);
 	}
+
 };
 
 void Renderer::drawGround(GLenum renderMode, float colValues[4], glm::mat4 matrix, GLuint texture) {

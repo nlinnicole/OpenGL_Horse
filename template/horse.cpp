@@ -197,8 +197,8 @@ void Horse::setLowerLegR(float angle)
 
 void Horse::setCol() {
 	glm::mat4 hCol;
-	scale = glm::scale(hCol, glm::vec3(2.3f, 2.5f, 1.0f));
-	translate = glm::translate(hCol, glm::vec3(-0.2f, -0.5f, 0.0f));
+	scale = glm::scale(hCol, glm::vec3(1.8f, 2.8f, 1.0f));
+	translate = glm::translate(hCol, glm::vec3(-0.3f, -0.5f, 0.0f));
 	hCol *= torsoObj.matrix * scale * translate;
 	colValues[0] = 1.0f;
 	colValues[1] = 1.0f;
@@ -289,14 +289,70 @@ void Horse::resetHorse() {
 	setTorso();
 }
 
-void Horse::moveHorse(int steps) {
+void Horse::moveHorse(double steps, int axis, int dir) {
 	glm::vec3 t = translation;
-	for (int i = 0; i < steps; ++i) {
-		//maps bounds
-		if (t.x <= 90 && t.z <= 90 && t.x >= -100 && t.z >= -100) {
-			t.z += (deltaX/2.0f);
-			translateHorse(t);
+	stepCounter = 0;
+	while (stepCounter != steps) {
+		if (dir == 0) {
+			t.x += speed;
 		}
+		else if (dir == 1) {
+			t.x -= speed;
+		}
+		else if (dir == 2) {
+			t.z += speed;
+		}
+		else if (dir == 3) {
+			t.z -= speed;
+		}
+		stepCounter += 0.5;
 	}
+
+
+
+	////x-Axis
+	//if (axis == 0) {
+	//	if ((t.x < 35 && t.x < -35) && hitObject == false) {
+	//		if (dir == 0)
+	//			t.x += (deltaX / 5.0f);
+	//		else
+	//			t.x -= (deltaX / 5.0f);
+	//	}
+	//	else if (t.x > 35 || hitObject == true){
+	//		hitObject = true;
+	//		t.x -= (deltaX / 5.0f);
+	//	}
+	//}
+
+
+
+	////positive bounds
+	//if ((t.x < 90 && t.z < 90) && hitObject == false) {
+	//	if (axis == 0) {
+	//		t.z += (deltaX / 2.0f);
+	//	} else if (axis == 1) {
+	//		t.x += (deltaX / 2.0f);
+	//	}
+	//}
+	//else {
+	//	hitObject = true;
+	//	if (axis == 0) {
+	//		t.z -= (deltaX / 2.0f);
+	//	}
+	//	else if (axis == 1) {
+	//		t.x -= (deltaX / 2.0f);
+	//	}
+	//}
+
+	////negative bounds
+	//if (t.x > -100 && t.z > -100) {
+	//	if (axis == 0) {
+	//		t.z += (deltaX / 2.0f);
+	//	}
+	//	else if (axis == 1) {
+	//		t.x += (deltaX / 2.0f);
+	//	}
+	//}
+	translateHorse(t);
 }
 

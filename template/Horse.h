@@ -45,7 +45,7 @@ public:
 	void animateHorse();
 	void resetHorse();
 
-	void moveHorse(int steps);
+	void moveHorse(double steps, int axis, int dir);
 
 	//COLLISION
 	HorseObject hColObj;
@@ -87,12 +87,11 @@ private:
 	int minAngle = -20.0f;
 	bool maxAngleReached = false;
 
-	int steps = rand() & 30 + 10;
-	int s = 0;
-	int axi = rand() % 2;
-	int dir = rand() % 2;
-	glm::vec3 t = glm::vec3(0.0f, 4.0f, 0.0f);
+	float speed = 0.002f;
 
+	//COLLISION
+	bool hitObject = false;
+	double stepCounter = 0;
 
 };
 
