@@ -54,6 +54,10 @@ public:
 	bool getHitObject();
 	void setHitObject(bool hit);
 
+	bool checkCollision(Horse other);
+	glm::vec3 colSize = glm::vec3(1.8f, 2.8f, 1.0f);
+	glm::vec4 colPos;
+
 private:
 	float colValues[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
 	glm::vec3 initScale = glm::vec3(2.0f, 1.0f, 1.0f);
@@ -95,6 +99,5 @@ private:
 	//COLLISION
 	bool hitObject = false;
 	int stepCounter = 0;
-
 };
 

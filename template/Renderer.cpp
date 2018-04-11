@@ -42,8 +42,8 @@ void Renderer::drawHorse(GLenum renderMode, GLuint texture, Horse &horse) {
 		glDrawArrays(renderMode, 0, 12 * 3);
 
 		//Render collision box
-		//glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(horse.hColObj.matrix));
-		//glDrawArrays(GL_LINES, 0, 12 * 3);
+		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(horse.hColObj.matrix));
+		glDrawArrays(GL_POINTS, 0, 12 * 3);
 	}
 
 };

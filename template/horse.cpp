@@ -221,6 +221,10 @@ void Horse::setCol() {
 	colValues[1] = 1.0f;
 	colValues[2] = 1.0f;
 
+	colPos = hCol[3];
+
+	std::cout << colPos.x << " " << colPos.y << " " << colPos.z << std::endl;
+
 	hColObj = { hCol, *colValues };
 }
 
@@ -324,4 +328,12 @@ void Horse::moveHorse() {
 	t.x -= glm::cos(glm::radians(angle)) * stepSize * 0.5;
 	translateHorse(t);
 	animateHorse();
+}
+
+bool Horse::checkCollision(Horse other) {
+	bool collisionX = (colPos.x + colSize.x >= other.colPos.x) && (other.colPos.x + other.colSize.x >= colPos.x);
+	bool collisionY = (colPos.y + colSize.y >= other.colPos.y) && (other.colPos.y + other.colSize.y >= colPos.y);
+	bool collisionZ = (colPos.z + colSize.z >= other.colPos.z) && (other.colPos.z + other.colSize.z >= colPos.z);
+
+	return collisionX && collisionY && collisionZ;
 }

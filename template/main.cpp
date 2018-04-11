@@ -405,7 +405,7 @@ void renderScene(Renderer r, BufferLoader b, GLuint groundTEX, GLuint horseTEX) 
 }
 
 void setHorses() {
-	for (int i = 0; i < 30; ++i) {
+	for (int i = 0; i < 2; ++i) {
 		glm::vec3 t;
 		glm::vec3 s;
 		float randX = rand() % 30 - 20;
@@ -607,6 +607,10 @@ int main()
 					moveHorseTroop(180, horses[i]);
 				}
 				moveHorseTroop(angle, horses[i]);
+				for (int j = 0; j < horses.size(); ++j) {
+					if (horses[i]->checkCollision(*horses[j]))
+						std::cout << "collision" << std::endl;
+				}
 			}
 		}
 
