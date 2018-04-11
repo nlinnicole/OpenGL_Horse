@@ -1,29 +1,9 @@
-﻿  main.cpp
+﻿  Horse.cpp
 c:\users\nicole\documents\comp371\template\horse.h(85): warning C4305: 'initializing': truncation from 'double' to 'GLfloat'
 c:\users\nicole\documents\comp371\template\horse.h(87): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
 c:\users\nicole\documents\comp371\template\horse.h(88): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-c:\users\nicole\documents\comp371\template\main.cpp(41): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-c:\users\nicole\documents\comp371\template\main.cpp(42): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-c:\users\nicole\documents\comp371\template\main.cpp(164): warning C4305: '+=': truncation from 'double' to 'float'
-c:\users\nicole\documents\comp371\template\main.cpp(165): warning C4305: '+=': truncation from 'double' to 'float'
-c:\users\nicole\documents\comp371\template\main.cpp(166): warning C4305: '+=': truncation from 'double' to 'float'
-c:\users\nicole\documents\comp371\template\main.cpp(172): warning C4305: '-=': truncation from 'double' to 'float'
-c:\users\nicole\documents\comp371\template\main.cpp(173): warning C4305: '-=': truncation from 'double' to 'float'
-c:\users\nicole\documents\comp371\template\main.cpp(174): warning C4305: '-=': truncation from 'double' to 'float'
-c:\users\nicole\documents\comp371\template\main.cpp(231): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-c:\users\nicole\documents\comp371\template\main.cpp(232): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-c:\users\nicole\documents\comp371\template\main.cpp(333): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-c:\users\nicole\documents\comp371\template\main.cpp(334): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-c:\users\nicole\documents\comp371\template\main.cpp(337): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-c:\users\nicole\documents\comp371\template\main.cpp(338): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-c:\users\nicole\documents\comp371\template\main.cpp(339): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-c:\users\nicole\documents\comp371\template\main.cpp(340): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-c:\users\nicole\documents\comp371\template\main.cpp(411): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-c:\users\nicole\documents\comp371\template\main.cpp(412): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-c:\users\nicole\documents\comp371\template\main.cpp(413): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-c:\users\nicole\documents\comp371\template\main.cpp(561): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-c:\users\nicole\documents\comp371\template\main.cpp(594): warning C4018: '<': signed/unsigned mismatch
-c:\users\nicole\documents\comp371\template\main.cpp(608): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+c:\users\nicole\documents\comp371\template\horse.cpp(304): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+c:\users\nicole\documents\comp371\template\horse.cpp(305): warning C4244: '-=': conversion from 'double' to 'float', possible loss of data
   template.vcxproj -> C:\Users\nicole\Documents\COMP371\Debug\a1_27890834.exe
   template.vcxproj -> C:\Users\nicole\Documents\COMP371\Debug\a1_27890834.pdb (Partial PDB)
   0 File(s) copied

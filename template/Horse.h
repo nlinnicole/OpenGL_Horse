@@ -45,7 +45,7 @@ public:
 	void animateHorse();
 	void resetHorse();
 
-	void moveHorse(int axis);
+	void moveHorse();
 
 	//COLLISION
 	HorseObject hColObj;

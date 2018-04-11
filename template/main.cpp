@@ -592,13 +592,10 @@ int main()
 		if (horseTroop) {
 			h->animateHorse();
 			for (int i = 0; i < horses.size(); ++i) {
-				double steps = rand() % 50 + 30;
-				int axis = rand() % 2;
-				//int dir = rand() % 2;
-				int dir = 0;
-
+				double steps = rand() % 60 + 30;
 				double angle = 0;
-				if (horses[i]->getStepCounter() >= 60) {
+
+				if (horses[i]->getStepCounter() >= steps) {
 					if (rand() % 2 == 0) {
 						angle = 15;
 					}
@@ -607,7 +604,7 @@ int main()
 					}
 					horses[i]->rotateHorse(angle, glm::vec3(0.0f, 1.0f, 0.0f));
 				}
-				horses[i]->moveHorse(axis);
+				horses[i]->moveHorse();
 			}
 		}
 

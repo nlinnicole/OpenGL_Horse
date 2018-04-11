@@ -13,6 +13,10 @@ Horse::~Horse()
 {
 }
 
+int Horse::getStepCounter() {
+	return stepCounter;
+}
+
 void Horse::translateHorse(glm::vec3 translate) {
 	translation = translate;
 	setTorso();
@@ -294,15 +298,10 @@ void Horse::resetHorse() {
 	setTorso();
 }
 
-void Horse::moveHorse(int axis) {
+void Horse::moveHorse() {
 	++stepCounter;
 	glm::vec3 t = translation;
-		t.x += glm::sin(glm::radians(angle)) * stepSize * 0.5;
-		t.z += glm::cos(glm::radians(angle)) * stepSize * 0.5;
+	t.z += glm::sin(glm::radians(angle)) * stepSize * 0.5;
+	t.x -= glm::cos(glm::radians(angle)) * stepSize * 0.5;
 	translateHorse(t);
 }
-
-int Horse::getStepCounter() {
-	return stepCounter;
-}
-
