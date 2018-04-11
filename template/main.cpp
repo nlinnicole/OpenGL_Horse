@@ -401,6 +401,7 @@ void renderScene(Renderer r, BufferLoader b, GLuint groundTEX, GLuint horseTEX) 
 			horses[i]->animateHorse();
 			int steps = rand() % 30 + 10;
 			horses[i]->moveHorse(steps);
+			horses[i]->rotateHorse(5.0f, glm::vec3(0.0f, 1.0f, 0.0f));
 		}
 	}
 	else {
@@ -423,8 +424,6 @@ void setHorses() {
 		Horse *temp = new Horse();
 		temp->translateHorse(t);
 		temp->scaleHorse(s);
-		temp->rotateHorse(randR, glm::vec3(0.0f, 1.0f, 0.0f));
-
 		horses.push_back(temp);
 	}
 	std::cout << horses.size() << std::endl;

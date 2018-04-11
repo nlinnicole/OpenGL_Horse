@@ -47,6 +47,10 @@ public:
 
 	void moveHorse(int steps);
 
+	//COLLISION
+	HorseObject hColObj;
+	void Horse::setCol();
+
 private:
 	float colValues[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
 	glm::vec3 initScale = glm::vec3(2.0f, 1.0f, 1.0f);

@@ -46,6 +46,7 @@ void Horse::setTorso() {
 	setUpperArmR(0.0f);
 	setUpperLegL(0.0f);
 	setUpperLegR(0.0f);
+	setCol();
 }
 
 void Horse::setNeck(float angle) {
@@ -194,6 +195,18 @@ void Horse::setLowerLegR(float angle)
 	lowerLegRObj = { lowerLegR, *colValues };
 }
 
+void Horse::setCol() {
+	glm::mat4 hCol;
+	scale = glm::scale(hCol, glm::vec3(2.3f, 2.5f, 1.0f));
+	translate = glm::translate(hCol, glm::vec3(-0.2f, -0.5f, 0.0f));
+	hCol *= torsoObj.matrix * scale * translate;
+	colValues[0] = 1.0f;
+	colValues[1] = 1.0f;
+	colValues[2] = 1.0f;
+
+	hColObj = { hCol, *colValues };
+}
+
 void Horse::setHorseRender() {
 	components.push_back(&lowerLegRObj);
 	components.push_back(&upperLegRObj);
@@ -206,6 +219,7 @@ void Horse::setHorseRender() {
 	components.push_back(&torsoObj);
 	components.push_back(&neckObj);
 	components.push_back(&headObj);
+	//components.push_back(&hColObj);
 }
 
 void Horse::animateHorse() {
@@ -272,15 +286,15 @@ void Horse::resetHorse() {
 		aniAngle[i] = 0.0f;
 	}
 	maxAngleReached = false;
-
 	setTorso();
 }
 
 void Horse::moveHorse(int steps) {
 	glm::vec3 t = translation;
 	for (int i = 0; i < steps; ++i) {
+		//maps bounds
 		if (t.x <= 90 && t.z <= 90 && t.x >= -100 && t.z >= -100) {
-			t.x -= deltaX;
+			t.z += (deltaX/2.0f);
 			translateHorse(t);
 		}
 	}
