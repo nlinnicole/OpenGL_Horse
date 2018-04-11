@@ -408,7 +408,7 @@ void setHorses() {
 	for (int i = 0; i < 30; ++i) {
 		glm::vec3 t;
 		glm::vec3 s;
-		float randX = rand() % 30;
+		float randX = rand() % 30 - 20;
 		float randZ = rand() % 100 - 50;
 		float randR = rand() % 360;
 
@@ -421,9 +421,14 @@ void setHorses() {
 	std::cout << horses.size() << std::endl;
 }
 
-//bool checkCol() {
-//
-//}
+void moveHorseTroop(float angle, Horse *h) {
+	double steps = rand() % 60 + 30;
+
+	if (h->getStepCounter() >= steps){
+		h->rotateHorse(angle, glm::vec3(0.0f, 1.0f, 0.0f));
+	}
+	h->moveHorse();
+}
 
 int init() {
 	std::cout << "Starting GLFW context, OpenGL 3.3" << std::endl;
@@ -590,21 +595,18 @@ int main()
 			h->animateHorse();
 
 		if (horseTroop) {
-			h->animateHorse();
 			for (int i = 0; i < horses.size(); ++i) {
-				double steps = rand() % 60 + 30;
 				double angle = 0;
+				if (rand() % 2 == 0)
+					angle = 15;
+				else 
+					angle = -15;
 
-				if (horses[i]->getStepCounter() >= steps) {
-					if (rand() % 2 == 0) {
-						angle = 15;
-					}
-					else {
-						angle = -15;
-					}
-					horses[i]->rotateHorse(angle, glm::vec3(0.0f, 1.0f, 0.0f));
+				if (horses[i]->getHitObject()) {
+					horses[i]->setHitObject(false);
+					moveHorseTroop(180, horses[i]);
 				}
-				horses[i]->moveHorse();
+				moveHorseTroop(angle, horses[i]);
 			}
 		}
 

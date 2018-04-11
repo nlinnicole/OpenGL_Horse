@@ -17,6 +17,14 @@ int Horse::getStepCounter() {
 	return stepCounter;
 }
 
+bool Horse::getHitObject() {
+	return hitObject;
+}
+
+void Horse::setHitObject(bool hit) {
+	hitObject = hit;
+}
+
 void Horse::translateHorse(glm::vec3 translate) {
 	translation = translate;
 	setTorso();
@@ -301,7 +309,19 @@ void Horse::resetHorse() {
 void Horse::moveHorse() {
 	++stepCounter;
 	glm::vec3 t = translation;
+	int speedUp = rand() % 2;
+	if (speedUp == 0) {
+		stepSize = 0.2f;
+	}
+	else {
+		stepSize = 0.1f;
+	}
+	//Reached map bounds
+	if (!((t.x < 30 && t.x > -80) && (t.z < 30 && t.z > -80))) {
+		hitObject = true;
+	}
 	t.z += glm::sin(glm::radians(angle)) * stepSize * 0.5;
 	t.x -= glm::cos(glm::radians(angle)) * stepSize * 0.5;
 	translateHorse(t);
+	animateHorse();
 }

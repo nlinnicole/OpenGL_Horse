@@ -51,6 +51,8 @@ public:
 	HorseObject hColObj;
 	void Horse::setCol();
 	int getStepCounter();
+	bool getHitObject();
+	void setHitObject(bool hit);
 
 private:
 	float colValues[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
