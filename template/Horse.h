@@ -45,14 +45,15 @@ public:
 	void animateHorse();
 	void resetHorse();
 
-	void moveHorse();
-
 	//COLLISION
 	HorseObject hColObj;
 	void Horse::setCol();
 	int getStepCounter();
 	bool getHitObject();
 	void setHitObject(bool hit);
+
+	void moveHorse();
+	void setStopped(bool s);
 
 	bool checkCollision(Horse other);
 	glm::vec3 colSize = glm::vec3(1.8f, 2.8f, 1.0f);
@@ -99,5 +100,6 @@ private:
 	//COLLISION
 	bool hitObject = false;
 	int stepCounter = 0;
+	bool stopped = false;
 };
 

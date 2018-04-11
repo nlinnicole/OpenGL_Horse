@@ -612,8 +612,19 @@ int main()
 				for (int j = 1; j < horses.size(); ++j) {
 					//Horse can't collide with itself
 					if (i != j) {
-						if (horses[i]->checkCollision(*horses[j]))
+						//Check collision
+						if (horses[i]->checkCollision(*horses[j])) {
 							std::cout << i << " and " << j << " collision" << std::endl;
+							if (rand() % 2 == 0) {
+								horses[i]->setStopped(true);
+								std::cout << "horse " << i << " stopped" << std::endl;
+							}
+							else {
+								horses[j]->setStopped(true);
+								std::cout << "horse " << j << " stopped" << std::endl;
+
+							}
+						}
 					}
 				}
 			}

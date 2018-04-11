@@ -17,6 +17,10 @@ int Horse::getStepCounter() {
 	return stepCounter;
 }
 
+void Horse::setStopped(bool s) {
+	stopped = s;
+}
+
 bool Horse::getHitObject() {
 	return hitObject;
 }
@@ -311,23 +315,26 @@ void Horse::resetHorse() {
 }
 
 void Horse::moveHorse() {
-	++stepCounter;
-	glm::vec3 t = translation;
-	int speedUp = rand() % 2;
-	if (speedUp == 0) {
-		stepSize = 0.2f;
+	if (!stopped) {
+		++stepCounter;
+		glm::vec3 t = translation;
+		int speedUp = rand() % 2;
+		if (speedUp == 0) {
+			stepSize = 0.3f;
+		}
+		else {
+			stepSize = 0.1f;
+		}
+		//Reached map bounds
+		if (!((t.x < 30 && t.x > -80) && (t.z < 30 && t.z > -80))) {
+			hitObject = true;
+		}
+			t.z += glm::sin(glm::radians(angle)) * stepSize * 0.5;
+			t.x -= glm::cos(glm::radians(angle)) * stepSize * 0.5;
+			translateHorse(t);
+			animateHorse();
 	}
-	else {
-		stepSize = 0.1f;
-	}
-	//Reached map bounds
-	if (!((t.x < 30 && t.x > -80) && (t.z < 30 && t.z > -80))) {
-		hitObject = true;
-	}
-	t.z += glm::sin(glm::radians(angle)) * stepSize * 0.5;
-	t.x -= glm::cos(glm::radians(angle)) * stepSize * 0.5;
-	translateHorse(t);
-	animateHorse();
+	
 }
 
 bool Horse::checkCollision(Horse other) {
@@ -335,13 +342,8 @@ bool Horse::checkCollision(Horse other) {
 	bool collisionY = (colPos.y + colSize.y >= other.colPos.y) && (other.colPos.y + other.colSize.y >= colPos.y);
 	bool collisionZ = (colPos.z + colSize.z >= other.colPos.z) && (other.colPos.z + other.colSize.z >= colPos.z);
 
-	//std::cout << collisionX << std::endl;
-	//std::cout << collisionY << std::endl;
-	//std::cout << collisionZ << std::endl;
-
 	//std::cout << "horse 1" << " " << colPos.x << " " << colPos.y << " " << colPos.z << std::endl;
 	//std::cout << "horse 2" << " " << other.colPos.x << " " << other.colPos.y << " " << other.colPos.z << std::endl;
-
 
 	return collisionX && collisionY && collisionZ;
 }

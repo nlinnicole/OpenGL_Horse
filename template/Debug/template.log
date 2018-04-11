@@ -1,11 +1,11 @@
-﻿Build started 4/11/2018 3:40:43 PM.
+﻿Build started 4/11/2018 3:50:43 PM.
      1>Project "C:\Users\Nicole\Documents\OpenGL_Assignments\template\template.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\CL.exe /c /I..\glm /I..\glfw /I..\glew /I..\soil /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Yu"stdafx.h" /Fp"Debug\a1_27890834.pch" /Fo"Debug\\" /Fd"Debug\vc140.pdb" /Gd /TP /analyze- /errorReport:prompt Horse.cpp main.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\CL.exe /c /I..\glm /I..\glfw /I..\glew /I..\soil /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Yu"stdafx.h" /Fp"Debug\a1_27890834.pch" /Fo"Debug\\" /Fd"Debug\vc140.pdb" /Gd /TP /analyze- /errorReport:prompt main.cpp
          main.cpp
-     1>c:\users\nicole\documents\opengl_assignments\template\horse.h(91): warning C4305: 'initializing': truncation from 'double' to 'GLfloat'
-     1>c:\users\nicole\documents\opengl_assignments\template\horse.h(93): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+     1>c:\users\nicole\documents\opengl_assignments\template\horse.h(92): warning C4305: 'initializing': truncation from 'double' to 'GLfloat'
      1>c:\users\nicole\documents\opengl_assignments\template\horse.h(94): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+     1>c:\users\nicole\documents\opengl_assignments\template\horse.h(95): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
      1>c:\users\nicole\documents\opengl_assignments\template\main.cpp(41): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
      1>c:\users\nicole\documents\opengl_assignments\template\main.cpp(42): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
      1>c:\users\nicole\documents\opengl_assignments\template\main.cpp(164): warning C4305: '+=': truncation from 'double' to 'float'
@@ -29,13 +29,6 @@
      1>c:\users\nicole\documents\opengl_assignments\template\main.cpp(600): warning C4018: '<': signed/unsigned mismatch
      1>c:\users\nicole\documents\opengl_assignments\template\main.cpp(611): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
      1>c:\users\nicole\documents\opengl_assignments\template\main.cpp(612): warning C4018: '<': signed/unsigned mismatch
-         Horse.cpp
-     1>c:\users\nicole\documents\opengl_assignments\template\horse.h(91): warning C4305: 'initializing': truncation from 'double' to 'GLfloat'
-     1>c:\users\nicole\documents\opengl_assignments\template\horse.h(93): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-     1>c:\users\nicole\documents\opengl_assignments\template\horse.h(94): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-     1>c:\users\nicole\documents\opengl_assignments\template\horse.cpp(327): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
-     1>c:\users\nicole\documents\opengl_assignments\template\horse.cpp(328): warning C4244: '-=': conversion from 'double' to 'float', possible loss of data
-         Generating Code...
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Nicole\Documents\OpenGL_Assignments\Debug\a1_27890834.exe" /INCREMENTAL /NOLOGO /LIBPATH:..\glfw /LIBPATH:..\glew /LIBPATH:..\soil glew32.lib glu32.lib opengl32.lib glfw3dll.lib glfw3.lib SOIL.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /Debug /PDB:"C:\Users\Nicole\Documents\OpenGL_Assignments\Debug\a1_27890834.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Nicole\Documents\OpenGL_Assignments\Debug\a1_27890834.lib" /MACHINE:X86 Debug\BufferLoader.obj
          Debug\Horse.obj
@@ -55,4 +48,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:01.17
+Time Elapsed 00:00:00.95
