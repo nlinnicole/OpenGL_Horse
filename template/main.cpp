@@ -405,7 +405,7 @@ void renderScene(Renderer r, BufferLoader b, GLuint groundTEX, GLuint horseTEX) 
 }
 
 void setHorses() {
-	for (int i = 0; i < 2; ++i) {
+	for (int i = 0; i < 20; ++i) {
 		glm::vec3 t;
 		glm::vec3 s;
 		float randX = rand() % 30 - 20;
@@ -417,6 +417,8 @@ void setHorses() {
 		temp->translateHorse(t);
 		temp->rotateHorse(randR, glm::vec3(0.0f, 1.0f, 0.0f));
 		horses.push_back(temp);
+		//std::cout << "horse" << i << " " << temp->colPos.x << " " << temp->colPos.y << " " << temp->colPos.z << std::endl;
+
 	}
 	std::cout << horses.size() << std::endl;
 }
@@ -607,9 +609,12 @@ int main()
 					moveHorseTroop(180, horses[i]);
 				}
 				moveHorseTroop(angle, horses[i]);
-				for (int j = 0; j < horses.size(); ++j) {
-					if (horses[i]->checkCollision(*horses[j]))
-						std::cout << "collision" << std::endl;
+				for (int j = 1; j < horses.size(); ++j) {
+					//Horse can't collide with itself
+					if (i != j) {
+						if (horses[i]->checkCollision(*horses[j]))
+							std::cout << i << " and " << j << " collision" << std::endl;
+					}
 				}
 			}
 		}

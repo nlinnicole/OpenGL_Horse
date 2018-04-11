@@ -223,7 +223,7 @@ void Horse::setCol() {
 
 	colPos = hCol[3];
 
-	std::cout << colPos.x << " " << colPos.y << " " << colPos.z << std::endl;
+	//std::cout << colPos.x << " " << colPos.y << " " << colPos.z << std::endl;
 
 	hColObj = { hCol, *colValues };
 }
@@ -334,6 +334,14 @@ bool Horse::checkCollision(Horse other) {
 	bool collisionX = (colPos.x + colSize.x >= other.colPos.x) && (other.colPos.x + other.colSize.x >= colPos.x);
 	bool collisionY = (colPos.y + colSize.y >= other.colPos.y) && (other.colPos.y + other.colSize.y >= colPos.y);
 	bool collisionZ = (colPos.z + colSize.z >= other.colPos.z) && (other.colPos.z + other.colSize.z >= colPos.z);
+
+	//std::cout << collisionX << std::endl;
+	//std::cout << collisionY << std::endl;
+	//std::cout << collisionZ << std::endl;
+
+	//std::cout << "horse 1" << " " << colPos.x << " " << colPos.y << " " << colPos.z << std::endl;
+	//std::cout << "horse 2" << " " << other.colPos.x << " " << other.colPos.y << " " << other.colPos.z << std::endl;
+
 
 	return collisionX && collisionY && collisionZ;
 }
