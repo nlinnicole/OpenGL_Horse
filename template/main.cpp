@@ -405,12 +405,11 @@ void renderScene(Renderer r, BufferLoader b, GLuint groundTEX, GLuint horseTEX) 
 }
 
 void setHorses() {
-	for (int i = 0; i < 10; ++i) {
+	for (int i = 0; i < 30; ++i) {
 		glm::vec3 t;
 		glm::vec3 s;
-		float randX = rand() % 100 - 50;
+		float randX = rand() % 30;
 		float randZ = rand() % 100 - 50;
-		float randS = rand() % 3;
 		float randR = rand() % 360;
 
 		t = glm::vec3(randX, 0.0f, randZ);
@@ -595,13 +594,21 @@ int main()
 			for (int i = 0; i < horses.size(); ++i) {
 				double steps = rand() % 50 + 30;
 				int axis = rand() % 2;
-				int dir = rand() % 2;
+				//int dir = rand() % 2;
+				int dir = 0;
 
-				horses[i]->moveHorse(steps, axis, dir);
-
-				//horses[i]->rotateHorse(5.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+				double angle = 0;
+				if (horses[i]->getStepCounter() >= 60) {
+					if (rand() % 2 == 0) {
+						angle = 15;
+					}
+					else {
+						angle = -15;
+					}
+					horses[i]->rotateHorse(angle, glm::vec3(0.0f, 1.0f, 0.0f));
+				}
+				horses[i]->moveHorse(axis);
 			}
-
 		}
 
 		//--------------------------DRAW SCENE--------------------------

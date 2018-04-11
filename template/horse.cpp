@@ -24,7 +24,12 @@ void Horse::scaleHorse(glm::vec3 scale) {
 }
 
 void Horse::rotateHorse(float ag, glm::vec3 rotate) {	 
-	angle = ag;
+	stepCounter = 0;
+	if (angle > 360) {
+		angle = 0;
+	}
+	angle += ag;
+	
 	rotation = rotate;
 	setTorso();
 }
@@ -32,9 +37,9 @@ void Horse::rotateHorse(float ag, glm::vec3 rotate) {
 void Horse::setTorso() {
 	glm::mat4 torso;
 	scale = glm::scale(torso, scaling);
-	rotate = glm::rotate(torso, glm::radians(0.0f + angle), rotation);
+	rotate = glm::rotate(torso, glm::radians(angle), rotation);
 	translate = glm::translate(torso, translation);
-	torso*= scale * rotate * translate;
+	torso*= scale * translate * rotate;
 	colValues[0] = 0.275f;
 	colValues[1] = 0.510f;
 	colValues[2] = 0.706f;
@@ -289,70 +294,15 @@ void Horse::resetHorse() {
 	setTorso();
 }
 
-void Horse::moveHorse(double steps, int axis, int dir) {
+void Horse::moveHorse(int axis) {
+	++stepCounter;
 	glm::vec3 t = translation;
-	stepCounter = 0;
-	while (stepCounter != steps) {
-		if (dir == 0) {
-			t.x += speed;
-		}
-		else if (dir == 1) {
-			t.x -= speed;
-		}
-		else if (dir == 2) {
-			t.z += speed;
-		}
-		else if (dir == 3) {
-			t.z -= speed;
-		}
-		stepCounter += 0.5;
-	}
-
-
-
-	////x-Axis
-	//if (axis == 0) {
-	//	if ((t.x < 35 && t.x < -35) && hitObject == false) {
-	//		if (dir == 0)
-	//			t.x += (deltaX / 5.0f);
-	//		else
-	//			t.x -= (deltaX / 5.0f);
-	//	}
-	//	else if (t.x > 35 || hitObject == true){
-	//		hitObject = true;
-	//		t.x -= (deltaX / 5.0f);
-	//	}
-	//}
-
-
-
-	////positive bounds
-	//if ((t.x < 90 && t.z < 90) && hitObject == false) {
-	//	if (axis == 0) {
-	//		t.z += (deltaX / 2.0f);
-	//	} else if (axis == 1) {
-	//		t.x += (deltaX / 2.0f);
-	//	}
-	//}
-	//else {
-	//	hitObject = true;
-	//	if (axis == 0) {
-	//		t.z -= (deltaX / 2.0f);
-	//	}
-	//	else if (axis == 1) {
-	//		t.x -= (deltaX / 2.0f);
-	//	}
-	//}
-
-	////negative bounds
-	//if (t.x > -100 && t.z > -100) {
-	//	if (axis == 0) {
-	//		t.z += (deltaX / 2.0f);
-	//	}
-	//	else if (axis == 1) {
-	//		t.x += (deltaX / 2.0f);
-	//	}
-	//}
+		t.x += glm::sin(glm::radians(angle)) * stepSize * 0.5;
+		t.z += glm::cos(glm::radians(angle)) * stepSize * 0.5;
 	translateHorse(t);
+}
+
+int Horse::getStepCounter() {
+	return stepCounter;
 }
 

@@ -45,11 +45,12 @@ public:
 	void animateHorse();
 	void resetHorse();
 
-	void moveHorse(double steps, int axis, int dir);
+	void moveHorse(int axis);
 
 	//COLLISION
 	HorseObject hColObj;
 	void Horse::setCol();
+	int getStepCounter();
 
 private:
 	float colValues[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
@@ -87,11 +88,11 @@ private:
 	int minAngle = -20.0f;
 	bool maxAngleReached = false;
 
-	float speed = 0.002f;
+	float stepSize = 0.1f;
 
 	//COLLISION
 	bool hitObject = false;
-	double stepCounter = 0;
+	int stepCounter = 0;
 
 };
 
